@@ -1,13 +1,11 @@
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 
-// import { useSession } from '@hooks/network/useSession';
-import { LoadingStatesEnum } from '@enums/loading-states.enum';
+import { SignOutAPI } from '@adapters/authentication/sign-out';
+
+import { LOADING_STATE } from '@enums/loading-states.enum';
+
+import { SignInApi } from '../adapters/authentication/sign-in';
+import { LOCAL_STORAGE_KEYS } from '../constants/storage/keys';
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -15,104 +13,109 @@ export interface IAuthProvider {
   children: ReactNode;
 }
 
+interface IUser {}
+
 export interface IContext {
-  // user: IUser | null;
+  user: IUser | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<{ redirect: string }>;
+  setUser: (user: IUser) => void;
   isAuthenticated: boolean;
+  token: string | null;
   isBlocked: boolean;
-  loadingState: LoadingStatesEnum;
-  signOut: () => void;
-  // setUser: (user: IUser) => void;
-  refreshSession: () => void;
-  signIn: (
-    email: string,
-    password: string
-  ) => Promise<void | AuthenticateResponseDTO>;
+  loadingState: LOADING_STATE;
+  getDataUser: () => void;
 }
 
 export const AuthProvider = ({ children }: IAuthProvider) => {
-  // const { getSession, authenticate, signOut: signOutApp } = useSession();
-
-  // const [user, setUser] = useState<IUser | null>(null);
+  const [user, setUser] = useState<IUser | null>(null);
+  const [token, setToken] = useState(
+    localStorage.getItem(LOCAL_STORAGE_KEYS.token) || null
+  );
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  // const [checkLoggedUserLoading, setCheckLoggedUserLoading] = useState(true);
-  // const [isBlocked, setIsBlocked] = useState(false);
-  const [loadingState, setLoadingState] = useState<LoadingStatesEnum>(
-    LoadingStatesEnum.STAND_BY
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [loadingState, setLoadingState] = useState<LOADING_STATE>(
+    LOADING_STATE.STAND_BY
   );
 
-  async function signIn(email: string, password: string) {
-    console.log({ email, password });
-    // const response = await authenticate({ email, password });
-
-    // if (response?.user) {
-    // setUser({
-    //   ...response.user,
-    //   token: response.token.token,
+  async function getDataUser() {
+    // const { data } = await GetSessionApi({
+    //   affiliatedId: affiliated.id,
     // });
-    // setIsAuthenticated(true);
-    // localStorage.setItem(
-    //   LocalStorageKeys.token,
-    //   JSON.stringify(response.token.token)
-    // );
+
+    // if (data?.token) {
+    //   setIsAuthenticated(true);
+    //   setUser({
+    //     ...data.user,
+    //     plans: data.plans,
+    //   });
     // }
 
-    // if (response?.status === 403) {
-    //   setIsBlocked(true);
-    //   return response;
-    // }
+    setLoadingState(LOADING_STATE.DONE);
+  }
+
+  async function signIn(email: string, password: string) {
+    const { data } = await SignInApi({
+      data: {
+        email: email.toLowerCase().trim(),
+        password,
+      },
+    });
+    if (!data) {
+      setIsBlocked(true);
+      return;
+    }
+
+    if (data?.user) {
+      setUser(data.user);
+      setIsAuthenticated(true);
+
+      localStorage.setItem(
+        LOCAL_STORAGE_KEYS.user,
+        JSON.stringify(data.user.email)
+      );
+
+      localStorage.setItem(
+        LOCAL_STORAGE_KEYS.token,
+        JSON.stringify(data.token.token)
+      );
+      setToken(data.token.token);
+    }
   }
 
   async function signOut() {
-    // await signOutApp();
-    // setUser(null);
-    setIsAuthenticated(false);
+    await SignOutAPI();
     localStorage.clear();
-    sessionStorage.clear();
-  }
+    setUser(null);
+    setIsAuthenticated(false);
+    setToken(null);
 
-  async function refreshSession() {
-    // const data = await getSession();
-    // if (data?.user) {
-    //   setUser({
-    //     ...data.user,
-    //     token: data.token.token,
-    //   });
-    // }
+    return {
+      redirect: '/welcome',
+    };
   }
 
   useEffect(() => {
-    const token = localStorage.getItem(LocalStorageKeys.token);
-    if (token) {
-      setIsAuthenticated(true);
-      (async () => {
-        // const data = await getSession();
-        // if (data?.user) {
-        //   setUser({
-        //     ...data.user,
-        //     token: data.token.token,
-        //   });
-        // }
-      })();
-    }
-    setLoadingState(LoadingStatesEnum.DONE);
-  }, []);
+    if (!token) setLoadingState(LOADING_STATE.DONE);
+
+    if (token) getDataUser();
+  }, [token]);
 
   return (
     <AuthContext.Provider
       value={{
-        // user,
+        user,
         signIn,
         signOut,
-        // setUser,
+        setUser,
         isAuthenticated,
         isBlocked,
         loadingState,
-        refreshSession,
+        getDataUser,
+        token,
       }}
     >
-      {children}
+      {loadingState === LOADING_STATE.DONE ? children : <h2>Loading...</h2>}
     </AuthContext.Provider>
   );
 };
-
-export const useAuth = () => useContext(AuthContext);

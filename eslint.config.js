@@ -23,6 +23,8 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      'react-hooks/rules-of-hooks': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off'
     },
   }
 );

@@ -14,6 +14,7 @@ module.exports = {
     '^@model/(.*)$',
     '^@interfaces/(.*)$',
     '^@infrastructure/(.*)$',
+    '^@adapters/(.*)$',
     '^@contexts/(.*)$',
     '^@hooks/(.*)$',
     '^@services/(.*)$',

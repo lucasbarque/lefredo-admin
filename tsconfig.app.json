@@ -37,7 +37,8 @@
       "@assets/*": ["./src/assets/*"],
       "@env/*": ["./src/env/*"],
       "@store/*": ["./src/store/*"],
-      "@enums/*": ["./src/enums/*"]
+      "@enums/*": ["./src/enums/*"],
+      "@adapters/*": ["./src/adapters/*"]
     }
   },
   "include": ["src"]
