@@ -6,7 +6,6 @@ module.exports = {
   singleQuote: true,
   jsxSingleQuote: true,
   semi: true,
-  // plugins: [require('prettier-plugin-tailwindcss')],
   importOrder: [
     '^react$',
     '<THIRD_PARTY_MODULES>',

@@ -1,10 +1,9 @@
 import { ReactNode, createContext, useEffect, useState } from 'react';
 
+import { LOADING_STATE } from '@enums/loading-states.enum';
+
 import { MeAPI } from '@adapters/authentication/me';
 import { SignInAPI } from '@adapters/authentication/sign-in';
-import { SignOutAPI } from '@adapters/authentication/sign-out';
-
-import { LOADING_STATE } from '@enums/loading-states.enum';
 
 import { LOCAL_STORAGE_KEYS } from '../constants/storage/keys';
 
@@ -24,7 +23,7 @@ export interface IUser {
 export interface IContext {
   user: IUser | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<{ redirect: string }>;
+  signOut: () => { redirect: string };
   setUser: (user: IUser) => void;
   isAuthenticated: boolean;
   token: string | null;
@@ -45,9 +44,9 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
   async function getDataUser() {
     const { data } = await MeAPI();
 
-    if (data) {
-      setIsAuthenticated(true);
+    if (data && (!user || user.id !== data.id)) {
       setUser(data);
+      setIsAuthenticated(true);
     }
 
     setLoadingState(LOADING_STATE.DONE);
@@ -73,23 +72,28 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     }
   }
 
-  async function signOut() {
-    await SignOutAPI();
+  function signOut() {
     localStorage.clear();
     setUser(null);
     setIsAuthenticated(false);
     setToken(null);
 
     return {
-      redirect: '/welcome',
+      redirect: '/',
     };
   }
 
   useEffect(() => {
-    if (!token) setLoadingState(LOADING_STATE.DONE);
-
-    if (token) getDataUser();
+    if (token) {
+      getDataUser();
+    } else {
+      setLoadingState(LOADING_STATE.DONE);
+    }
   }, [token]);
+
+  if (loadingState !== LOADING_STATE.DONE) {
+    return <h2>Loading...</h2>;
+  }
 
   return (
     <AuthContext.Provider
@@ -104,7 +108,7 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
         token,
       }}
     >
-      {loadingState === LOADING_STATE.DONE ? children : <h2>Loading...</h2>}
+      {children}
     </AuthContext.Provider>
   );
 };

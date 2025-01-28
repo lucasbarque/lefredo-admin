@@ -1,39 +1,12 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
-
 import { Input } from '@components/inputs/input';
-import { LoginForm } from './login.types';
-import { useAuth } from '@hooks/useAuth';
 
-const inputSchema = yup.object({
-  email: yup
-    .string()
-    .email('E-mail com formato inválido.')
-    .required('E-mail é obrigatório.'),
-  password: yup.string().required('Senha é obrigatória.'),
-});
+import { useLogin } from './use-login';
 
 export function Login() {
-  const { signIn } = useAuth()
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginForm>({
-    resolver: yupResolver(inputSchema),
-    defaultValues: {
-      email: '',
-      password: ''
-    },
-  });
-
-  const onSubmit: SubmitHandler<LoginForm> = async({email, password}) => {
-    await signIn(email, password)
-  };
+  const { handleSubmit, onSubmit, control, errors } = useLogin();
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
+    <div className='w-screen h-screen flex items-center justify-center'>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           control={control}
@@ -52,7 +25,9 @@ export function Login() {
           type='password'
         />
 
-        <button type='submit' className="cursor-pointer">Logar</button>
+        <button type='submit' className='cursor-pointer'>
+          Logar
+        </button>
       </form>
     </div>
   );
