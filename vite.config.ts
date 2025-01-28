@@ -24,6 +24,7 @@ export default defineConfig({
       '@env': path.resolve(__dirname, './src/env'),
       '@store': path.resolve(__dirname, './src/store'),
       '@adapters': path.resolve(__dirname, './src/adapters'),
+      '@constants': path.resolve(__dirname, './src/constants'),
     },
   },
 });

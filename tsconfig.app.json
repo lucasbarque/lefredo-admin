@@ -38,7 +38,8 @@
       "@env/*": ["./src/env/*"],
       "@store/*": ["./src/store/*"],
       "@enums/*": ["./src/enums/*"],
-      "@adapters/*": ["./src/adapters/*"]
+      "@adapters/*": ["./src/adapters/*"],
+      "@constants/*": ["./src/constants/*"]
     }
   },
   "include": ["src"]

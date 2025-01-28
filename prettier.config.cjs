@@ -21,6 +21,7 @@ module.exports = {
     '^@libs/(.*)$',
     '^@pages/(.*)$',
     '^@styles/(.*)$',
+    '^@constants/(.*)$',
     '^@components/(.*)$',
     '^[./]',
   ],

@@ -24,7 +24,11 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'react-hooks/rules-of-hooks': 'off',
-      '@typescript-eslint/no-empty-object-type': 'off'
+      '@typescript-eslint/no-empty-object-type': 'off',
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/no-explicit-any': 'off'
+
+
     },
   }
 );
