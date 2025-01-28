@@ -3,11 +3,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { Input } from '@components/inputs/input';
-
-interface InputForm {
-  email: string;
-  password: string;
-}
+import { LoginForm } from './login.types';
+import { useAuth } from '@hooks/useAuth';
 
 const inputSchema = yup.object({
   email: yup
@@ -18,61 +15,25 @@ const inputSchema = yup.object({
 });
 
 export function Login() {
+  const { signIn } = useAuth()
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<InputForm>({
+  } = useForm<LoginForm>({
     resolver: yupResolver(inputSchema),
     defaultValues: {
       email: '',
+      password: ''
     },
   });
 
-  const onSubmit: SubmitHandler<InputForm> = async () => {
-    // if (affiliated) {
-    //   const { data } = await CheckEmailApi({
-    //     data: {
-    //       affiliatedId: affiliated.id,
-    //       email: email,
-    //     },
-    //   });
-
-    //   const { data: dataUser } = await SigninApi({
-    //     data: { email, affiliatedId: affiliated.id },
-    //     disbleFeedback: true,
-    //   });
-
-    //   if (
-    //     data?.status === HTTP_STATUS_CODE.ok &&
-    //     dataUser?.affiliatedClientPlan.plan.type !== 'FREE'
-    //   ) {
-    //     navigate(`/login?email=${email}`);
-    //   } else {
-    //     const isFreeUserSignedIn = await RegisterApi({
-    //       data: {
-    //         email,
-    //         affiliatedId: affiliated.id,
-    //         isTermsSigned: true,
-    //       },
-    //     });
-    //     if (isFreeUserSignedIn) buildTracker();
-    //     const { data } = await SigninApi({
-    //       data: { email, affiliatedId: affiliated.id },
-    //     });
-
-    //     setIsAuthenticated(true);
-
-    //     localStorage.setItem(
-    //       LOCAL_STORAGE_KEYS.token,
-    //       JSON.stringify(data?.token.token)
-    //     );
-    //   }
-    // }
+  const onSubmit: SubmitHandler<LoginForm> = async({email, password}) => {
+    await signIn(email, password)
   };
 
   return (
-    <div>
+    <div className="w-screen h-screen flex items-center justify-center">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Input
           control={control}
@@ -91,7 +52,7 @@ export function Login() {
           type='password'
         />
 
-        <button type='submit'>Logar</button>
+        <button type='submit' className="cursor-pointer">Logar</button>
       </form>
     </div>
   );

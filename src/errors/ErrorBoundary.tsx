@@ -4,6 +4,12 @@ interface ErrorBoundaryProps {
   children: ReactNode;
 }
 
+export interface ErrorAPIResponse {
+  statusCode: number;
+  message: string;
+  error?: string;
+}
+
 export function ErrorBoundary({ children }: ErrorBoundaryProps) {
   const [hasError, setHasError] = useState(false);
 

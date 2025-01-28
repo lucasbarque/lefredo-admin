@@ -1,3 +1,5 @@
+import { IUser } from '@contexts/AuthContext';
+
 export type SignInRequestAPI = {
   data: {
     email: string;
@@ -6,11 +8,6 @@ export type SignInRequestAPI = {
 };
 
 export type SignInResponseAPI = {
-  token: {
-    type: 'bearer';
-    token: string;
-  };
-  user: {
-    email: string;
-  };
+  token: string;
+  user: IUser;
 };
