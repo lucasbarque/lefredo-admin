@@ -1,1 +1,9 @@
 @import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Nunito Sans', sans-serif;
+
+  --color-text-default: #717171;
+  --color-admin-brand-default: #fe7a7c;
+  --color-admin-brand-hover: #e36062;
+}

@@ -20,7 +20,7 @@ export function Input({
     <div className='flex flex-col'>
       {label && (
         <label
-          className={clsx('mb-[6px] text-sm font-medium text-black', {
+          className={clsx('text-sm font-medium text-black', {
             'text-red-500': error,
           })}
           htmlFor={name}
@@ -35,6 +35,7 @@ export function Input({
           name={name}
           render={({ field }) => (
             <input
+              {...rest}
               type={
                 isPassword ? (viewPassword ? 'text' : 'password') : rest.type
               }
@@ -43,14 +44,11 @@ export function Input({
               onChange={field.onChange}
               className={clsx(
                 {
-                  'border-red-500 ring-red-500 focus:border-transparent focus:ring-red-500':
-                    error,
-                  'focus:border-transparent focus:ring-2 focus:ring-black':
-                    !error,
+                  'border-red-500 ring-red-500 focus:ring-red-500': error,
+                  'focus:ring-0 focus:ring-admin-brand-default': !error,
                 },
-                'mt-1 h-11 w-full rounded-lg border border-black/[0.15] px-[15px] font-normal text-black/60 placeholder-black/60'
+                'h-11 w-full rounded-lg border border-black/[0.15] px-[15px] font-normal text-black/60 placeholder-black/60'
               )}
-              {...rest}
             />
           )}
         />

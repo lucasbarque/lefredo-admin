@@ -24,6 +24,7 @@ export const SignInAPI = async ({ data }: SignInRequestAPI) => {
         toast({
           message: 'E-mail ou senha inválidos.',
           type: 'error',
+          position: 'top-center',
         });
       }
     } else {

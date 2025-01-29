@@ -19,7 +19,7 @@ export function useLogin() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginForm>({
     resolver: yupResolver(inputSchema),
     defaultValues: {
@@ -37,5 +37,6 @@ export function useLogin() {
     handleSubmit,
     onSubmit,
     errors,
+    isSubmitting,
   };
 }
