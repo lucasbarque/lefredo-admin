@@ -1,7 +1,8 @@
-import { DEFAULT_ROUTES } from '@constants/routes';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuth } from '@hooks/useAuth';
+
+import { DEFAULT_ROUTES } from '@constants/routes';
 
 interface HandleRoutesProps {
   isPrivate?: boolean;
