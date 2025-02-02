@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useState } from 'react';
 
 import { LOADING_STATE } from '@enums/loading-states.enum';
 
@@ -83,17 +83,17 @@ export const AuthProvider = ({ children }: IAuthProvider) => {
     };
   }
 
-  useEffect(() => {
-    if (token) {
-      getDataUser();
-    } else {
-      setLoadingState(LOADING_STATE.DONE);
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     getDataUser();
+  //   } else {
+  //     setLoadingState(LOADING_STATE.DONE);
+  //   }
+  // }, [token]);
 
-  if (loadingState !== LOADING_STATE.DONE) {
-    return <h2>Loading...</h2>;
-  }
+  // if (loadingState !== LOADING_STATE.DONE) {
+  //   return <h2>Loading...</h2>;
+  // }
 
   return (
     <AuthContext.Provider

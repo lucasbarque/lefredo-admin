@@ -20,7 +20,7 @@ export function Input({
     <div className='flex flex-col'>
       {label && (
         <label
-          className={clsx('text-sm font-medium text-black', {
+          className={clsx('text-sm font-medium text-gray-600', {
             'text-red-500': error,
           })}
           htmlFor={name}
@@ -45,9 +45,9 @@ export function Input({
               className={clsx(
                 {
                   'border-red-500 ring-red-500 focus:ring-red-500': error,
-                  'focus:ring-0 focus:ring-admin-brand-default': !error,
+                  'focus:ring-0 focus:ring-brand-default': !error,
                 },
-                'h-11 w-full rounded-lg border border-black/[0.15] px-[15px] font-normal text-black/60 placeholder-black/60'
+                'h-11 w-full rounded-lg border border-border-default px-[15px] font-normal text-gray-500 placeholder-gray-500'
               )}
             />
           )}
@@ -62,9 +62,9 @@ export function Input({
               className='flex cursor-pointer items-center justify-center p-1'
             >
               {viewPassword ? (
-                <IconEye size={24} className='text-black/60' />
+                <IconEye size={24} className='text-gray-500' />
               ) : (
-                <IconEyeClosed size={24} className='text-black/60' />
+                <IconEyeClosed size={24} className='text-gray-500' />
               )}
             </button>
           </div>
