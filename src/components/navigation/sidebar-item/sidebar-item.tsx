@@ -12,17 +12,16 @@ export function SidebarItem({
     <button
       {...rest}
       className={clsx(
-        'h-12 flex items-center px-4 gap-2 cursor-pointer relative transition-all duration-500 w-full',
+        'h-12 flex items-center px-4 gap-2 cursor-pointer relative transition-all duration-500 w-full rounded-md',
         {
-          'bg-admin-brand-default/12 before:absolute before:bg-admin-brand-default before:w-[4px] before:h-full before:left-0 before:bottom-0':
-            isActive,
+          'bg-brand-default/12': isActive,
           'hover:bg-gray-100': !isActive,
         }
       )}
     >
       <div
         className={clsx('', {
-          'text-admin-brand-default': isActive,
+          'text-brand-default': isActive,
           'text-admin-title-default': !isActive,
         })}
       >
@@ -30,7 +29,7 @@ export function SidebarItem({
       </div>
       <span
         className={clsx('text-sm font-bold', {
-          'text-admin-brand-default': isActive,
+          'text-brand-default': isActive,
           'text-admin-title-default': !isActive,
         })}
       >

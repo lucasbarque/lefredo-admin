@@ -1,6 +1,8 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { FirstStepsMenu } from '@pages/private/first-steps-menu';
 import { Home } from '@pages/private/home';
+import { LayoutsPrivate } from '@pages/private/layouts';
 import { Login } from '@pages/public/login';
 
 import { DEFAULT_ROUTES } from '../constants/routes';
@@ -12,14 +14,20 @@ export default function MainRoutes() {
       <Routes>
         <Route element={<HandleRoutes />}>
           <Route path={DEFAULT_ROUTES.LOGIN} element={<Login />} />
-        </Route>
+          <Route element={<LayoutsPrivate />}>
+            {/* </Route>
 
         <Route element={<HandleRoutes isPrivate />}>
           <Route
             index
             element={<Navigate to={DEFAULT_ROUTES.HOME} replace />}
-          />
-          <Route path={DEFAULT_ROUTES.HOME} element={<Home />} />
+          /> */}
+            <Route path={DEFAULT_ROUTES.HOME} element={<Home />} />
+            <Route
+              path={DEFAULT_ROUTES.FIRST_STEPS}
+              element={<FirstStepsMenu />}
+            />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
