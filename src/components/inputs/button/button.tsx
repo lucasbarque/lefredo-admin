@@ -25,6 +25,9 @@ export function Button({
             family === 'primary',
           'hover:bg-[#3F4D54]/6 bg-white text-brand-default border border-brand-default':
             family === 'secondary',
+
+          'hover:text-button-hover bg-white text-brand-default':
+            family === 'tertiary',
         }
       )}
       {...props}
