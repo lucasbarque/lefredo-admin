@@ -1,6 +1,7 @@
 import { IconDeviceMobileSearch, IconPlus } from '@tabler/icons-react';
 
 import { CategoryItem } from '@components/data-display/category-item';
+import { Header } from '@components/data-display/header';
 import { Button } from '@components/inputs/button';
 import { Input } from '@components/inputs/input';
 
@@ -11,13 +12,11 @@ export function FirstCategoryCreate() {
 
   return (
     <div className='w-full'>
-      <h2 className='font-extrabold text-[1.75rem] text-title-default mb-3'>
-        Cardápio
-      </h2>
-      <p className='text-text-default max-w-[390px] text-lg'>
-        Este é o seu cardápio. Aqui você define quais os itens seus clientes
-        poderão visualizar no app.
-      </p>
+      <Header
+        title='Cardápio'
+        description=' Este é o seu cardápio. Aqui você define quais os itens seus clientes
+        poderão visualizar no app.'
+      />
       <div className='w-full flex gap-16'>
         <div>
           <div className='pt-6 text-2xl font-bold text-title-default'>
