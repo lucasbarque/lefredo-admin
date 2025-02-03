@@ -17,7 +17,7 @@ export function Input({
   const [viewPassword, setViewPassword] = useState(false);
 
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col w-full'>
       {label && (
         <label
           className={clsx('text-sm font-medium text-gray-600', {

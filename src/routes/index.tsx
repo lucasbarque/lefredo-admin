@@ -1,8 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { FirstCategoryCreate } from '@pages/private/first-category-create';
 import { FirstStepsMenu } from '@pages/private/first-steps-menu';
 import { Home } from '@pages/private/home';
 import { LayoutsPrivate } from '@pages/private/layouts';
+import { MenuList } from '@pages/private/menu-list';
 import { Login } from '@pages/public/login';
 
 import { DEFAULT_ROUTES } from '../constants/routes';
@@ -27,6 +29,11 @@ export default function MainRoutes() {
               path={DEFAULT_ROUTES.FIRST_STEPS}
               element={<FirstStepsMenu />}
             />
+            <Route
+              path={DEFAULT_ROUTES.FIRST_CATEGORY_CREATE}
+              element={<FirstCategoryCreate />}
+            />
+            <Route path={DEFAULT_ROUTES.MENU_LIST} element={<MenuList />} />
           </Route>
         </Route>
       </Routes>

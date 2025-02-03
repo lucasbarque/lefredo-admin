@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { IconDeviceMobileSearch } from '@tabler/icons-react';
 
+import { Header } from '@components/data-display/header';
 import { Button } from '@components/inputs/button';
 import { Stepper } from '@components/navigation/stepper';
 
@@ -47,9 +48,7 @@ export function FirstStepsMenu() {
 
   return (
     <div className='w-full '>
-      <h2 className='font-extrabold text-[1.75rem] text-title-default mb-6'>
-        Criando meu cardápio
-      </h2>
+      <Header title='Criando meu cardápio' />
 
       <Stepper steps={steps.length} currentStep={currentStep} />
 
