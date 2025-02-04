@@ -1,10 +1,17 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { IconCamera, IconDotsVertical } from '@tabler/icons-react';
+import {
+  IconCamera,
+  IconCopyPlus,
+  IconDotsVertical,
+  IconEdit,
+  IconTrash,
+} from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
 import { InputCashout } from '@components/inputs/input-cashout/input-cashout';
 import { ToggleSwitch } from '@components/inputs/toggle-switch';
+import { DropdownMenu } from '@components/navigation/dropdown-menu';
 
 interface FormPrice {
   price?: string;
@@ -70,15 +77,42 @@ export function ItemList({
           limitCash={10000}
         />
       </form>
-      <div className='w-[15%] pr-6'>
+      <div className='w-[15%]'>
         <div className='flex items-center w-full justify-center'>
           <div className='flex-1'>
             <ToggleSwitch label='Ativado' id='teste2' />
           </div>
-          <IconDotsVertical
-            size={22}
-            className='text-gray-600 cursor-pointer'
-          />
+          <DropdownMenu>
+            <DropdownMenu.Item>
+              <DropdownMenu.Trigger>
+                <IconDotsVertical
+                  size={22}
+                  className='text-gray-600 cursor-pointer z-1'
+                />
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content
+                dropdownItems={[
+                  {
+                    icon: <IconEdit size={20} className='text-gray-700' />,
+                    linkProps: { href: '#' },
+                    title: 'Editar categoria',
+                  },
+                  {
+                    icon: <IconCopyPlus size={20} className='text-gray-700' />,
+                    linkProps: { href: '#' },
+                    title: 'Duplicar item',
+                  },
+                ]}
+                lastDropdownItems={[
+                  {
+                    icon: <IconTrash size={20} className='text-gray-700' />,
+                    linkProps: { href: '#' },
+                    title: 'Excluir item',
+                  },
+                ]}
+              />
+            </DropdownMenu.Item>
+          </DropdownMenu>
         </div>
       </div>
     </div>

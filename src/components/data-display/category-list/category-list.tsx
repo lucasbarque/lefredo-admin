@@ -1,8 +1,16 @@
-import { IconChevronUp, IconDotsVertical, IconPlus } from '@tabler/icons-react';
+import {
+  IconChevronUp,
+  IconCopyPlus,
+  IconDotsVertical,
+  IconEdit,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
 import clsx from 'clsx';
 
 import { Button } from '@components/inputs/button';
 import { ToggleSwitch } from '@components/inputs/toggle-switch';
+import { DropdownMenu } from '@components/navigation/dropdown-menu';
 
 import { ItemList } from '../item-list';
 
@@ -51,13 +59,44 @@ export function CategoryList({ category }: CategoryListProps) {
           <ToggleSwitch label='Ativado' id='teste' />
           <div className='flex items-center gap-2'>
             <IconChevronUp size={22} className='text-gray-600 cursor-pointer' />
-            <IconDotsVertical
-              size={22}
-              className='text-gray-600 cursor-pointer'
-            />
+
+            <DropdownMenu>
+              <DropdownMenu.Item>
+                <DropdownMenu.Trigger>
+                  <IconDotsVertical
+                    size={22}
+                    className='text-gray-600 cursor-pointer'
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content
+                  dropdownItems={[
+                    {
+                      icon: <IconEdit size={20} className='text-gray-700' />,
+                      linkProps: { href: '#' },
+                      title: 'Editar categoria',
+                    },
+                    {
+                      icon: (
+                        <IconCopyPlus size={20} className='text-gray-700' />
+                      ),
+                      linkProps: { href: '#' },
+                      title: 'Duplicar item',
+                    },
+                  ]}
+                  lastDropdownItems={[
+                    {
+                      icon: <IconTrash size={20} className='text-gray-700' />,
+                      linkProps: { href: '#' },
+                      title: 'Excluir item',
+                    },
+                  ]}
+                />
+              </DropdownMenu.Item>
+            </DropdownMenu>
           </div>
         </div>
       </div>
+
       <div>
         {category.items.length > 0 && (
           <div className='mt-6 flex items-center px-6 border-b border-line pb-3'>

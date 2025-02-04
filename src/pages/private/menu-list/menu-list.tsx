@@ -49,6 +49,7 @@ export function MenuList() {
         description='Este é o seu cardápio. Aqui você define quais os itens seus clientes
         poderão visualizar no app.'
       />
+
       <div className='pt-14 flex items-center justify-end'>
         <Button leftIcon={<IconPlus size={24} />}>Adicionar categoria</Button>
       </div>
