@@ -4,7 +4,8 @@ export type ROUTE =
   | 'HOME'
   | 'FIRST_STEPS'
   | 'FIRST_CATEGORY_CREATE'
-  | 'MENU_LIST';
+  | 'MENU_LIST'
+  | 'CREATE_CATEGORY';
 
 export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   INDEX: '/',
@@ -13,4 +14,5 @@ export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   FIRST_STEPS: '/first-steps',
   FIRST_CATEGORY_CREATE: '/first-category-create',
   MENU_LIST: '/menu-list',
+  CREATE_CATEGORY: '/create-category',
 };

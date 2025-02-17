@@ -1,9 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   IconCamera,
-  IconCopyPlus,
   IconDotsVertical,
   IconEdit,
+  IconListDetails,
   IconTrash,
 } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';
@@ -98,7 +98,9 @@ export function ItemList({
                     title: 'Editar categoria',
                   },
                   {
-                    icon: <IconCopyPlus size={20} className='text-gray-700' />,
+                    icon: (
+                      <IconListDetails size={20} className='text-gray-700' />
+                    ),
                     linkProps: { href: '#' },
                     title: 'Duplicar item',
                   },

@@ -1,9 +1,25 @@
+import { IconChevronLeft } from '@tabler/icons-react';
+
+import { Button } from '@components/inputs/button';
+
 import { HeaderProps } from './header.types';
 
-export function Header({ title, description }: HeaderProps) {
+export function Header({ title, description, backButton }: HeaderProps) {
   return (
     <div>
-      <h2 className='font-extrabold text-[1.75rem] text-title-default mb-3'>
+      {backButton && (
+        <div className='pb-3'>
+          <Button
+            family='tertiary'
+            leftIcon={<IconChevronLeft size={16} />}
+            onClick={backButton.onClick}
+          >
+            {backButton.title}
+          </Button>
+        </div>
+      )}
+
+      <h2 className='font-extrabold text-[1.75rem] text-title-default'>
         {title}
       </h2>
       {description && (

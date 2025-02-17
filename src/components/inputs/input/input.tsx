@@ -2,7 +2,11 @@ import { useState } from 'react';
 
 import { IconEye, IconEyeClosed } from '@tabler/icons-react';
 import { clsx } from 'clsx';
-import { Controller } from 'react-hook-form';
+import {
+  Controller,
+  ControllerRenderProps,
+  FieldValues,
+} from 'react-hook-form';
 
 import { InputProps } from './input.types';
 
@@ -12,9 +16,22 @@ export function Input({
   error,
   name,
   control,
+  countCharacters,
+  countCharacterslength = 40,
   ...rest
 }: InputProps) {
   const [viewPassword, setViewPassword] = useState(false);
+  const [count, setCount] = useState(0);
+
+  const onChangeText = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: ControllerRenderProps<FieldValues, string>
+  ) => {
+    field.onChange(event);
+
+    const value = event.target.value;
+    setCount(value.length);
+  };
 
   return (
     <div className='flex flex-col w-full'>
@@ -41,13 +58,13 @@ export function Input({
               }
               id={name}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(e) => onChangeText(e, field)}
               className={clsx(
                 {
                   'border-red-500 ring-red-500 focus:ring-red-500': error,
-                  'focus:ring-0 focus:ring-brand-default': !error,
+                  'focus:ring-0 outline-brand-default': !error,
                 },
-                'h-11 w-full rounded-lg border border-border-default px-[15px] font-normal text-gray-500 placeholder-gray-500'
+                'h-11 w-full rounded-lg border border-border-default px-[15px] font-normal text-title-default placeholder-gray-500'
               )}
             />
           )}
@@ -71,14 +88,26 @@ export function Input({
         )}
       </div>
 
-      {error && (
-        <div
-          data-testid={`error-input-${name}`}
-          className='mt-[6px] flex items-center gap-[6px] text-sm text-red-500'
-        >
-          {error}
-        </div>
-      )}
+      <div className='flex justify-betweeen items-center mt-[6px]'>
+        {error && (
+          <div
+            data-testid={`error-input-${name}`}
+            className=' flex items-center gap-[6px] text-sm text-red-500'
+          >
+            {error}
+          </div>
+        )}
+
+        {countCharacters && (
+          <span
+            className={clsx('text-sm text-gray-600 ml-auto', {
+              'text-red-500': error,
+            })}
+          >
+            {count}/{countCharacterslength}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

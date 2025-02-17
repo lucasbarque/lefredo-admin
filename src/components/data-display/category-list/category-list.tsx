@@ -1,8 +1,8 @@
 import {
   IconChevronUp,
-  IconCopyPlus,
   IconDotsVertical,
   IconEdit,
+  IconListDetails,
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
@@ -77,7 +77,7 @@ export function CategoryList({ category }: CategoryListProps) {
                     },
                     {
                       icon: (
-                        <IconCopyPlus size={20} className='text-gray-700' />
+                        <IconListDetails size={20} className='text-gray-700' />
                       ),
                       linkProps: { href: '#' },
                       title: 'Duplicar item',

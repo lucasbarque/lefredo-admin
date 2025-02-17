@@ -22,7 +22,7 @@ export function SidebarItem({
       <div
         className={clsx('', {
           'text-brand-default': isActive,
-          'text-admin-title-default': !isActive,
+          'text-title-default': !isActive,
         })}
       >
         {icon}
@@ -30,7 +30,7 @@ export function SidebarItem({
       <span
         className={clsx('text-sm font-bold', {
           'text-brand-default': isActive,
-          'text-admin-title-default': !isActive,
+          'text-title-default': !isActive,
         })}
       >
         {title}

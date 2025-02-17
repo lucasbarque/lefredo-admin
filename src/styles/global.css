@@ -6,11 +6,10 @@ html {
 
 @theme {
   --font-sans: 'Nunito Sans', sans-serif;
-
-  --color-admin-title-default: #151515;
   --color-title-default: #393939;
   --color-title-secondary: #2e2e2e;
   --color-text-default: #adadb5;
+  --color-gray-300: #f9fafb;
   --color-gray-400: #fafafa;
   --color-gray-500: #a0a6ad;
   --color-gray-600: #79818a;

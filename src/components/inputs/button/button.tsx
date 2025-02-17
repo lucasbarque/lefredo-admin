@@ -16,9 +16,9 @@ export function Button({
       className={clsx(
         'flex items-center  cursor-pointer justify-center gap-2 rounded-lg font-medium transition duration-300 ease-in-out disabled:opacity-40',
         {
-          'h-10 px-4': size === 'sm',
-          'h-11 px-5': size === 'md',
-          'h-14 px-5': size === 'lg',
+          'h-10 px-4': size === 'sm' && family !== 'tertiary',
+          'h-11 px-5': size === 'md' && family !== 'tertiary',
+          'h-14 px-5': size === 'lg' && family !== 'tertiary',
           'w-full': fullSize,
 
           'hover:bg-brand-hover bg-brand-default text-white':
