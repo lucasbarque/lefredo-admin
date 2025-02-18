@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+import { AddItemDetails } from '@pages/private/add-item-details';
 import { CreateCategory } from '@pages/private/create-category';
 import { FirstCategoryCreate } from '@pages/private/first-category-create';
 import { FirstStepsMenu } from '@pages/private/first-steps-menu';
@@ -17,6 +18,7 @@ export default function MainRoutes() {
       <Routes>
         <Route element={<HandleRoutes />}>
           <Route path={DEFAULT_ROUTES.LOGIN} element={<Login />} />
+
           <Route element={<LayoutsPrivate />}>
             {/* </Route>
 
@@ -38,6 +40,10 @@ export default function MainRoutes() {
             <Route
               path={DEFAULT_ROUTES.CREATE_CATEGORY}
               element={<CreateCategory />}
+            />
+            <Route
+              path={DEFAULT_ROUTES.ADD_ITEM_DETAILS}
+              element={<AddItemDetails />}
             />
           </Route>
         </Route>

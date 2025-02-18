@@ -34,7 +34,7 @@ export function Input({
   };
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex w-full flex-col'>
       {label && (
         <label
           className={clsx('text-sm font-medium text-gray-600', {
@@ -61,10 +61,11 @@ export function Input({
               onChange={(e) => onChangeText(e, field)}
               className={clsx(
                 {
-                  'border-red-500 ring-red-500 focus:ring-red-500': error,
-                  'focus:ring-0 outline-brand-default': !error,
+                  'border-red-500 bg-red-500/5 ring-red-500 focus:ring-red-500':
+                    error,
+                  'focus:ring-0': !error,
                 },
-                'h-11 w-full rounded-lg border border-border-default px-[15px] font-normal text-title-default placeholder-gray-500'
+                'border-border-default text-title-default outline-brand-default h-11 w-full rounded-lg border px-[15px] font-normal placeholder-gray-500'
               )}
             />
           )}
@@ -88,11 +89,11 @@ export function Input({
         )}
       </div>
 
-      <div className='flex justify-betweeen items-center mt-[6px]'>
+      <div className='justify-betweeen mt-[6px] flex items-center'>
         {error && (
           <div
             data-testid={`error-input-${name}`}
-            className=' flex items-center gap-[6px] text-sm text-red-500'
+            className='flex items-center gap-[6px] text-sm text-red-500'
           >
             {error}
           </div>
@@ -100,7 +101,7 @@ export function Input({
 
         {countCharacters && (
           <span
-            className={clsx('text-sm text-gray-600 ml-auto', {
+            className={clsx('ml-auto text-sm text-gray-600', {
               'text-red-500': error,
             })}
           >

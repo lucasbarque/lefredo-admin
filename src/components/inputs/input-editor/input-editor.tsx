@@ -37,7 +37,7 @@ export const InputEditor: FC<InputEditorProps> = ({
         </label>
       )}
       <div
-        className={clsx('rounded-md ', {
+        className={clsx('rounded-md', {
           'ring-1 ring-red-500': error,
         })}
       >
@@ -61,7 +61,7 @@ export const InputEditor: FC<InputEditorProps> = ({
       {error && showErrorMessage && (
         <div
           data-testid={`error-input-${name}`}
-          className='mt-[6px] flex items-center gap-[6px]'
+          className='mt-[6px] flex items-center gap-[6px] text-sm text-red-500'
         >
           {error}
         </div>

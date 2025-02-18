@@ -10,7 +10,7 @@ export function CreateCategory() {
     useCreateCategory();
 
   return (
-    <div>
+    <div className='h-[calc(100vh-80px)] w-full overflow-y-scroll p-6'>
       <Header
         backButton={{ onClick: () => {}, title: 'Voltar' }}
         title='Nova categoria'
@@ -41,7 +41,7 @@ export function CreateCategory() {
               maxLength={100}
             />
           </div>
-          <div className='flex gap-2.5 justify-end mt-4'>
+          <div className='mt-4 flex justify-end gap-2.5'>
             <Button size='sm' family='secondary'>
               Cancelar
             </Button>

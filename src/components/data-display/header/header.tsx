@@ -8,17 +8,15 @@ export function Header({ title, description, backButton }: HeaderProps) {
   return (
     <div>
       {backButton && (
-        <div className='pb-3'>
-          <Button family='tertiary' onClick={backButton.onClick}>
-            <Button.Icon>
-              <IconChevronLeft size={16} />
-            </Button.Icon>
-            {backButton.title}
-          </Button>
-        </div>
+        <Button family='tertiary' onClick={backButton.onClick}>
+          <Button.Icon>
+            <IconChevronLeft size={16} />
+          </Button.Icon>
+          {backButton.title}
+        </Button>
       )}
 
-      <h2 className='font-extrabold text-[1.75rem] text-title-default'>
+      <h2 className='text-title-default text-[1.75rem] leading-none font-extrabold'>
         {title}
       </h2>
       {description && (

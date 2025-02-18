@@ -10,7 +10,7 @@ export function Sidebar({ children }: SidebarProps) {
 
   return (
     <div className='flex'>
-      <div className='w-full max-w-[300px] px-6 py-8 border-r border-gray-200 h-[calc(100vh-80px)]'>
+      <div className='h-[calc(100vh-80px)] w-full max-w-[300px] border-r border-gray-200 px-6 py-8'>
         <SidebarItem isActive title='Cardápio' icon={<IconBook size={24} />} />
         <SidebarItem
           title='Minha Loja'
@@ -22,9 +22,7 @@ export function Sidebar({ children }: SidebarProps) {
           onClick={() => handleLogout()}
         />
       </div>
-      <div className='p-6 w-full h-[calc(100vh-80px)] overflow-y-scroll'>
-        {children}
-      </div>
+      {children}
     </div>
   );
 }

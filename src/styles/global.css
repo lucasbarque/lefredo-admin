@@ -6,6 +6,7 @@ html {
 
 @theme {
   --font-sans: 'Nunito Sans', sans-serif;
+
   --color-title-default: #393939;
   --color-title-secondary: #2e2e2e;
   --color-text-default: #adadb5;
