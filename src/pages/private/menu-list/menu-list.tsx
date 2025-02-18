@@ -51,7 +51,12 @@ export function MenuList() {
       />
 
       <div className='pt-14 flex items-center justify-end'>
-        <Button leftIcon={<IconPlus size={24} />}>Adicionar categoria</Button>
+        <Button>
+          <Button.Icon>
+            <IconPlus size={24} />
+          </Button.Icon>
+          Adicionar categoria
+        </Button>
       </div>
       <div>
         <h2 className='text-2xl text-title-default font-medium'>Editar</h2>

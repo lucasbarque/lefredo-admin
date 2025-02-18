@@ -33,7 +33,11 @@ export function FirstCategoryCreate() {
             <CategoryItem />
             <CategoryItem />
             <CategoryItem />
-            <Button leftIcon={<IconPlus size={16} />} family='tertiary'>
+
+            <Button family='tertiary'>
+              <Button.Icon>
+                <IconPlus size={16} />
+              </Button.Icon>
               Criar outra categoria
             </Button>
           </div>

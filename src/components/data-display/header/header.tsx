@@ -9,11 +9,10 @@ export function Header({ title, description, backButton }: HeaderProps) {
     <div>
       {backButton && (
         <div className='pb-3'>
-          <Button
-            family='tertiary'
-            leftIcon={<IconChevronLeft size={16} />}
-            onClick={backButton.onClick}
-          >
+          <Button family='tertiary' onClick={backButton.onClick}>
+            <Button.Icon>
+              <IconChevronLeft size={16} />
+            </Button.Icon>
             {backButton.title}
           </Button>
         </div>

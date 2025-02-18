@@ -49,11 +49,10 @@ export function CategoryList({ category }: CategoryListProps) {
           {category.title}
         </div>
         <div className='flex items-center gap-6'>
-          <Button
-            leftIcon={<IconPlus size={16} />}
-            family='secondary'
-            size='sm'
-          >
+          <Button family='secondary' size='sm'>
+            <Button.Icon>
+              <IconPlus size={16} />
+            </Button.Icon>
             Adicionar item
           </Button>
           <ToggleSwitch label='Ativado' id='teste' />
