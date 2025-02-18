@@ -38,6 +38,7 @@ export function CreateCategory() {
               placeholder='Obs: Esse texto que será exibido em todos os produtos desta categoria'
               error={errors.observations?.message}
               isOptional
+              maxLength={100}
             />
           </div>
           <div className='flex gap-2.5 justify-end mt-4'>

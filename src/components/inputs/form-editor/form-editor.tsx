@@ -166,6 +166,7 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           <IconLink />
         </button>
         <button
+          type='button'
           onClick={() => editor.chain().focus().unsetLink().run()}
           className={
             'text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200'
