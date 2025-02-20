@@ -9,7 +9,8 @@ export type ROUTE =
   | 'ADD_ITEM_DETAILS'
   | 'ADD_ITEM_PHOTOS'
   | 'ADD_ITEM_ADDITIONALS'
-  | 'ADD_ITEM_CLASSIFICATION';
+  | 'ADD_ITEM_CLASSIFICATION'
+  | 'ADD_ITEM_FLAVORS';
 
 export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   INDEX: '/',
@@ -23,4 +24,5 @@ export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   ADD_ITEM_PHOTOS: '/add-item-photos',
   ADD_ITEM_ADDITIONALS: '/add-item-additionals',
   ADD_ITEM_CLASSIFICATION: '/add-item-classification',
+  ADD_ITEM_FLAVORS: '/add-item-flavors',
 };

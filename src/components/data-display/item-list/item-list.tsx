@@ -55,16 +55,16 @@ export function ItemList({
 
   return (
     <div className='flex items-center px-6 py-3'>
-      <div className='w-[70%] flex items-center gap-4'>
+      <div className='flex w-[70%] items-center gap-4'>
         {coverPhoto ? (
-          <img className='w-16 h-16 rounded-2xl' src={coverPhoto} alt='' />
+          <img className='h-16 w-16 rounded-2xl' src={coverPhoto} alt='' />
         ) : (
-          <div className='border border-dashed w-16 h-16 rounded-2xl border-line items-center justify-center flex'>
+          <div className='border-line flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed'>
             <IconCamera size={24} className='text-border-default' />
           </div>
         )}
 
-        <div className='text-sm font-medium text-title-secondary'>{title}</div>
+        <div className='text-title-secondary text-sm font-medium'>{title}</div>
       </div>
       <form className='w-[15%]'>
         <InputCashout
@@ -78,7 +78,7 @@ export function ItemList({
         />
       </form>
       <div className='w-[15%]'>
-        <div className='flex items-center w-full justify-center'>
+        <div className='flex w-full items-center justify-center'>
           <div className='flex-1'>
             <ToggleSwitch label='Ativado' id='teste2' />
           </div>
@@ -87,7 +87,7 @@ export function ItemList({
               <DropdownMenu.Trigger>
                 <IconDotsVertical
                   size={22}
-                  className='text-gray-600 cursor-pointer z-1'
+                  className='z-1 cursor-pointer text-gray-600'
                 />
               </DropdownMenu.Trigger>
               <DropdownMenu.Content

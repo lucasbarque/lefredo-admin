@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AddItemAdditionals } from '@pages/private/add-item-additionals';
 import { AddItemClassification } from '@pages/private/add-item-classification';
 import { AddItemDetails } from '@pages/private/add-item-details';
+import { AddItemFlavors } from '@pages/private/add-item-flavors';
 import { AddItemPhotos } from '@pages/private/add-item-photos';
 import { CreateCategory } from '@pages/private/create-category';
 import { FirstCategoryCreate } from '@pages/private/first-category-create';
@@ -60,6 +61,10 @@ export default function MainRoutes() {
             <Route
               path={DEFAULT_ROUTES.ADD_ITEM_CLASSIFICATION}
               element={<AddItemClassification />}
+            />
+            <Route
+              path={DEFAULT_ROUTES.ADD_ITEM_FLAVORS}
+              element={<AddItemFlavors />}
             />
           </Route>
         </Route>

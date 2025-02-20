@@ -12,8 +12,6 @@ export function AddItemDetails() {
   const { handleSubmit, onSubmit, control, errors, isSubmitting } =
     useAddItemDetails();
 
-  console.log(errors);
-
   return (
     <div className='flex h-[calc(100vh-80px)] w-full flex-col overflow-y-auto'>
       <div className='flex items-end justify-between px-6 pt-6'>

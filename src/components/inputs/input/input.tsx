@@ -65,7 +65,7 @@ export function Input({
                     error,
                   'focus:ring-0': !error,
                 },
-                'border-border-default text-title-default outline-brand-default h-11 w-full rounded-lg border px-[15px] font-normal placeholder-gray-500'
+                'border-border-default text-title-default outline-brand-default h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500'
               )}
             />
           )}

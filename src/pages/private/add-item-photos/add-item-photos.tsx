@@ -23,7 +23,7 @@ export function AddItemPhotos() {
       <div className='p-6'>
         <UploadImages
           label='Fotos do item'
-          additionalInfo='Resolução sugerida 533x430 | Formatos: JPG, JPEG, PNG - Máximo 10MB '
+          additionalInfo='Resolução sugerida 533x430 | Formatos: JPG, JPEG, PNG - Máximo 10MB'
           currentImages={images}
           onSubmit={setImages}
         />
