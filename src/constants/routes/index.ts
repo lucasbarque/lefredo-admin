@@ -8,7 +8,8 @@ export type ROUTE =
   | 'CREATE_CATEGORY'
   | 'ADD_ITEM_DETAILS'
   | 'ADD_ITEM_PHOTOS'
-  | 'ADD_ITEM_ADDITIONALS';
+  | 'ADD_ITEM_ADDITIONALS'
+  | 'ADD_ITEM_CLASSIFICATION';
 
 export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   INDEX: '/',
@@ -21,4 +22,5 @@ export const DEFAULT_ROUTES: { [key in ROUTE]: string } = {
   ADD_ITEM_DETAILS: '/add-item-details',
   ADD_ITEM_PHOTOS: '/add-item-photos',
   ADD_ITEM_ADDITIONALS: '/add-item-additionals',
+  ADD_ITEM_CLASSIFICATION: '/add-item-classification',
 };
