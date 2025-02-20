@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { AddItemDetails } from '@pages/private/add-item-details';
+import { AddItemPhotos } from '@pages/private/add-item-photos';
 import { CreateCategory } from '@pages/private/create-category';
 import { FirstCategoryCreate } from '@pages/private/first-category-create';
 import { FirstStepsMenu } from '@pages/private/first-steps-menu';
@@ -44,6 +45,10 @@ export default function MainRoutes() {
             <Route
               path={DEFAULT_ROUTES.ADD_ITEM_DETAILS}
               element={<AddItemDetails />}
+            />
+            <Route
+              path={DEFAULT_ROUTES.ADD_ITEM_PHOTOS}
+              element={<AddItemPhotos />}
             />
           </Route>
         </Route>

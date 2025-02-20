@@ -10,13 +10,20 @@ html {
   --color-title-default: #393939;
   --color-title-secondary: #2e2e2e;
   --color-text-default: #adadb5;
+
+  --color-slate-200: #e9ebf0;
+  --color-slate-300: #f2f4f7;
+
   --color-gray-300: #f9fafb;
   --color-gray-400: #fafafa;
   --color-gray-500: #a0a6ad;
   --color-gray-600: #79818a;
   --color-gray-700: #3f4d54;
+
   --color-line: #dbdbdb;
+
   --color-border-default: #dadee3;
+
   --color-brand-default: #de6c53;
   --color-brand-default-hover: #de6c53;
   --color-brand-hover: #c3542b;
