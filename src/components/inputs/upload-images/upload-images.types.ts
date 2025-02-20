@@ -1,5 +1,7 @@
+import { Crop } from './crop-modal.types';
+
 export interface CropData {
-  crop: { x: number; y: number };
+  crop: Crop;
   zoom: number;
   croppedArea: { x: number; y: number; width: number; height: number };
 }
@@ -13,6 +15,6 @@ export interface FileUploaded {
 export interface UploadImageProps {
   label: string;
   currentImages?: FileUploaded[];
-  aditionalInfo?: string;
+  additionalInfo?: string;
   onSubmit?: (files: FileUploaded[]) => void;
 }
