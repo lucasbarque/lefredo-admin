@@ -81,7 +81,7 @@ export function InputCashout({
                   'border-red-500 bg-red-500/5 ring-0': error,
                   'focus:ring-0': !error,
                 },
-                'border-line font-nunito-sans text-title-default placeholder:text-text-default hover:border-gray-3 focus:border-brand-default focus:ring-brand-default focus:text-title-default disabled:bg-gray-2 disabled:text-gray-6 relative w-full border px-4 py-2 outline-0 transition-all duration-200 focus:ring-[0.5px] focus:ring-offset-[0px]'
+                'border-line font-nunito-sans text-title-default placeholder:text-text-default hover:border-gray-3 focus:border-brand-default focus:ring-brand-default focus:text-title-default disabled:bg-gray-2 disabled:text-gray-6 relative h-11 w-full border px-4 outline-0 transition-all duration-200 focus:ring-[0.5px] focus:ring-offset-[0px]'
               )}
               {...rest}
             />
