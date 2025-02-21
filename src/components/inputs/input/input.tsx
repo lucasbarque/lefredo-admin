@@ -1,8 +1,14 @@
+'use client';
+
 import { useState } from 'react';
 
 import { IconEye, IconEyeClosed } from '@tabler/icons-react';
 import { clsx } from 'clsx';
-import { Controller } from 'react-hook-form';
+import {
+  Controller,
+  ControllerRenderProps,
+  FieldValues,
+} from 'react-hook-form';
 
 import { InputProps } from './input.types';
 
@@ -12,15 +18,28 @@ export function Input({
   error,
   name,
   control,
+  countCharacters,
+  countCharacterslength = 40,
   ...rest
 }: InputProps) {
   const [viewPassword, setViewPassword] = useState(false);
+  const [count, setCount] = useState(0);
+
+  const onChangeText = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: ControllerRenderProps<FieldValues, string>
+  ) => {
+    field.onChange(event);
+
+    const value = event.target.value;
+    setCount(value.length);
+  };
 
   return (
-    <div className='flex flex-col w-full'>
+    <div className='flex w-full flex-col'>
       {label && (
         <label
-          className={clsx('text-sm font-medium text-gray-600', {
+          className={clsx('font-work-sans text-sm font-medium text-gray-600', {
             'text-red-500': error,
           })}
           htmlFor={name}
@@ -41,13 +60,14 @@ export function Input({
               }
               id={name}
               value={field.value}
-              onChange={field.onChange}
+              onChange={(e) => onChangeText(e, field)}
               className={clsx(
                 {
-                  'border-red-500 ring-red-500 focus:ring-red-500': error,
-                  'focus:ring-0 focus:ring-brand-default': !error,
+                  'border-red-500 bg-red-500/5 ring-red-500 focus:ring-red-500':
+                    error,
+                  'focus:ring-0': !error,
                 },
-                'h-11 w-full rounded-lg border border-border-default px-[15px] font-normal text-gray-500 placeholder-gray-500'
+                'border-border-default text-title-default outline-brand-default h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500'
               )}
             />
           )}
@@ -71,14 +91,26 @@ export function Input({
         )}
       </div>
 
-      {error && (
-        <div
-          data-testid={`error-input-${name}`}
-          className='mt-[6px] flex items-center gap-[6px] text-sm text-red-500'
-        >
-          {error}
-        </div>
-      )}
+      <div className='justify-betweeen mt-[6px] flex items-center'>
+        {error && (
+          <div
+            data-testid={`error-input-${name}`}
+            className='flex items-center gap-[6px] text-sm text-red-500'
+          >
+            {error}
+          </div>
+        )}
+
+        {countCharacters && (
+          <span
+            className={clsx('ml-auto text-sm text-gray-600', {
+              'text-red-500': error,
+            })}
+          >
+            {count}/{countCharacterslength}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

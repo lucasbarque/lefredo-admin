@@ -1,42 +1,25 @@
-import clsx from 'clsx';
+import { ButtonIconProps, ButtonProps } from './button.types';
 
-import { ButtonProps } from './button.types';
-
-export function Button({
-  children,
+function Button({
   family = 'primary',
   size = 'md',
   fullSize = false,
-  leftIcon,
-  rightIcon,
   ...props
 }: ButtonProps) {
   return (
     <button
-      className={clsx(
-        'flex items-center  cursor-pointer justify-center gap-2 rounded-lg font-medium transition duration-300 ease-in-out disabled:opacity-40',
-        {
-          'h-10 px-4': size === 'sm',
-          'h-11 px-5': size === 'md',
-          'h-14 px-5': size === 'lg',
-          'w-full': fullSize,
-
-          'hover:bg-brand-hover bg-brand-default text-white':
-            family === 'primary',
-          'hover:bg-[#3F4D54]/6 bg-white text-brand-default border border-brand-default':
-            family === 'secondary',
-
-          'hover:text-button-hover bg-white text-brand-default':
-            family === 'tertiary',
-        }
-      )}
+      data-family={family}
+      data-size={size}
+      data-fullsize={fullSize ? 'true' : 'false'}
+      className='data-[family=primary]:bg-brand-default data-[family=primary]:hover:bg-brand-hover data-[family=secondary]:text-brand-default data-[family=secondary]:border-brand-default data-[family=tertiary]:text-brand-default data-[family=tertiary]:hover:text-button-hover flex cursor-pointer items-center justify-center gap-2 rounded-lg font-medium transition duration-300 ease-in-out disabled:opacity-40 data-[family=primary]:text-white data-[family=secondary]:border data-[family=secondary]:bg-white data-[family=secondary]:hover:bg-[#3F4D54]/6 data-[family=tertiary]:bg-white data-[family=tertiary]:!px-0 data-[fullsize=true]:w-full data-[size=lg]:h-14 data-[size=lg]:px-5 data-[size=md]:h-11 data-[size=md]:px-5 data-[size=sm]:h-10 data-[size=sm]:px-4'
       {...props}
-    >
-      {leftIcon && leftIcon}
-
-      {children}
-
-      {rightIcon && rightIcon}
-    </button>
+    />
   );
 }
+
+export function ButtonIcon({ ...props }: ButtonIconProps) {
+  return <span className='flex items-center' {...props} />;
+}
+
+Button.Icon = ButtonIcon;
+export { Button };

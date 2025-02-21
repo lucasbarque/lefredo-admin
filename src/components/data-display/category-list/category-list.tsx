@@ -1,8 +1,16 @@
-import { IconChevronUp, IconDotsVertical, IconPlus } from '@tabler/icons-react';
+import {
+  IconChevronUp,
+  IconDotsVertical,
+  IconEdit,
+  IconListDetails,
+  IconPlus,
+  IconTrash,
+} from '@tabler/icons-react';
 import clsx from 'clsx';
 
-import { Button } from '@components/inputs/button';
-import { ToggleSwitch } from '@components/inputs/toggle-switch';
+import { Button } from '@/components/inputs/button';
+import { ToggleSwitch } from '@/components/inputs/toggle-switch';
+import { DropdownMenu } from '@/components/navigation/dropdown-menu';
 
 import { ItemList } from '../item-list';
 
@@ -32,49 +40,79 @@ interface CategoryListProps {
 export function CategoryList({ category }: CategoryListProps) {
   return (
     <div
-      className={clsx('border border-line pt-6 rounded-md', {
+      className={clsx('border-line rounded-md border pt-6', {
         'pb-6': category.items.length === 0,
       })}
     >
       <div className='flex items-center justify-between px-6'>
-        <div className='font-bold text-[22px] text-title-default'>
+        <div className='text-title-default text-[22px] font-bold'>
           {category.title}
         </div>
         <div className='flex items-center gap-6'>
-          <Button
-            leftIcon={<IconPlus size={16} />}
-            family='secondary'
-            size='sm'
-          >
+          <Button family='secondary' size='sm'>
+            <Button.Icon>
+              <IconPlus size={16} />
+            </Button.Icon>
             Adicionar item
           </Button>
           <ToggleSwitch label='Ativado' id='teste' />
           <div className='flex items-center gap-2'>
-            <IconChevronUp size={22} className='text-gray-600 cursor-pointer' />
-            <IconDotsVertical
-              size={22}
-              className='text-gray-600 cursor-pointer'
-            />
+            <IconChevronUp size={22} className='cursor-pointer text-gray-600' />
+
+            <DropdownMenu>
+              <DropdownMenu.Item>
+                <DropdownMenu.Trigger>
+                  <IconDotsVertical
+                    size={22}
+                    className='cursor-pointer text-gray-600'
+                  />
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content
+                  dropdownItems={[
+                    {
+                      icon: <IconEdit size={20} className='text-gray-700' />,
+                      linkProps: { href: '#' },
+                      title: 'Editar categoria',
+                    },
+                    {
+                      icon: (
+                        <IconListDetails size={20} className='text-gray-700' />
+                      ),
+                      linkProps: { href: '#' },
+                      title: 'Duplicar item',
+                    },
+                  ]}
+                  lastDropdownItems={[
+                    {
+                      icon: <IconTrash size={20} className='text-gray-700' />,
+                      linkProps: { href: '#' },
+                      title: 'Excluir item',
+                    },
+                  ]}
+                />
+              </DropdownMenu.Item>
+            </DropdownMenu>
           </div>
         </div>
       </div>
+
       <div>
         {category.items.length > 0 && (
-          <div className='mt-6 flex items-center px-6 border-b border-line pb-3'>
-            <div className='font-semibold text-title-secondary w-[70%]'>
+          <div className='border-line mt-6 flex items-center border-b px-6 pb-3'>
+            <div className='text-title-secondary w-[70%] font-semibold'>
               Item
             </div>
-            <div className='font-semibold text-title-secondary w-[15%] text-center'>
+            <div className='text-title-secondary w-[15%] text-center font-semibold'>
               Preço
             </div>
-            <div className='font-semibold text-title-secondary w-[15%] text-center'>
+            <div className='text-title-secondary w-[15%] text-center font-semibold'>
               Status de venda
             </div>
           </div>
         )}
 
         {category.items.length > 0 && (
-          <div className='flex flex-col divide-line divide-y-1'>
+          <div className='divide-line flex flex-col divide-y-1'>
             {category.items.map((item) => (
               <ItemList
                 key={item.id}

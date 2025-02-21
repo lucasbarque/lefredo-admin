@@ -39,24 +39,21 @@ export function InputCashout({
     <div className='flex w-full flex-col'>
       {label && (
         <label
-          className={clsx('mb-[6px] font-medium', {
-            'text-gray-400': rest.disabled,
-            'text-gray-500': !rest.disabled,
+          className={clsx('text-sm font-medium text-gray-600', {
+            'text-red-500': error,
           })}
           htmlFor={name}
         >
-          <div className='flex items-center justify-between w-full'>
-            {label}
-          </div>
+          {label}
           {isOptional && (
-            <span className='ml-2 text-body-3-regular'>(opcional)</span>
+            <span className='text-brand-text text-xs'> (Opcional)</span>
           )}
         </label>
       )}
 
       <div className='relative flex w-full items-center'>
         {withSideLabel && sideBarPosition === 'left' && (
-          <div className='flex h-full w-[53px] items-center justify-center rounded-s-md border-b border-l border-t border-line py-2 text-text-default'>
+          <div className='border-line text-text-default flex h-11 w-[53px] items-center justify-center rounded-s-md border-t border-b border-l'>
             {sideLabelText}
           </div>
         )}
@@ -81,10 +78,10 @@ export function InputCashout({
                   'rounded-e-md': sideBarPosition === 'left',
                   'rounded-s-md': sideBarPosition === 'right',
                   'rounded-md': !withSideLabel,
-                  'bg-[#FCEDEF] ring-2 ring-danger-pure': error,
-                  'focus:ring-brand-medium-2': !error,
+                  'border-red-500 bg-red-500/5 ring-0': error,
+                  'focus:ring-0': !error,
                 },
-                'relative w-full border border-line px-4 py-2 font-nunito-sans text-text-default outline-0 transition-all duration-200 placeholder:text-text-default hover:border-gray-3 focus:border-brand-default focus:ring-[0.5px] focus:ring-brand-default focus:ring-offset-[0px] focus:text-title-default disabled:bg-gray-2 disabled:text-gray-6'
+                'border-line font-nunito-sans text-title-default placeholder:text-text-default hover:border-gray-3 focus:border-brand-default focus:ring-brand-default focus:text-title-default disabled:bg-gray-2 disabled:text-gray-6 relative h-11 w-full border px-4 outline-0 transition-all duration-200 focus:ring-[0.5px] focus:ring-offset-[0px]'
               )}
               {...rest}
             />
@@ -92,7 +89,7 @@ export function InputCashout({
         />
 
         {withSideLabel && sideBarPosition === 'right' && (
-          <div className='flex h-full w-[53px] items-center justify-center rounded-e-md border-b border-r border-t border-gray-4 py-3 font-nunito-sans text-gray-5'>
+          <div className='border-gray-4 font-nunito-sans text-gray-5 flex h-full w-[53px] items-center justify-center rounded-e-md border-t border-r border-b py-3'>
             {sideLabelText}
           </div>
         )}
