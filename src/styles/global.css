@@ -30,6 +30,8 @@ html {
   --color-brand-hover: #c3542b;
   --color-button-hover: #ee5c3c;
 
+  --color-danger-light: #fcf0f1;
+
   --drop-shadow-mobile: 4px 7px 20.6px rgba(0, 0, 0, 0.11);
 }
 
