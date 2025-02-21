@@ -8,5 +8,9 @@ export interface UploadImageProps {
   currentImage?: FileUploaded;
   footerLabel?: string;
   additionalInfo?: string;
+  cropConfig: {
+    width: number;
+    height: number;
+  };
   onSubmit?: (file?: FileUploaded) => void;
 }

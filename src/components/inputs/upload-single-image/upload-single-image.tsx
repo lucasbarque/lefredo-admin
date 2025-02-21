@@ -10,6 +10,7 @@ export function UploadSingleImage({
   additionalInfo,
   onSubmit,
   currentImage,
+  cropConfig,
 }: UploadImageProps) {
   const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState('');
@@ -17,9 +18,9 @@ export function UploadSingleImage({
   const [isImageSelected, setIsImageSelected] = useState(false);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
+
   const [croppedArea, setCroppedArea] = useState({
-    height: 1080,
-    width: 1920,
+    ...cropConfig,
     x: 0,
     y: 0,
   });
@@ -59,7 +60,7 @@ export function UploadSingleImage({
   };
 
   const onSubmitImage = () => {
-    const image = new Image(1280, 720);
+    const image = new Image(cropConfig.width, cropConfig.height);
     image.src = fileUrl;
 
     const canvas = document.createElement('canvas');

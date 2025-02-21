@@ -76,6 +76,7 @@ export function FormAddFlavor() {
           additionalInfo='Resolução sugerida 533x430'
           currentImage={imageData}
           onSubmit={setImageData}
+          cropConfig={{ width: 533, height: 430 }}
         />
       </div>
       <div className='mt-2 flex items-center justify-end gap-2'>

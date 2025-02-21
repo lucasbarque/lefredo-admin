@@ -11,6 +11,7 @@ import { FirstStepsMenu } from '@pages/private/first-steps-menu';
 import { Home } from '@pages/private/home';
 import { LayoutsPrivate } from '@pages/private/layouts';
 import { MenuList } from '@pages/private/menu-list';
+import { MyStore } from '@pages/private/my-store';
 import { Login } from '@pages/public/login';
 
 import { DEFAULT_ROUTES } from '../constants/routes';
@@ -66,6 +67,7 @@ export default function MainRoutes() {
               path={DEFAULT_ROUTES.ADD_ITEM_FLAVORS}
               element={<AddItemFlavors />}
             />
+            <Route path={DEFAULT_ROUTES.MY_STORE} element={<MyStore />} />
           </Route>
         </Route>
       </Routes>
