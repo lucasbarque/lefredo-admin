@@ -7,6 +7,7 @@ export type InputProps = {
   error?: string;
   viewPassword?: boolean;
   isPassword?: boolean;
+  isOptional?: boolean;
   countCharacters?: boolean;
   countCharacterslength?: number;
 } & InputHTMLAttributes<HTMLElement>;

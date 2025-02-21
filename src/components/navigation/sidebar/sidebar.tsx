@@ -1,4 +1,6 @@
-'use client'
+'use client';
+
+import { useClerk } from '@clerk/nextjs';
 import { IconBook, IconBuildingStore, IconLogout2 } from '@tabler/icons-react';
 
 import { SidebarItem } from '@/components/navigation/sidebar-item';
@@ -6,6 +8,7 @@ import { SidebarItem } from '@/components/navigation/sidebar-item';
 import { SidebarProps } from './sidebar.types';
 
 export function Sidebar({ children }: SidebarProps) {
+  const { signOut } = useClerk();
 
   return (
     <div className='flex'>
@@ -18,7 +21,7 @@ export function Sidebar({ children }: SidebarProps) {
         <SidebarItem
           title='Sair'
           icon={<IconLogout2 size={24} />}
-          onClick={() => {}}
+          onClick={() => signOut({ redirectUrl: '/login' })}
         />
       </div>
       {children}

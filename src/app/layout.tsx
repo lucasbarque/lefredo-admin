@@ -1,5 +1,7 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Nunito_Sans, Work_Sans } from 'next/font/google';
+import { Toaster } from 'sonner';
 
 import '@/styles/global.css';
 
@@ -26,11 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='pt-BR'
-      className={`${nunitoSans.variable} ${workSans.variable}`}
-    >
-      <body>{children}</body>
-    </html>
+    <ClerkProvider>
+      <html
+        lang='pt-BR'
+        className={`${nunitoSans.variable} ${workSans.variable}`}
+      >
+        <body>
+          <Toaster richColors />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 
-import { IconEye, IconEyeClosed } from '@tabler/icons-react';
+import {
+  IconExclamationCircle,
+  IconEye,
+  IconEyeClosed,
+} from '@tabler/icons-react';
 import { clsx } from 'clsx';
 import {
   Controller,
@@ -12,8 +16,40 @@ import {
 
 import { InputProps } from './input.types';
 
+export function InputErrorFeedback({ error }: { error: string }) {
+  return (
+    <div className='flex items-center gap-1 text-red-500'>
+      <IconExclamationCircle size={16} />
+      <span>{error}</span>
+    </div>
+  );
+}
+
+export function InputLabel({
+  name,
+  label,
+  isOptional,
+}: {
+  name: string;
+  label: string;
+  isOptional: boolean;
+}) {
+  return (
+    <label className='font-work-sans font-medium text-gray-600' htmlFor={name}>
+      {label}
+      {isOptional && (
+        <span className='font-work-sans text-sm font-normal text-gray-500'>
+          {' '}
+          (Opcional)
+        </span>
+      )}
+    </label>
+  );
+}
+
 export function Input({
   isPassword,
+  isOptional = false,
   label,
   error,
   name,
@@ -36,16 +72,12 @@ export function Input({
   };
 
   return (
-    <div className='flex w-full flex-col'>
+    <div
+      className='group flex w-full flex-col'
+      data-is-error={error ? 'true' : 'false'}
+    >
       {label && (
-        <label
-          className={clsx('font-work-sans text-sm font-medium text-gray-600', {
-            'text-red-500': error,
-          })}
-          htmlFor={name}
-        >
-          {label}
-        </label>
+        <InputLabel name={name} label={label} isOptional={isOptional} />
       )}
 
       <div className='relative flex w-full items-center'>
@@ -61,14 +93,7 @@ export function Input({
               id={name}
               value={field.value}
               onChange={(e) => onChangeText(e, field)}
-              className={clsx(
-                {
-                  'border-red-500 bg-red-500/5 ring-red-500 focus:ring-red-500':
-                    error,
-                  'focus:ring-0': !error,
-                },
-                'border-border-default text-title-default outline-brand-default h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500'
-              )}
+              className='border-border-default text-title-default outline-brand-default group-data-[is-error=true]:bg-danger-light h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500 group-data-[is-error=true]:border-red-500'
             />
           )}
         />
@@ -92,14 +117,7 @@ export function Input({
       </div>
 
       <div className='justify-betweeen mt-[6px] flex items-center'>
-        {error && (
-          <div
-            data-testid={`error-input-${name}`}
-            className='flex items-center gap-[6px] text-sm text-red-500'
-          >
-            {error}
-          </div>
-        )}
+        {error && <InputErrorFeedback error={error} />}
 
         {countCharacters && (
           <span
