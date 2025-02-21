@@ -1,6 +1,6 @@
 import { IconChevronLeft } from '@tabler/icons-react';
 
-import { Button } from '@components/inputs/button';
+import { Button } from '@/components/inputs/button';
 
 import { HeaderProps } from './header.types';
 
@@ -8,7 +8,7 @@ export function Header({ title, description, backButton }: HeaderProps) {
   return (
     <div>
       {backButton && (
-        <Button family='tertiary' onClick={backButton.onClick}>
+        <Button family='tertiary' size='sm' onClick={backButton.onClick}>
           <Button.Icon>
             <IconChevronLeft size={16} />
           </Button.Icon>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ToggleSwitch } from '@components/inputs/toggle-switch';
+import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 
 import { ClassificatinItemProps } from './classification-item.types';
 

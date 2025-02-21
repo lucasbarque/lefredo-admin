@@ -5,7 +5,8 @@ html {
 }
 
 @theme {
-  --font-sans: 'Nunito Sans', sans-serif;
+  --font-work-sans: var(--font-work-sans);
+  --font-sans: var(--font-nunito);
 
   --color-title-default: #393939;
   --color-title-secondary: #2e2e2e;

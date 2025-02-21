@@ -1,6 +1,6 @@
 import Cropper from 'react-easy-crop';
 
-import Modal from '@components/data-display/modal/modal';
+import Modal from '@/components/data-display/modal/modal';
 
 import { CropModalProps } from './crop-modal.types';
 

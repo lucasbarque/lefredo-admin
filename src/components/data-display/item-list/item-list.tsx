@@ -1,4 +1,4 @@
-import { yupResolver } from '@hookform/resolvers/yup';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   IconCamera,
   IconDotsVertical,
@@ -6,16 +6,13 @@ import {
   IconListDetails,
   IconTrash,
 } from '@tabler/icons-react';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
-import * as yup from 'yup';
+import { z } from 'zod';
 
-import { InputCashout } from '@components/inputs/input-cashout/input-cashout';
-import { ToggleSwitch } from '@components/inputs/toggle-switch';
-import { DropdownMenu } from '@components/navigation/dropdown-menu';
-
-interface FormPrice {
-  price?: string;
-}
+import { InputCashout } from '@/components/inputs/input-cashout';
+import { ToggleSwitch } from '@/components/inputs/toggle-switch';
+import { DropdownMenu } from '@/components/navigation/dropdown-menu';
 
 interface ItemListProps {
   id: string;
@@ -24,6 +21,14 @@ interface ItemListProps {
   isActive: boolean;
   coverPhoto?: string;
 }
+const inputSchema = z.object({
+  price: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .transform((value) => value.replace('.', '').replace(',', '.')),
+});
+
+type FormPriceSchema = z.infer<typeof inputSchema>;
 
 export function ItemList({
   id,
@@ -32,17 +37,10 @@ export function ItemList({
   isActive,
   coverPhoto,
 }: ItemListProps) {
-  const inputSchema = yup.object({
-    price: yup
-      .string()
-      .transform((value) => value.replace('.', '').replace(',', '.'))
-      .matches(/^\d+(\.\d{1,2})?$/),
-  });
-
   console.log(isActive);
 
-  const { control } = useForm<FormPrice>({
-    resolver: yupResolver(inputSchema),
+  const { control } = useForm<FormPriceSchema>({
+    resolver: zodResolver(inputSchema),
     defaultValues: {
       price:
         new Intl.NumberFormat('pt-BR', {
@@ -53,11 +51,19 @@ export function ItemList({
     },
   });
 
+  console.log(coverPhoto);
+
   return (
     <div className='flex items-center px-6 py-3'>
       <div className='flex w-[70%] items-center gap-4'>
         {coverPhoto ? (
-          <img className='h-16 w-16 rounded-2xl' src={coverPhoto} alt='' />
+          <Image
+            className='h-16 w-16 rounded-2xl'
+            width={64}
+            height={64}
+            src={coverPhoto}
+            alt=''
+          />
         ) : (
           <div className='border-line flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed'>
             <IconCamera size={24} className='text-border-default' />

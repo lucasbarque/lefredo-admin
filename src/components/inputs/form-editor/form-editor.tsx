@@ -35,7 +35,7 @@ import StarterKit from '@tiptap/starter-kit';
 import clsx from 'clsx';
 import EmojiPicker from 'emoji-picker-react';
 
-import '@styles/tiptap.css';
+import '@/styles/tiptap.css';
 
 import { FormEditorProps, FormEditorRefProps } from './form-editor.types';
 
@@ -62,21 +62,21 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
   }, [editor]);
 
   return (
-    <div className='border-b-none flex min-h-[44px] w-full flex-wrap items-center justify-start gap-1 rounded-t-md border-b-transparent px-4 bg-gray-300'>
+    <div className='border-b-none flex min-h-[44px] w-full flex-wrap items-center justify-start gap-1 rounded-t-md border-b-transparent bg-gray-300 px-4'>
       <button
         type='button'
-        className='text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200'
+        className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200'
         onClick={() => setOpenMenuEmoji(true)}
       >
         <IconMoodSmileBeam size={24} />
       </button>
-      <div className='px-4 flex gap-1 items-center'>
+      <div className='flex items-center gap-1 px-4'>
         <button
           type='button'
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={`${
-            editor.isActive('bold') && 'text-gray-800 bg-gray-200 '
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            editor.isActive('bold') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconBold size={24} />
         </button>
@@ -85,8 +85,8 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           type='button'
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={`${
-            editor.isActive('italic') && 'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            editor.isActive('italic') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconItalic size={24} />
         </button>
@@ -94,8 +94,8 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           type='button'
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={`${
-            editor.isActive('underline') && 'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center hover:bg-gray-200 cursor-pointer`}
+            editor.isActive('underline') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconUnderline size={24} />
         </button>
@@ -103,20 +103,20 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           type='button'
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={`${
-            editor.isActive('strike') && 'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center hover:bg-gray-200 cursor-pointer`}
+            editor.isActive('strike') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconStrikethrough size={24} />
         </button>
       </div>
-      <div className='flex gap-1 items-center'>
+      <div className='flex items-center gap-1'>
         <button
           type='button'
           onClick={() => editor.chain().focus().setTextAlign('left').run()}
           className={`${
             editor.isActive({ textAlign: 'left' }) &&
-            'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconAlignLeft size={24} />
         </button>
@@ -126,8 +126,8 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           onClick={() => editor.chain().focus().setTextAlign('center').run()}
           className={`${
             editor.isActive({ textAlign: 'center' }) &&
-            'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconAlignCenter size={24} />
         </button>
@@ -136,32 +136,32 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           onClick={() => editor.chain().focus().setTextAlign('right').run()}
           className={`${
             editor.isActive({ textAlign: 'right' }) &&
-            'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center hover:bg-gray-200 cursor-pointer`}
+            'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconAlignRight size={24} />
         </button>
       </div>
 
-      <div className='px-4 flex gap-1 items-center'>
+      <div className='flex items-center gap-1 px-4'>
         <button
           type='button'
           onClick={() => editor.chain().focus().toggleBulletList().run()}
           className={`${
-            editor.isActive('bulletList') && 'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            editor.isActive('bulletList') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconList />
         </button>
       </div>
 
-      <div className='flex gap-1 items-center'>
+      <div className='flex items-center gap-1'>
         <button
           type='button'
           onClick={setLink}
           className={`${
-            editor.isActive('link') && 'text-gray-800 bg-gray-200'
-          } text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200`}
+            editor.isActive('link') && 'bg-gray-200 text-gray-800'
+          } flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200`}
         >
           <IconLink />
         </button>
@@ -169,7 +169,7 @@ const MenuBar: FC<any> = ({ editor, setOpenMenuEmoji }) => {
           type='button'
           onClick={() => editor.chain().focus().unsetLink().run()}
           className={
-            'text-gray-700 rounded-md w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-200'
+            'flex h-8 w-8 cursor-pointer items-center justify-center rounded-md text-gray-700 hover:bg-gray-200'
           }
         >
           <IconUnlink />
@@ -386,7 +386,7 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
             </div>
             <div className='bg-border-default h-[2px] w-full' />
             <EditorContent
-              className='text-gray-700 max-h-[25rem] min-h-[8rem] cursor-text overflow-y-scroll [&_>_div]:min-h-[6.25rem] [&_>_div]:p-3'
+              className='max-h-[25rem] min-h-[8rem] cursor-text overflow-y-scroll text-gray-700 [&_>_div]:min-h-[6.25rem] [&_>_div]:p-3'
               editor={editor}
               style={{ height: height ? height : 'max-content' }}
             />
@@ -401,7 +401,7 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
           </div>
         )}
 
-        <div className='w-full rounded-b-md p-2'>
+        <div className='w-full rounded-b-md pt-2'>
           <div className='character-count flex w-full items-center justify-between text-xs'>
             <p className='text-gray-600'>
               {charactersRemaining()} caracteres restantes

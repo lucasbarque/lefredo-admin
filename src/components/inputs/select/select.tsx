@@ -18,7 +18,7 @@ export function Select({
     <div className='flex w-full flex-col'>
       {label && (
         <label
-          className={clsx('text-sm font-medium text-gray-600', {
+          className={clsx('font-work-sans text-sm font-medium text-gray-600', {
             'text-red-500': error,
           })}
           htmlFor={name}
@@ -30,7 +30,7 @@ export function Select({
         </label>
       )}
 
-      <div className='relative flex w-full items-center'>
+      <div className='font-work-sans relative flex w-full items-center'>
         <Controller
           control={control}
           name={name}

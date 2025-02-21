@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { IconEdit, IconX } from '@tabler/icons-react';
 
 import { ImagePreviewProps } from './image-preview.types';

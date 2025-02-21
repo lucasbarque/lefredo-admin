@@ -25,7 +25,7 @@ export const InputEditor: FC<InputEditorProps> = ({
     <div className='flex w-full flex-col' translate='no'>
       {label && (
         <label
-          className={clsx('text-sm font-medium text-gray-600', {
+          className={clsx('text-sm font-medium text-gray-600 font-work-sans', {
             'text-red-500': error,
           })}
           htmlFor={name}

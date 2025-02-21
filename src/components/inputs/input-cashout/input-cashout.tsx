@@ -53,7 +53,7 @@ export function InputCashout({
 
       <div className='relative flex w-full items-center'>
         {withSideLabel && sideBarPosition === 'left' && (
-          <div className='border-line text-text-default flex h-full w-[53px] items-center justify-center rounded-s-md border-t border-b border-l py-2'>
+          <div className='border-line text-text-default flex h-11 w-[53px] items-center justify-center rounded-s-md border-t border-b border-l'>
             {sideLabelText}
           </div>
         )}

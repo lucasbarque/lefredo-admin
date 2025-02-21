@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import { IconEye, IconEyeClosed } from '@tabler/icons-react';
@@ -37,7 +39,7 @@ export function Input({
     <div className='flex w-full flex-col'>
       {label && (
         <label
-          className={clsx('text-sm font-medium text-gray-600', {
+          className={clsx('font-work-sans text-sm font-medium text-gray-600', {
             'text-red-500': error,
           })}
           htmlFor={name}

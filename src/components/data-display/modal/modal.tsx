@@ -4,7 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-alert-dialog';
 import { IconX } from '@tabler/icons-react';
 import clsx from 'clsx';
 
-import { Button } from '@components/inputs/button';
+import { Button } from '@/components/inputs/button';
 
 export type ModalProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
   overlay?: boolean;
