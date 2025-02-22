@@ -1,3 +1,4 @@
+import { loginSchema } from '@/validations/login-schema';
 import { useSignIn } from '@clerk/nextjs';
 import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -5,19 +6,6 @@ import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
-const inputSchema = z.object({
-  email: z
-    .string()
-    .nonempty('E-mail é obrigatório.')
-    .email('E-mail com formato inválido.'),
-  password: z
-    .string()
-    .min(6, 'A senha deve ter no mínimo 6 caracteres')
-    .nonempty('Senha é obrigatória.'),
-});
-
-type LoginFormSchema = z.infer<typeof inputSchema>;
 
 export function useLogin() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -28,15 +16,15 @@ export function useLogin() {
     control,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormSchema>({
-    resolver: zodResolver(inputSchema),
+  } = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  const onSubmit: SubmitHandler<LoginFormSchema> = async ({
+  const onSubmit: SubmitHandler<z.infer<typeof loginSchema>> = async ({
     email,
     password,
   }) => {

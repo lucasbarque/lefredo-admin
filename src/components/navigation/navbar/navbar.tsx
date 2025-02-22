@@ -1,20 +1,33 @@
-'use client'
-import { IconUser } from '@tabler/icons-react';
+'use client';
 
-import { NavbarProps } from './navbar.types';
-import ImgLogo from '../../../../public/assets/images/logo.svg';
+import { useUser } from '@clerk/nextjs';
+import { IconUser } from '@tabler/icons-react';
 import Image from 'next/image';
 
+import ImgLogo from '../../../../public/assets/images/logo.svg';
+import { NavbarProps } from './navbar.types';
+
 export function Navbar({ children }: NavbarProps) {
+  const { user } = useUser();
+
   return (
     <>
-      <div className='w-full h-20 flex items-center px-6 gap-2 shadow-[0px_2px_2px_0px_rgba(0,_0,_0,_0.1)] justify-between'>
-        <Image src={ImgLogo} alt='' width={60} height={100} />
-        <div className='flex items-center gap-2 cursor-pointer'>
-          <div className='hover:bg-gray-200 text-title-default p-2 rounded-md cursor-pointer transition-all duration-500'>
+      <div className='flex h-20 w-full items-center justify-between gap-2 px-6 shadow-[0px_2px_2px_0px_rgba(0,_0,_0,_0.1)]'>
+        <Image
+          src={ImgLogo}
+          alt=''
+          width={60}
+          height={100}
+          priority
+          className='h-auto w-auto'
+        />
+        <div className='flex cursor-pointer items-center gap-2'>
+          <div className='text-title-default cursor-pointer rounded-md p-2 transition-all duration-500 hover:bg-gray-200'>
             <IconUser size={24} />
           </div>
-          <div className='font-bold text-title-default'>Lucas Barque</div>
+          <div className='text-title-default font-bold'>
+            {user?.firstName + ' ' + user?.lastName}
+          </div>
         </div>
       </div>
       <>{children}</>
