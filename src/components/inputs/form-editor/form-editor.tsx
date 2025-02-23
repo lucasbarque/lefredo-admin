@@ -20,13 +20,9 @@ import {
   IconUnderline,
   IconUnlink,
 } from '@tabler/icons-react';
-import BulletList from '@tiptap/extension-bullet-list';
 import CharacterCount from '@tiptap/extension-character-count';
-import Document from '@tiptap/extension-document';
-import Heading from '@tiptap/extension-heading';
 import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
-import Text from '@tiptap/extension-text';
 import TextAlign from '@tiptap/extension-text-align';
 import TextStyle from '@tiptap/extension-text-style';
 import Underline from '@tiptap/extension-underline';
@@ -200,10 +196,8 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
     );
 
     const editor: any = useEditor({
+      immediatelyRender: false,
       extensions: [
-        Document,
-        Text,
-        BulletList,
         Link.configure({
           openOnClick: false,
           autolink: true,
@@ -278,9 +272,6 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
         Underline,
         Placeholder.configure({
           placeholder,
-        }),
-        Heading.configure({
-          levels: [4, 5, 6],
         }),
         CharacterCount.configure({
           limit: maxLength,

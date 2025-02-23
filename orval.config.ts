@@ -1,4 +1,4 @@
-import { defineConfig } from 'orval'
+import { defineConfig } from 'orval';
 
 export default defineConfig({
   api: {
@@ -7,13 +7,12 @@ export default defineConfig({
       target: './src/http/api.ts',
       client: 'fetch',
       httpClient: 'fetch',
-      clean: true,
       baseUrl: 'http://localhost:3333',
       override: {
         fetch: {
-          includeHttpResponseReturnType: false,
+          includeHttpResponseReturnType: true,
         },
       },
     },
   },
-})
+});

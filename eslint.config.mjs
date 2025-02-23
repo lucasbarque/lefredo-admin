@@ -18,7 +18,8 @@ const eslintConfig = [
       'react-refresh/only-export-components': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       'no-constant-binary-expression': 'off',
-      'react/display-name': 'off'
+      'react/display-name': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
     }
   }
 ];

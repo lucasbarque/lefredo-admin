@@ -5,4 +5,5 @@ export interface SidebarItemProps
   isActive?: boolean;
   title: string;
   icon: ReactNode;
+  href: string;
 }
