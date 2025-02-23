@@ -1,7 +1,9 @@
 'use server';
 
 import {
+  ChangeLogoDTO,
   UpdateResturantDTO,
+  changeLogoRestaurant,
   getRestaurantById,
   updateRestaurant,
 } from '@/http/api';
@@ -52,6 +54,19 @@ export async function updateRestaurantData({
   const response = await updateRestaurant(restaurantId, data, {
     headers: {
       Cookie: cookiesHeader,
+    },
+  });
+
+  return response;
+}
+
+export async function changeRestaurantLogo(
+  restaurantId: string,
+  file: ChangeLogoDTO
+) {
+  const response = await changeLogoRestaurant(restaurantId, file, {
+    headers: {
+      Cookie: await getCookiesHeader(),
     },
   });
 

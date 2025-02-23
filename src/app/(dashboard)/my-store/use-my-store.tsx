@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { uploadSingleFile } from '@/actions/medias.action';
-import { updateRestaurantData } from '@/actions/my-store.action';
+import {
+  changeRestaurantLogo,
+  updateRestaurantData,
+} from '@/actions/my-store.action';
 import { GetRestaurantByIdDTO } from '@/http/api';
 import { updateStoreSchema } from '@/validations/update-store';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -65,35 +67,38 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
     }
   };
 
-  useEffect(() => {
-    async function loadImage() {
-      const imageUrl = restaurantData.logo;
-      const response = await fetch(imageUrl, { mode: 'no-cors' });
-      const blob = await response.blob();
-      const file = new File([blob], 'minha-imagem-logo.png', {
-        type: blob.type,
-      });
-      setImageData({ file, url: imageUrl });
-    }
+  async function loadImage() {
+    const imageUrl = restaurantData.logo;
+    const response = await fetch(imageUrl, { mode: 'no-cors' });
+    const blob = await response.blob();
+    const file = new File([blob], 'minha-imagem-logo.png', {
+      type: blob.type,
+    });
+    setImageData({ file, url: imageUrl });
+  }
 
+  useEffect(() => {
     loadImage();
   }, []);
 
   useEffect(() => {
     async function uploadImage() {
       if (imageData && imageData.file) {
-        const response = await uploadSingleFile({
-          data: {
-            // @ts-ignore
-            file: imageData.file,
-            referenceId: restaurantData.id,
-            referenceName: 'restaurants',
-            title: `store-${restaurantData.id}-${imageData.file.name}`,
-            type: 'image',
-          },
-        });
-        if (response.status === 201) {
-          toast.success('Imagem atualizada com sucesso');
+        const response = await changeRestaurantLogo(
+          restaurantData.id,
+          // @ts-ignore
+          { file: imageData.file }
+        );
+        console.log(response);
+        if (response.status === 200) {
+          toast.success('Logo atualizada com sucesso');
+        }
+        if (response.status === 400) {
+          toast.error(
+            'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
+            { position: 'top-right' }
+          );
+          loadImage();
         }
       }
     }

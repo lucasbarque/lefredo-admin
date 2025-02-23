@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 
 import { IconCloudUpload, IconEdit, IconX } from '@tabler/icons-react';
@@ -28,7 +29,7 @@ export function UploadSingleImage({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files?.length > 0) {
+    if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setZoom(1);
       setFile(file);
@@ -46,16 +47,25 @@ export function UploadSingleImage({
     onSubmit(undefined);
   };
 
+  // Função para abrir o modal de crop utilizando a imagem atual
+  const handleEditImage = () => {
+    if (currentImage) {
+      setFile(currentImage.file);
+      setFileUrl(currentImage.url);
+      setIsImageSelected(true);
+    }
+  };
+
   const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
     setCroppedArea(croppedAreaPixels);
   }, []);
 
   const handleChangeZoom = (type: 'zoomIn' | 'zoomOut') => {
     if (type === 'zoomIn') {
-      setZoom((oldstate) => oldstate + 0.1);
+      setZoom((oldState) => oldState + 0.1);
     } else {
       if (zoom === 1) return;
-      setZoom((oldstate) => oldstate - 0.1);
+      setZoom((oldState) => oldState - 0.1);
     }
   };
 
@@ -85,7 +95,7 @@ export function UploadSingleImage({
       );
     }
 
-    // Converting to base64
+    // Convertendo para base64
     const base64Image = canvas.toDataURL('image/png');
 
     if (!onSubmit) return;
@@ -103,26 +113,20 @@ export function UploadSingleImage({
       <div className='w-full max-w-[490px] rounded-md border border-slate-200 px-3 py-4'>
         {currentImage ? (
           <div className='relative w-full'>
-            <input
-              type='file'
-              id='upload-file'
-              onChange={onChange}
-              hidden
-              ref={inputRef}
-            />
             <img src={currentImage.url} alt='img' />
             <div className='absolute top-4 right-4 flex gap-2'>
-              <label
-                htmlFor='upload-file'
+              <button
+                type='button'
+                onClick={handleEditImage}
                 className='flex h-8 w-8 cursor-pointer items-center justify-center rounded-md bg-white'
               >
-                <IconEdit className='h-5 w-5 cursor-pointer' />
-              </label>
+                <IconEdit className='h-5 w-5' />
+              </button>
 
               <button
                 type='button'
-                className='flex h-8 w-8 items-center justify-center rounded-md bg-white'
                 onClick={resetInput}
+                className='flex h-8 w-8 items-center justify-center rounded-md bg-white'
               >
                 <IconX className='h-5 w-5 cursor-pointer' />
               </button>

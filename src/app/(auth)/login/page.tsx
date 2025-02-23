@@ -27,7 +27,6 @@ export default function PageLogin() {
             error={errors.email?.message}
             placeholder='Digite seu e-mail'
             label='E-mail'
-            isOptional
           />
 
           <Input
