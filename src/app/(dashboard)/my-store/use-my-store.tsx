@@ -32,6 +32,7 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
   });
 
   const [imageData, setImageData] = useState<FileUploaded>();
+  const [isLoadingUploadImage, setIsLoadingUploadImage] = useState(false);
 
   const onSubmit: SubmitHandler<z.infer<typeof updateStoreSchema>> = async (
     data
@@ -77,32 +78,34 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
     setImageData({ file, url: imageUrl });
   }
 
+  async function uploadImage() {
+    setIsLoadingUploadImage(true);
+    if (imageData && imageData.file) {
+      const response = await changeRestaurantLogo(
+        restaurantData.id,
+        // @ts-ignore
+        { file: imageData.file }
+      );
+
+      if (response.status === 200) {
+        toast.success('Logo atualizada com sucesso');
+      }
+      if (response.status === 400) {
+        toast.error(
+          'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
+          { position: 'top-right' }
+        );
+        loadImage();
+      }
+    }
+    setIsLoadingUploadImage(false);
+  }
+
   useEffect(() => {
     loadImage();
   }, []);
 
   useEffect(() => {
-    async function uploadImage() {
-      if (imageData && imageData.file) {
-        const response = await changeRestaurantLogo(
-          restaurantData.id,
-          // @ts-ignore
-          { file: imageData.file }
-        );
-        console.log(response);
-        if (response.status === 200) {
-          toast.success('Logo atualizada com sucesso');
-        }
-        if (response.status === 400) {
-          toast.error(
-            'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
-            { position: 'top-right' }
-          );
-          loadImage();
-        }
-      }
-    }
-
     if (imageData && imageData.file.name !== 'minha-imagem-logo.png') {
       uploadImage();
     }
@@ -116,5 +119,6 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
     isSubmitting,
     imageData,
     setImageData,
+    isLoadingUploadImage,
   };
 }

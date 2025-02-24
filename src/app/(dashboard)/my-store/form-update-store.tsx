@@ -14,8 +14,15 @@ export interface FormProps {
 }
 
 export function FormUpdateStore({ restaurantData }: FormProps) {
-  const { control, errors, imageData, setImageData, handleSubmit, onSubmit } =
-    useMyStore({ restaurantData });
+  const {
+    control,
+    errors,
+    imageData,
+    setImageData,
+    handleSubmit,
+    onSubmit,
+    isLoadingUploadImage,
+  } = useMyStore({ restaurantData });
 
   return (
     <form
@@ -47,6 +54,7 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
         currentImage={imageData}
         onSubmit={setImageData}
         cropConfig={{ width: 300, height: 300 }}
+        isLoading={isLoadingUploadImage}
       />
 
       <div className='mt-4'>

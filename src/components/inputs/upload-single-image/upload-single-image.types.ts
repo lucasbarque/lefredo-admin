@@ -8,6 +8,7 @@ export interface UploadImageProps {
   currentImage?: FileUploaded;
   footerLabel?: string;
   additionalInfo?: string;
+  isLoading?: boolean;
   cropConfig: {
     width: number;
     height: number;

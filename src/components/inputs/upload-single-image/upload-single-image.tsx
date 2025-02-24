@@ -2,6 +2,10 @@
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 
 import { IconCloudUpload, IconEdit, IconX } from '@tabler/icons-react';
+import clsx from 'clsx';
+import { v4 as uuidv4 } from 'uuid';
+
+import { LoadingSpinner } from '@/components/data-display/loading-spinner/loading-spinner';
 
 import { CropModal } from './crop-modal';
 import { UploadImageProps } from './upload-single-image.types';
@@ -12,8 +16,8 @@ export function UploadSingleImage({
   onSubmit,
   currentImage,
   cropConfig,
+  isLoading = false,
 }: UploadImageProps) {
-  const [file, setFile] = useState<File | null>(null);
   const [fileUrl, setFileUrl] = useState('');
   const [isDragActive, setIsDragActive] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
@@ -32,16 +36,15 @@ export function UploadSingleImage({
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       setZoom(1);
-      setFile(file);
       setFileUrl(URL.createObjectURL(file));
       setIsImageSelected(true);
     }
   };
 
   const resetInput = () => {
-    setFile(null);
     setFileUrl('');
     setIsImageSelected(false);
+    setZoom(1);
 
     if (!onSubmit) return;
     onSubmit(undefined);
@@ -50,7 +53,6 @@ export function UploadSingleImage({
   // Função para abrir o modal de crop utilizando a imagem atual
   const handleEditImage = () => {
     if (currentImage) {
-      setFile(currentImage.file);
       setFileUrl(currentImage.url);
       setIsImageSelected(true);
     }
@@ -71,48 +73,67 @@ export function UploadSingleImage({
 
   const onSubmitImage = () => {
     const image = new Image(cropConfig.width, cropConfig.height);
+    image.crossOrigin = 'anonymous'; // Adiciona o atributo CORS
     image.src = fileUrl;
 
     const canvas = document.createElement('canvas');
-
     canvas.width = croppedArea.width;
     canvas.height = croppedArea.height;
     const ctx = canvas.getContext('2d');
 
-    if (ctx) {
-      ctx.imageSmoothingQuality = 'high';
+    image.onload = () => {
+      if (ctx) {
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(
+          image,
+          croppedArea.x,
+          croppedArea.y,
+          croppedArea.width,
+          croppedArea.height,
+          0,
+          0,
+          croppedArea.width,
+          croppedArea.height
+        );
+      }
 
-      ctx.drawImage(
-        image,
-        croppedArea.x,
-        croppedArea.y,
-        croppedArea.width,
-        croppedArea.height,
-        0,
-        0,
-        croppedArea.width,
-        croppedArea.height
-      );
-    }
+      const base64Image = canvas.toDataURL('image/png');
 
-    // Convertendo para base64
-    const base64Image = canvas.toDataURL('image/png');
-
-    if (!onSubmit) return;
-
-    onSubmit({
-      file: file!,
-      url: base64Image,
-    });
-
-    setIsImageSelected(false);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          const croppedFile = new File([blob], uuidv4() + '.png', {
+            type: 'image/png',
+          });
+          if (onSubmit) {
+            onSubmit({
+              file: croppedFile,
+              url: base64Image,
+            });
+          }
+          setIsImageSelected(false);
+          setZoom(1);
+        }
+      }, 'image/png');
+    };
   };
 
   return (
     <Fragment>
       <div className='w-full max-w-[490px] rounded-md border border-slate-200 px-3 py-4'>
         {currentImage ? (
-          <div className='relative w-full'>
+          <div
+            className={clsx('relative w-full', {
+              'animate-pulse before:absolute before:inset-0 before:bg-black/40 before:backdrop-blur-xs':
+                isLoading,
+            })}
+          >
+            {isLoading && (
+              <LoadingSpinner
+                family='secondary'
+                className='absolute inset-0 top-1/2 left-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2'
+              />
+            )}
+
             <img src={currentImage.url} alt='img' />
             <div className='absolute top-4 right-4 flex gap-2'>
               <button
@@ -169,6 +190,7 @@ export function UploadSingleImage({
               onBlur={() => setIsDragActive(false)}
               onDrop={() => setIsDragActive(false)}
               ref={inputRef}
+              disabled={isLoading}
             />
           </label>
         )}

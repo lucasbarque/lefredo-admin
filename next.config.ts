@@ -7,15 +7,7 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'www.cdn-parachute.com.br',
-        port: '',
-        pathname: '/**',
-        search: '',
-      },
-    ],
+    domains: ['lefredo.s3.us-east-1.amazonaws.com'],
   },
 };
 
