@@ -22,6 +22,7 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     handleSubmit,
     onSubmit,
     isLoadingUploadImage,
+    deleteImageData,
   } = useMyStore({ restaurantData });
 
   return (
@@ -53,6 +54,7 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
         label='Adicione uma imagem'
         currentImage={imageData}
         onSubmit={setImageData}
+        onDelete={deleteImageData}
         cropConfig={{ width: 300, height: 300 }}
         isLoading={isLoadingUploadImage}
       />

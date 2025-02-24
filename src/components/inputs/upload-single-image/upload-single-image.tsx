@@ -3,6 +3,7 @@ import React, { Fragment, useCallback, useRef, useState } from 'react';
 
 import { IconCloudUpload, IconEdit, IconX } from '@tabler/icons-react';
 import clsx from 'clsx';
+import { extname } from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LoadingSpinner } from '@/components/data-display/loading-spinner/loading-spinner';
@@ -14,10 +15,12 @@ export function UploadSingleImage({
   label,
   additionalInfo,
   onSubmit,
+  onDelete,
   currentImage,
   cropConfig,
   isLoading = false,
 }: UploadImageProps) {
+  const [file, setFile] = useState<File | undefined>(currentImage?.file);
   const [fileUrl, setFileUrl] = useState('');
   const [isDragActive, setIsDragActive] = useState(false);
   const [isImageSelected, setIsImageSelected] = useState(false);
@@ -37,17 +40,22 @@ export function UploadSingleImage({
       const file = event.target.files[0];
       setZoom(1);
       setFileUrl(URL.createObjectURL(file));
+      setFile(file);
       setIsImageSelected(true);
     }
   };
 
   const resetInput = () => {
+    if (onDelete) {
+      onDelete(currentImage?.file.name || '');
+    }
+    if (onSubmit) {
+      onSubmit(undefined);
+    }
+    setFile(undefined);
     setFileUrl('');
     setIsImageSelected(false);
     setZoom(1);
-
-    if (!onSubmit) return;
-    onSubmit(undefined);
   };
 
   // Função para abrir o modal de crop utilizando a imagem atual
@@ -97,13 +105,18 @@ export function UploadSingleImage({
         );
       }
 
-      const base64Image = canvas.toDataURL('image/png');
+      const base64Image = canvas.toDataURL(file?.type || 'image/png');
 
       canvas.toBlob((blob) => {
         if (blob) {
-          const croppedFile = new File([blob], uuidv4() + '.png', {
-            type: 'image/png',
-          });
+          const croppedFile = new File(
+            [blob],
+            uuidv4() + extname(file?.name || 'image.png'),
+            {
+              type: file?.name || 'image/png',
+            }
+          );
+          setFile(croppedFile);
           if (onSubmit) {
             onSubmit({
               file: croppedFile,
@@ -113,7 +126,7 @@ export function UploadSingleImage({
           setIsImageSelected(false);
           setZoom(1);
         }
-      }, 'image/png');
+      }, file?.type || 'image/png');
     };
   };
 

@@ -4,6 +4,7 @@ import {
   ChangeLogoDTO,
   UpdateResturantDTO,
   changeLogoRestaurant,
+  deleteLogoRestaurant,
   getRestaurantById,
   updateRestaurant,
 } from '@/http/api';
@@ -65,6 +66,16 @@ export async function changeRestaurantLogo(
   file: ChangeLogoDTO
 ) {
   const response = await changeLogoRestaurant(restaurantId, file, {
+    headers: {
+      Cookie: await getCookiesHeader(),
+    },
+  });
+
+  return response;
+}
+
+export async function deleteRestaurantLogo(restaurantId: string) {
+  const response = await deleteLogoRestaurant(restaurantId, {
     headers: {
       Cookie: await getCookiesHeader(),
     },

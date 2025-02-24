@@ -14,4 +14,5 @@ export interface UploadImageProps {
     height: number;
   };
   onSubmit?: (file?: FileUploaded) => void;
+  onDelete?: (imageId: string) => void;
 }

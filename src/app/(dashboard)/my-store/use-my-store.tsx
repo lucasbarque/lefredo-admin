@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import {
   changeRestaurantLogo,
+  deleteRestaurantLogo,
   updateRestaurantData,
 } from '@/actions/my-store.action';
 import { GetRestaurantByIdDTO } from '@/http/api';
@@ -69,10 +70,12 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
   };
 
   async function loadImage() {
+    if (!restaurantData.logo) return;
+
     const imageUrl = restaurantData.logo;
-    const response = await fetch(imageUrl, { mode: 'no-cors' });
+    const response = await fetch(imageUrl);
     const blob = await response.blob();
-    const file = new File([blob], 'minha-imagem-logo.png', {
+    const file = new File([blob], imageUrl, {
       type: blob.type,
     });
     setImageData({ file, url: imageUrl });
@@ -86,6 +89,8 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
         // @ts-ignore
         { file: imageData.file }
       );
+
+      console.log(imageData);
 
       if (response.status === 200) {
         toast.success('Logo atualizada com sucesso');
@@ -101,12 +106,21 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
     setIsLoadingUploadImage(false);
   }
 
+  async function deleteImageData() {
+    setIsLoadingUploadImage(true);
+    const response = await deleteRestaurantLogo(restaurantData.id);
+    if (response.status === 200) {
+      toast.success('Logo deletada com sucesso', { position: 'top-right' });
+    }
+    setIsLoadingUploadImage(false);
+  }
+
   useEffect(() => {
     loadImage();
   }, []);
 
   useEffect(() => {
-    if (imageData && imageData.file.name !== 'minha-imagem-logo.png') {
+    if (imageData && imageData.file.name !== restaurantData.logo) {
       uploadImage();
     }
   }, [imageData]);
@@ -120,5 +134,6 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
     imageData,
     setImageData,
     isLoadingUploadImage,
+    deleteImageData,
   };
 }
