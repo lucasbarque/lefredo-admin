@@ -90,17 +90,19 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
         { file: imageData.file }
       );
 
-      console.log(imageData);
-
       if (response.status === 200) {
         toast.success('Logo atualizada com sucesso');
-      }
-      if (response.status === 400) {
+      } else if (response.status === 400) {
+        loadImage();
         toast.error(
           'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
           { position: 'top-right' }
         );
-        loadImage();
+      } else {
+        toast.error(
+          'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
+          { position: 'top-right' }
+        );
       }
     }
     setIsLoadingUploadImage(false);

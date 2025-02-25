@@ -395,7 +395,7 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
         <div className='w-full rounded-b-md pt-2'>
           <div className='character-count flex w-full items-center justify-between text-xs'>
             <p className='text-gray-600'>
-              {charactersRemaining()} caracteres restantes
+              {charactersRemaining() || 0} caracteres restantes
             </p>
           </div>
         </div>

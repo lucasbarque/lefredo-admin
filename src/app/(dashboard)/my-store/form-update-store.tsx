@@ -5,7 +5,7 @@ import { GetRestaurantByIdDTO } from '@/http/api';
 import { Button } from '@/components/inputs/button';
 import { Input } from '@/components/inputs/input';
 import { InputEditor } from '@/components/inputs/input-editor';
-import { UploadSingleImage } from '@/components/inputs/upload-single-image/upload-single-image';
+import { UploadImage } from '@/components/inputs/upload-image/upload-image';
 
 import { useMyStore } from './use-my-store';
 
@@ -50,12 +50,20 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
         maxLength={500}
       />
 
-      <UploadSingleImage
+      {/* <UploadSingleImage
         label='Adicione uma imagem'
         currentImage={imageData}
         onSubmit={setImageData}
         onDelete={deleteImageData}
         cropConfig={{ width: 300, height: 300 }}
+        isLoading={isLoadingUploadImage}
+      /> */}
+
+      <UploadImage
+        label='Adicione uma imagem'
+        currentImage={imageData}
+        onSubmit={setImageData}
+        onDelete={deleteImageData}
         isLoading={isLoadingUploadImage}
       />
 
