@@ -72,7 +72,7 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
   async function loadImage() {
     if (!restaurantData.logo) return;
 
-    const imageUrl = restaurantData.logo;
+    const imageUrl = process.env.NEXT_PUBLIC_BUCKET_URL + restaurantData.logo;
     const response = await fetch(imageUrl);
     const blob = await response.blob();
     const file = new File([blob], imageUrl, {
@@ -122,7 +122,11 @@ export function useMyStore({ restaurantData }: UseMyStoreProps) {
   }, []);
 
   useEffect(() => {
-    if (imageData && imageData.file.name !== restaurantData.logo) {
+    if (
+      imageData &&
+      imageData.file.name !==
+        process.env.NEXT_PUBLIC_BUCKET_URL + restaurantData.logo
+    ) {
       uploadImage();
     }
   }, [imageData]);

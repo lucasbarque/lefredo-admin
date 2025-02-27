@@ -23,6 +23,7 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     onSubmit,
     isLoadingUploadImage,
     deleteImageData,
+    isSubmitting,
   } = useMyStore({ restaurantData });
 
   return (
@@ -50,15 +51,6 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
         maxLength={500}
       />
 
-      {/* <UploadSingleImage
-        label='Adicione uma imagem'
-        currentImage={imageData}
-        onSubmit={setImageData}
-        onDelete={deleteImageData}
-        cropConfig={{ width: 300, height: 300 }}
-        isLoading={isLoadingUploadImage}
-      /> */}
-
       <UploadImage
         label='Adicione uma imagem'
         currentImage={imageData}
@@ -68,7 +60,9 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
       />
 
       <div className='mt-4'>
-        <Button type='submit'>Salvar alterações</Button>
+        <Button type='submit' isLoading={isSubmitting}>
+          {isSubmitting ? 'Carregando...' : 'Salvar alterações'}
+        </Button>
       </div>
     </form>
   );
