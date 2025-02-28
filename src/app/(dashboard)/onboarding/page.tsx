@@ -1,9 +1,8 @@
-'use client';
-
-import { useState } from 'react';
-
+import { changeOnboardingStatusAPI } from '@/actions/users.action';
 import { IconDeviceMobileSearch } from '@tabler/icons-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { RedirectType, redirect } from 'next/navigation';
 
 import { Header } from '@/components/data-display/header';
 import { Button } from '@/components/inputs/button';
@@ -36,16 +35,19 @@ const steps = [
   },
 ];
 
-export default function PageFirstStepsMenu() {
-  const [currentStep, setCurrentStep] = useState(1);
+type SearchParams = Promise<{ step: string | undefined }>;
 
-  function handleChangeStep(type: 'increment' | 'decrement') {
-    if (type === 'increment' && currentStep < steps.length) {
-      setCurrentStep((current) => current + 1);
-    }
+export default async function PageOnboarding(props: {
+  searchParams: SearchParams;
+}) {
+  const searchParams = await props.searchParams;
+  const currentStep = Number(searchParams.step) || 1;
 
-    if (type === 'decrement') {
-      setCurrentStep((current) => current - 1);
+  if (currentStep === 5) {
+    const response = await changeOnboardingStatusAPI();
+
+    if (response.status === 200) {
+      redirect('/first-category-create', RedirectType.replace);
     }
   }
 
@@ -53,7 +55,9 @@ export default function PageFirstStepsMenu() {
     <section className='w-full'>
       <Header title='Criando meu cardápio' />
 
-      <Stepper steps={steps.length} currentStep={currentStep} />
+      <div className='pt-6'>
+        <Stepper steps={steps.length} currentStep={currentStep} />
+      </div>
 
       <div className='flex items-center justify-center gap-16'>
         <div className='w-full max-w-[22.938rem]'>
@@ -66,20 +70,26 @@ export default function PageFirstStepsMenu() {
           </p>
           <div className='flex gap-3'>
             {currentStep > 1 && (
-              <Button
-                family='secondary'
-                fullSize
-                onClick={() => handleChangeStep('decrement')}
+              <Link
+                href={`/onboarding?step=${currentStep - 1}`}
+                className='w-full'
               >
-                Voltar
-              </Button>
+                <Button family='secondary' fullSize>
+                  Voltar
+                </Button>
+              </Link>
             )}
 
-            <Button fullSize onClick={() => handleChangeStep('increment')}>
-              {currentStep === 1 || currentStep === steps.length
-                ? 'Vamos começar'
-                : 'Continuar'}
-            </Button>
+            <Link
+              href={`/onboarding?step=${currentStep + 1}`}
+              className='w-full'
+            >
+              <Button fullSize>
+                {currentStep === 1 || currentStep === steps.length
+                  ? 'Vamos começar'
+                  : 'Continuar'}
+              </Button>
+            </Link>
           </div>
         </div>
         <div className='flex flex-col gap-4 pt-6'>

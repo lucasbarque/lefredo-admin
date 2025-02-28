@@ -1,6 +1,6 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
-import { Nunito_Sans, Work_Sans } from 'next/font/google';
+import { Nunito, Work_Sans } from 'next/font/google';
 import { Toaster } from 'sonner';
 
 import '@/styles/global.css';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Gerencie sua loja de maneira simples e rápida',
 };
 
-const nunitoSans = Nunito_Sans({
+const nunitoSans = Nunito({
   weight: ['500', '600', '800'],
   subsets: ['latin'],
   variable: '--font-sans',

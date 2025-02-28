@@ -1,14 +1,15 @@
 'use client';
 
 import { IconDeviceMobileSearch, IconPlus } from '@tabler/icons-react';
-import Image from 'next/image';
+
+// import Image from 'next/image';
 
 import { CategoryItem } from '@/components/data-display/category-item';
 import { Header } from '@/components/data-display/header';
 import { Button } from '@/components/inputs/button';
 import { Input } from '@/components/inputs/input';
 
-import imagePreview from '../../../public/assets/images/preview-2.png';
+// import imagePreview from '../../../public/assets/images/preview-2.png';
 import { useFirstCategoryCreate } from './use-first-category-create';
 
 export default function PageFirstCategoryCreate() {
@@ -63,13 +64,13 @@ export default function PageFirstCategoryCreate() {
           </form>
         </div>
         <div className='flex flex-col gap-4 pt-6'>
-          <Image
+          {/* <Image
             className='drop-shadow-mobile'
             src={imagePreview}
             alt=''
             height={625}
             width={282}
-          />
+          /> */}
           <div className='border-line flex w-[280px] items-center gap-2 rounded-md border bg-gray-400 px-6 py-3 text-[10px] font-bold'>
             <IconDeviceMobileSearch size={24} className='shrink-0' />É mais ou
             menos assim que essas informações ficam no app do Le Fredo

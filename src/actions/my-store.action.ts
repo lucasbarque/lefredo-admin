@@ -9,16 +9,8 @@ import {
   updateRestaurant,
 } from '@/http/api';
 import { auth, clerkClient } from '@clerk/nextjs/server';
-import { cookies } from 'next/headers';
 
-async function getCookiesHeader() {
-  const cookiesData = await cookies();
-  const cookieEntries = cookiesData
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`);
-
-  return cookieEntries.join('; ');
-}
+import { getCookiesHeader } from './utils.action';
 
 export async function getRestaurantData() {
   const { userId } = await auth();
@@ -45,16 +37,9 @@ export async function updateRestaurantData({
   restaurantId: string;
   data: UpdateResturantDTO;
 }) {
-  const cookiesData = await cookies();
-  const cookieEntries = cookiesData
-    .getAll()
-    .map((cookie) => `${cookie.name}=${cookie.value}`);
-
-  const cookiesHeader = cookieEntries.join('; ');
-
   const response = await updateRestaurant(restaurantId, data, {
     headers: {
-      Cookie: cookiesHeader,
+      Cookie: await getCookiesHeader(),
     },
   });
 
