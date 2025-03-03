@@ -6,6 +6,7 @@
   font-size: 1rem !important;
   line-height: 1.4 !important;
   color: var(--color-title-default);
+  word-break: normal;
 }
 
 .tiptap p a {

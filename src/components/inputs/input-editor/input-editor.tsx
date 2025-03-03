@@ -1,40 +1,30 @@
-import { FC, useEffect } from 'react';
-
 import clsx from 'clsx';
 import { Controller } from 'react-hook-form';
 
-import { FormEditor } from '../form-editor';
+import { InputLabel } from '../input/input';
+import { FormEditor } from './form-editor';
 import { InputEditorProps } from './input-editor.types';
 
-export const InputEditor: FC<InputEditorProps> = ({
+export function InputEditor({
   control,
   name,
   label,
   error,
-  isOptional,
+  isOptional = false,
   height,
   maxLength,
   showErrorMessage = true,
   ...props
-}) => {
-  useEffect(() => {
-    document.documentElement.setAttribute('translate', 'no');
-    document.documentElement.classList.add('notranslate');
-  }, []);
+}: InputEditorProps) {
   return (
     <div className='flex w-full flex-col' translate='no'>
       {label && (
-        <label
-          className={clsx('text-sm font-medium text-gray-600 font-work-sans', {
-            'text-red-500': error,
-          })}
-          htmlFor={name}
-        >
-          {label}
-          {isOptional && (
-            <span className='text-brand-text text-xs'> (Opcional)</span>
-          )}
-        </label>
+        <InputLabel
+          name={name}
+          label={label}
+          isOptional={isOptional}
+          isDisabled={!!props.disabled}
+        />
       )}
       <div
         className={clsx('rounded-md', {
@@ -54,10 +44,12 @@ export const InputEditor: FC<InputEditorProps> = ({
               height={height}
               maxLength={maxLength}
               placeholder={props.placeholder}
+              disabled={props.disabled}
             />
           )}
         />
       </div>
+
       {error && showErrorMessage && (
         <div
           data-testid={`error-input-${name}`}
@@ -68,4 +60,4 @@ export const InputEditor: FC<InputEditorProps> = ({
       )}
     </div>
   );
-};
+}

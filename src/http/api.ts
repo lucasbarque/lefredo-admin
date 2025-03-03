@@ -110,7 +110,25 @@ export interface GetDishesDTO {
   dishMedias: DishMediasDTO[];
 }
 
-export interface CreateDishDTO { [key: string]: unknown }
+export interface RequestCreateDishDTO {
+  title: string;
+  portion: string;
+  price: string;
+  /** @nullable */
+  prepTime: string | null;
+  flagged: string;
+  /** @nullable */
+  description: string | null;
+  sectionId: string;
+}
+
+export interface ResponseCreateDishDTO {
+  id: string;
+}
+
+export interface RequestChangePriceDTO {
+  price: number;
+}
 
 export interface GetRestaurantBySlugDTO {
   id: string;
@@ -141,6 +159,10 @@ export interface ChangeLogoResponseDTO {
   logo: string;
 }
 
+export interface GetRestaurantIsFirstCategoryDTO {
+  isFirstCategory: boolean;
+}
+
 export interface CreateResturantDTO { [key: string]: unknown }
 
 export interface GetSectionsDTO {
@@ -150,7 +172,49 @@ export interface GetSectionsDTO {
   slug: string;
 }
 
-export interface CreateSectionDTO { [key: string]: unknown }
+export interface Dish {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  portion: string;
+  /** @nullable */
+  prepTime: string | null;
+  dishMedias: DishMediasDTO[];
+  isActive: boolean;
+}
+
+export interface ResponseGetSectionsWithItemsDTO {
+  id: string;
+  title: string;
+  /** @nullable */
+  description: string | null;
+  slug: string;
+  Dish: Dish[];
+  isActive: boolean;
+}
+
+export interface ResponseGetSectionByIdDTO {
+  id: string;
+  title: string;
+  /** @nullable */
+  description: string | null;
+  slug: string;
+  isActive: boolean;
+}
+
+export interface RequestCreateSectionDTO {
+  title: string;
+  menuId: string;
+  /** @nullable */
+  description: string | null;
+}
+
+export interface RequestUpdateSectionDTO {
+  title: string;
+  /** @nullable */
+  description: string | null;
+}
 
 export type MenusControllerGetByRestaurantParams = {
 restaurantId: string;
@@ -166,6 +230,10 @@ restaurantId: string;
 };
 
 export type GetSectionsParams = {
+menuId: string;
+};
+
+export type GetSectionsWithItemsParams = {
 menuId: string;
 };
 
@@ -548,34 +616,37 @@ export const getDishesBySectionId = async (params: GetDishesBySectionIdParams, o
 
 
 
-export type dishesControllerCreateResponse = {
-  data: void;
+/**
+ * @summary Create Dish
+ */
+export type createDishResponse = {
+  data: ResponseCreateDishDTO;
   status: number;
   headers: Headers;
 }
 
-export const getDishesControllerCreateUrl = () => {
+export const getCreateDishUrl = () => {
 
 
   return `http://localhost:3333/dishes`
 }
 
-export const dishesControllerCreate = async (createDishDTO: CreateDishDTO, options?: RequestInit): Promise<dishesControllerCreateResponse> => {
+export const createDish = async (requestCreateDishDTO: RequestCreateDishDTO, options?: RequestInit): Promise<createDishResponse> => {
   
-  const res = await fetch(getDishesControllerCreateUrl(),
+  const res = await fetch(getCreateDishUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      createDishDTO,)
+      requestCreateDishDTO,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: dishesControllerCreateResponse['data'] = body ? JSON.parse(body) : {}
+  const data: createDishResponse['data'] = body ? JSON.parse(body) : {}
 
-  return { data, status: res.status, headers: res.headers } as dishesControllerCreateResponse
+  return { data, status: res.status, headers: res.headers } as createDishResponse
 }
 
 
@@ -610,6 +681,76 @@ export const getDishesBySlug = async (slug: string, options?: RequestInit): Prom
   const data: getDishesBySlugResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as getDishesBySlugResponse
+}
+
+
+
+/**
+ * @summary Toggle Section
+ */
+export type toggleDishResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getToggleDishUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/toggle/${id}`
+}
+
+export const toggleDish = async (id: string, options?: RequestInit): Promise<toggleDishResponse> => {
+  
+  const res = await fetch(getToggleDishUrl(id),
+  {      
+    ...options,
+    method: 'PATCH'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: toggleDishResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as toggleDishResponse
+}
+
+
+
+/**
+ * @summary Change Price
+ */
+export type changePriceResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getChangePriceUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/change-price/${id}`
+}
+
+export const changePrice = async (id: string,
+    requestChangePriceDTO: RequestChangePriceDTO, options?: RequestInit): Promise<changePriceResponse> => {
+  
+  const res = await fetch(getChangePriceUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      requestChangePriceDTO,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: changePriceResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as changePriceResponse
 }
 
 
@@ -861,6 +1002,40 @@ export const deleteLogoRestaurant = async (id: string, options?: RequestInit): P
 
 
 /**
+ * @summary Get restaurant is first category information
+ */
+export type getRestaurantIsFirstCategoryResponse = {
+  data: GetRestaurantIsFirstCategoryDTO;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetRestaurantIsFirstCategoryUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/restaurants/is-first-category/${id}`
+}
+
+export const getRestaurantIsFirstCategory = async (id: string, options?: RequestInit): Promise<getRestaurantIsFirstCategoryResponse> => {
+  
+  const res = await fetch(getGetRestaurantIsFirstCategoryUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getRestaurantIsFirstCategoryResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getRestaurantIsFirstCategoryResponse
+}
+
+
+
+/**
  * @summary Get Sections
  */
 export type getSectionsResponse = {
@@ -901,53 +1076,66 @@ export const getSections = async (params: GetSectionsParams, options?: RequestIn
 
 
 
-export type sectionsControllerCreateResponse = {
+/**
+ * @summary Create Section
+ */
+export type createSectionResponse = {
   data: void;
   status: number;
   headers: Headers;
 }
 
-export const getSectionsControllerCreateUrl = () => {
+export const getCreateSectionUrl = () => {
 
 
   return `http://localhost:3333/sections`
 }
 
-export const sectionsControllerCreate = async (createSectionDTO: CreateSectionDTO, options?: RequestInit): Promise<sectionsControllerCreateResponse> => {
+export const createSection = async (requestCreateSectionDTO: RequestCreateSectionDTO, options?: RequestInit): Promise<createSectionResponse> => {
   
-  const res = await fetch(getSectionsControllerCreateUrl(),
+  const res = await fetch(getCreateSectionUrl(),
   {      
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      createSectionDTO,)
+      requestCreateSectionDTO,)
   }
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: sectionsControllerCreateResponse['data'] = body ? JSON.parse(body) : {}
+  const data: createSectionResponse['data'] = body ? JSON.parse(body) : {}
 
-  return { data, status: res.status, headers: res.headers } as sectionsControllerCreateResponse
+  return { data, status: res.status, headers: res.headers } as createSectionResponse
 }
 
 
 
-export type sectionsControllerGetByIdResponse = {
-  data: void;
+/**
+ * @summary Get Sections with items
+ */
+export type getSectionsWithItemsResponse = {
+  data: ResponseGetSectionsWithItemsDTO[];
   status: number;
   headers: Headers;
 }
 
-export const getSectionsControllerGetByIdUrl = (id: string,) => {
+export const getGetSectionsWithItemsUrl = (params: GetSectionsWithItemsParams,) => {
+  const normalizedParams = new URLSearchParams();
 
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
 
-  return `http://localhost:3333/sections/${id}`
+  return normalizedParams.size ? `http://localhost:3333/sections/get-with-items?${normalizedParams.toString()}` : `http://localhost:3333/sections/get-with-items`
 }
 
-export const sectionsControllerGetById = async (id: string, options?: RequestInit): Promise<sectionsControllerGetByIdResponse> => {
+export const getSectionsWithItems = async (params: GetSectionsWithItemsParams, options?: RequestInit): Promise<getSectionsWithItemsResponse> => {
   
-  const res = await fetch(getSectionsControllerGetByIdUrl(id),
+  const res = await fetch(getGetSectionsWithItemsUrl(params),
   {      
     ...options,
     method: 'GET'
@@ -957,9 +1145,147 @@ export const sectionsControllerGetById = async (id: string, options?: RequestIni
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: sectionsControllerGetByIdResponse['data'] = body ? JSON.parse(body) : {}
+  const data: getSectionsWithItemsResponse['data'] = body ? JSON.parse(body) : {}
 
-  return { data, status: res.status, headers: res.headers } as sectionsControllerGetByIdResponse
+  return { data, status: res.status, headers: res.headers } as getSectionsWithItemsResponse
+}
+
+
+
+/**
+ * @summary Get Section By Id
+ */
+export type getSectionByIdResponse = {
+  data: ResponseGetSectionByIdDTO;
+  status: number;
+  headers: Headers;
+}
+
+export const getGetSectionByIdUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/sections/${id}`
+}
+
+export const getSectionById = async (id: string, options?: RequestInit): Promise<getSectionByIdResponse> => {
+  
+  const res = await fetch(getGetSectionByIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getSectionByIdResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getSectionByIdResponse
+}
+
+
+
+/**
+ * @summary Delete Section
+ */
+export type deleteSectionResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteSectionUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/sections/${id}`
+}
+
+export const deleteSection = async (id: string, options?: RequestInit): Promise<deleteSectionResponse> => {
+  
+  const res = await fetch(getDeleteSectionUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: deleteSectionResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as deleteSectionResponse
+}
+
+
+
+/**
+ * @summary Update Section
+ */
+export type updateSectionResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getUpdateSectionUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/sections/${id}`
+}
+
+export const updateSection = async (id: string,
+    requestUpdateSectionDTO: RequestUpdateSectionDTO, options?: RequestInit): Promise<updateSectionResponse> => {
+  
+  const res = await fetch(getUpdateSectionUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      requestUpdateSectionDTO,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: updateSectionResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as updateSectionResponse
+}
+
+
+
+/**
+ * @summary Toggle Section
+ */
+export type toggleSectionResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getToggleSectionUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/sections/toggle/${id}`
+}
+
+export const toggleSection = async (id: string, options?: RequestInit): Promise<toggleSectionResponse> => {
+  
+  const res = await fetch(getToggleSectionUrl(id),
+  {      
+    ...options,
+    method: 'PATCH'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: toggleSectionResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as toggleSectionResponse
 }
 
 

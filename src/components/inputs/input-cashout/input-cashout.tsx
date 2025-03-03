@@ -3,6 +3,8 @@ import { InputHTMLAttributes } from 'react';
 import { clsx } from 'clsx';
 import { Controller } from 'react-hook-form';
 
+import { InputErrorFeedback, InputLabel } from '../input/input';
+
 interface InputProps extends InputHTMLAttributes<HTMLElement> {
   name: string;
   control: any;
@@ -20,14 +22,14 @@ export function InputCashout({
   error,
   name,
   control,
-  isOptional,
+  isOptional = false,
   withSideLabel,
   limitCash = 1000000,
   sideLabelText = 'XX',
   sideBarPosition = 'left',
   ...rest
 }: InputProps) {
-  const formatCurrency = (value: string) => {
+  const formatCurrencyAmount = (value: string) => {
     const formatter = new Intl.NumberFormat('pt-BR', {
       style: 'decimal',
       currency: 'BRL',
@@ -38,17 +40,12 @@ export function InputCashout({
   return (
     <div className='flex w-full flex-col'>
       {label && (
-        <label
-          className={clsx('text-sm font-medium text-gray-600', {
-            'text-red-500': error,
-          })}
-          htmlFor={name}
-        >
-          {label}
-          {isOptional && (
-            <span className='text-brand-text text-xs'> (Opcional)</span>
-          )}
-        </label>
+        <InputLabel
+          name={name}
+          label={label}
+          isOptional={isOptional}
+          isDisabled={!!rest.disabled}
+        />
       )}
 
       <div className='relative flex w-full items-center'>
@@ -70,7 +67,7 @@ export function InputCashout({
                 const rawValue = e.target.value;
                 const numericValue = rawValue.replace(/\D/g, '');
                 if (Number(numericValue) / 100 > limitCash) return;
-                const formattedValue = formatCurrency(numericValue);
+                const formattedValue = formatCurrencyAmount(numericValue);
                 field.onChange(formattedValue); // Atualize o valor diretamente no react-hook-form
               }}
               className={clsx(
@@ -94,14 +91,8 @@ export function InputCashout({
           </div>
         )}
       </div>
-      {error && (
-        <div
-          data-testid={`error-input-${name}`}
-          className='mt-[6px] flex items-center gap-[6px] text-sm text-red-500'
-        >
-          {error}
-        </div>
-      )}
+
+      {error && <InputErrorFeedback error={error} />}
     </div>
   );
 }

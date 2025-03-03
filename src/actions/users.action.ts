@@ -1,25 +1,19 @@
 'use server';
 
 import { changeOnboardingStatus, getUserByRestaurantId } from '@/http/api';
-import { auth, clerkClient } from '@clerk/nextjs/server';
 
 import { getCookiesHeader } from './utils.action';
 
 export async function getUsersByRestaurantIdAPI() {
-  const { userId } = await auth();
-  if (!userId) throw new Error('Unauthorized');
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
 
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-
-  const response = await getUserByRestaurantId(
-    user.publicMetadata.restaurantId,
-    {
-      headers: {
-        Cookie: await getCookiesHeader(),
-      },
-    }
-  );
+  const response = await getUserByRestaurantId(restaurantid, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
 
   if (response.status !== 200) throw new Error('Unauthorized');
 
@@ -27,20 +21,15 @@ export async function getUsersByRestaurantIdAPI() {
 }
 
 export async function changeOnboardingStatusAPI() {
-  const { userId } = await auth();
-  if (!userId) throw new Error('Unauthorized');
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
 
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-
-  const userAPI = await getUserByRestaurantId(
-    user.publicMetadata.restaurantId,
-    {
-      headers: {
-        Cookie: await getCookiesHeader(),
-      },
-    }
-  );
+  const userAPI = await getUserByRestaurantId(restaurantid, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
 
   if (!userAPI.data.id) {
     throw new Error('Failed to get user id');

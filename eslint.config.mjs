@@ -10,8 +10,12 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  {
+    ignores: ["src/http/api.ts"],
+  },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
+    // ignorePatterns: ["src/http/api.ts"],
     rules: {
      'react-hooks/rules-of-hooks': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',

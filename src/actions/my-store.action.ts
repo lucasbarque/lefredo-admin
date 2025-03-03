@@ -6,22 +6,25 @@ import {
   changeLogoRestaurant,
   deleteLogoRestaurant,
   getRestaurantById,
+  getRestaurantIsFirstCategory,
   updateRestaurant,
 } from '@/http/api';
-import { auth, clerkClient } from '@clerk/nextjs/server';
+import { revalidateTag } from 'next/cache';
 
 import { getCookiesHeader } from './utils.action';
 
 export async function getRestaurantData() {
-  const { userId } = await auth();
-  if (!userId) throw new Error('Unauthorized');
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
 
-  const client = await clerkClient();
-  const user = await client.users.getUser(userId);
-
-  const response = await getRestaurantById(user.publicMetadata.restaurantId, {
+  const response = await getRestaurantById(restaurantid, {
     headers: {
-      Cookie: await getCookiesHeader(),
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+    cache: 'force-cache',
+    next: {
+      tags: ['update-restaurant'],
     },
   });
 
@@ -37,11 +40,19 @@ export async function updateRestaurantData({
   restaurantId: string;
   data: UpdateResturantDTO;
 }) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
   const response = await updateRestaurant(restaurantId, data, {
     headers: {
-      Cookie: await getCookiesHeader(),
+      Cookie: cookies,
+      restaurantid,
+      menuid,
     },
   });
+
+  if (response.status === 200) {
+    revalidateTag('update-restaurant');
+  }
 
   return response;
 }
@@ -50,9 +61,13 @@ export async function changeRestaurantLogo(
   restaurantId: string,
   file: ChangeLogoDTO
 ) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
   const response = await changeLogoRestaurant(restaurantId, file, {
     headers: {
-      Cookie: await getCookiesHeader(),
+      Cookie: cookies,
+      restaurantid,
+      menuid,
     },
   });
 
@@ -60,11 +75,35 @@ export async function changeRestaurantLogo(
 }
 
 export async function deleteRestaurantLogo(restaurantId: string) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
   const response = await deleteLogoRestaurant(restaurantId, {
     headers: {
-      Cookie: await getCookiesHeader(),
+      Cookie: cookies,
+      restaurantid,
+      menuid,
     },
   });
 
   return response;
+}
+
+export async function getRestaurantIsFirstCategoryAPI() {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
+  const response = await getRestaurantIsFirstCategory(restaurantid, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+    cache: 'force-cache',
+    next: {
+      tags: ['update-restaurant-first-category'],
+    },
+  });
+
+  if (response.status !== 200) throw new Error('Unauthorized');
+
+  return response.data;
 }

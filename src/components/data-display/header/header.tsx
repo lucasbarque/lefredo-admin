@@ -8,11 +8,17 @@ export function Header({ title, description, backButton }: HeaderProps) {
   return (
     <div>
       {backButton && (
-        <Button family='tertiary' size='sm' onClick={backButton.onClick}>
+        <Button
+          family='tertiary'
+          size='sm'
+          onClick={backButton.onClick}
+          {...backButton}
+        >
           <Button.Icon>
             <IconChevronLeft size={16} />
           </Button.Icon>
           {backButton.title}
+          {backButton.children}
         </Button>
       )}
 
@@ -20,7 +26,7 @@ export function Header({ title, description, backButton }: HeaderProps) {
         {title}
       </h2>
       {description && (
-        <p className='text-text-default max-w-[390px] text-lg'>{description}</p>
+        <p className='text-text-default text-lg'>{description}</p>
       )}
     </div>
   );

@@ -1,12 +1,12 @@
 'use client';
 
+import { getRestaurantIsFirstCategoryAPI } from '@/actions/my-store.action';
 import { getUsersByRestaurantIdAPI } from '@/actions/users.action';
 import { useClerk } from '@clerk/nextjs';
 import { IconBook, IconBuildingStore, IconLogout2 } from '@tabler/icons-react';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { SidebarItem } from '@/components/navigation/sidebar-item';
-
+import { SidebarItem } from './sidebar-item';
 import { SidebarProps } from './sidebar.types';
 
 export function Sidebar({ children }: SidebarProps) {
@@ -16,31 +16,36 @@ export function Sidebar({ children }: SidebarProps) {
 
   async function handleClickMenu() {
     const currentUser = await getUsersByRestaurantIdAPI();
+    const { isFirstCategory } = await getRestaurantIsFirstCategoryAPI();
 
-    if (!currentUser?.onboardingFinished) {
-      router.push('/onboarding');
+    if (currentUser?.onboardingFinished === false) {
+      return router.push('/onboarding');
     }
+
+    if (isFirstCategory) {
+      return router.push('/first-category-create');
+    }
+
+    return router.push('/menu-list');
   }
 
   return (
     <div className='flex'>
       <div className='h-[calc(100vh-80px)] w-full max-w-[300px] border-r border-gray-200 px-6 py-8'>
         <SidebarItem
-          isActive={pathname === '/onboarding'}
+          isActive={pathname !== '/my-store'}
           title='Cardápio'
           icon={<IconBook size={24} />}
-          href=''
           onClick={handleClickMenu}
         />
         <SidebarItem
           title='Minha Loja'
-          href='/my-store'
+          onClick={() => router.push('/my-store')}
           isActive={pathname === '/my-store'}
           icon={<IconBuildingStore size={24} />}
         />
         <SidebarItem
           title='Sair'
-          href=''
           icon={<IconLogout2 size={24} />}
           onClick={() => signOut({ redirectUrl: '/login' })}
         />

@@ -55,3 +55,7 @@ html {
     @apply bg-button-hover;
   }
 }
+
+[aria-label='Notifications alt+T'] ol {
+  @apply mt-[70px];
+}

@@ -21,28 +21,27 @@ const ToggleThumb = (props: ToggleThumbProps) => (
   />
 );
 
-const ToggleSwitch = ({
-  label,
-  id = 'toggle-switch',
-  ...props
-}: ToggleSwitchProps) => {
+const ToggleSwitch = ({ label, ...props }: ToggleSwitchProps) => {
   return (
-    <div className='flex items-center flex-col'>
+    <div
+      className={clsx('flex flex-col items-center', {
+        'animate-pulse': props.disabled === true,
+      })}
+    >
       {label && (
         <label
-          className='text-title-secondary text-sm select-none'
-          htmlFor={id}
+          className='text-title-secondary cursor-pointer text-sm select-none'
+          htmlFor={props.id}
         >
           {label}
         </label>
       )}
       <Switch.Root
         className={clsx(
-          'relative h-[24px] w-[42px] rounded-full cursor-pointer',
+          'relative h-[24px] w-[42px] cursor-pointer rounded-full',
           'bg-border-default outline-none',
           'data-[state=checked]:bg-brand-default'
         )}
-        id={id}
         {...props}
       >
         <ToggleThumb />

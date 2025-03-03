@@ -7,7 +7,12 @@ const nextConfig: NextConfig = {
     },
   },
   images: {
-    domains: ['lefredo.s3.us-east-1.amazonaws.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lefredo-development.s3.us-east-1.amazonaws.com',
+      },
+    ],
   },
 };
 

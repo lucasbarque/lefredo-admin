@@ -2,32 +2,29 @@ import clsx from 'clsx';
 import { Controller } from 'react-hook-form';
 import ReactSelect from 'react-select';
 
+import { InputLabel } from '../input';
 import { SelectProps } from './select.types';
 
 export function Select({
+  id,
   label,
   error,
   control,
   name,
   placeholder = 'Selecione',
-  isOptional,
+  isOptional = false,
   options,
   ...props
 }: SelectProps) {
   return (
     <div className='flex w-full flex-col'>
       {label && (
-        <label
-          className={clsx('font-work-sans text-sm font-medium text-gray-600', {
-            'text-red-500': error,
-          })}
-          htmlFor={name}
-        >
-          {label}
-          {isOptional && (
-            <span className='text-brand-text text-xs'> (Opcional)</span>
-          )}
-        </label>
+        <InputLabel
+          name={name}
+          label={label}
+          isOptional={isOptional}
+          isDisabled={!!props.disabled}
+        />
       )}
 
       <div className='font-work-sans relative flex w-full items-center'>
@@ -36,6 +33,7 @@ export function Select({
           name={name}
           render={({ field }) => (
             <ReactSelect
+              instanceId={id}
               className='w-full'
               placeholder={placeholder}
               value={options.find((item) => item.value === field.value)}

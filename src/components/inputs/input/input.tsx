@@ -18,7 +18,7 @@ import { InputProps } from './input.types';
 
 export function InputErrorFeedback({ error }: { error: string }) {
   return (
-    <div className='flex items-center gap-1 text-red-500'>
+    <div className='mt-1 flex items-center gap-1 text-red-500'>
       <IconExclamationCircle size={16} />
       <span>{error}</span>
     </div>
@@ -29,13 +29,19 @@ export function InputLabel({
   name,
   label,
   isOptional,
+  isDisabled,
 }: {
   name: string;
   label: string;
   isOptional: boolean;
+  isDisabled: boolean;
 }) {
   return (
-    <label className='font-work-sans font-medium text-gray-600' htmlFor={name}>
+    <label
+      data-is-disabled={isDisabled}
+      className='font-work-sans font-medium text-gray-600 data-[is-disabled=true]:text-gray-500'
+      htmlFor={name}
+    >
       {label}
       {isOptional && (
         <span className='font-work-sans text-sm font-normal text-gray-500'>
@@ -77,7 +83,12 @@ export function Input({
       data-is-error={error ? 'true' : 'false'}
     >
       {label && (
-        <InputLabel name={name} label={label} isOptional={isOptional} />
+        <InputLabel
+          name={name}
+          label={label}
+          isOptional={isOptional}
+          isDisabled={!!rest.disabled}
+        />
       )}
 
       <div className='relative flex w-full items-center'>
@@ -93,7 +104,7 @@ export function Input({
               id={name}
               value={field.value}
               onChange={(e) => onChangeText(e, field)}
-              className='border-border-default text-title-default outline-brand-default group-data-[is-error=true]:bg-danger-light h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500 group-data-[is-error=true]:border-red-500'
+              className='border-border-default text-title-default outline-brand-default group-data-[is-error=true]:bg-danger-light h-11 w-full rounded-lg border bg-white px-[15px] font-normal placeholder-gray-500 group-data-[is-error=true]:border-red-500 disabled:cursor-not-allowed disabled:bg-slate-300 disabled:text-gray-600'
             />
           )}
         />
@@ -116,7 +127,7 @@ export function Input({
         )}
       </div>
 
-      <div className='justify-betweeen mt-[6px] flex items-center'>
+      <div className='justify-betweeen flex items-center'>
         {error && <InputErrorFeedback error={error} />}
 
         {countCharacters && (

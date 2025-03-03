@@ -1,9 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { Fragment, useCallback, useRef, useState } from 'react';
 
+import { extname } from '@/lib/utils';
 import { IconCloudUpload, IconEdit, IconX } from '@tabler/icons-react';
 import clsx from 'clsx';
-import { extname } from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
 
 import { LoadingSpinner } from '@/components/data-display/loading-spinner/loading-spinner';
