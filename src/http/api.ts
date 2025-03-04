@@ -33,6 +33,8 @@ export interface CreateMenuDTO { [key: string]: unknown }
 export interface UpdateMenuDTO { [key: string]: unknown }
 
 export interface Section {
+  id: string;
+  title: string;
   description: string;
 }
 
@@ -71,7 +73,7 @@ export const DishSpecKey = {
   cold: 'cold',
   hot: 'hot',
   vegan: 'vegan',
-  highlited: 'highlited',
+  highlighted: 'highlighted',
 } as const;
 
 export interface DishSpec {
@@ -126,7 +128,24 @@ export interface ResponseCreateDishDTO {
   id: string;
 }
 
+export interface RequestUpdateDishDTO {
+  title: string;
+  portion: string;
+  price: string;
+  /** @nullable */
+  prepTime: string | null;
+  flagged: string;
+  /** @nullable */
+  description: string | null;
+}
+
 export interface RequestChangePriceDTO {
+  price: number;
+}
+
+export interface ResponseGetDishesExtraDTO {
+  id: string;
+  title: string;
   price: number;
 }
 
@@ -544,21 +563,60 @@ export const getDishById = async (id: string, options?: RequestInit): Promise<ge
 
 
 
-export type dishesControllerDeleteResponse = {
-  data: void;
+/**
+ * @summary Update Dish
+ */
+export type updateDishResponse = {
+  data: ResponseCreateDishDTO;
   status: number;
   headers: Headers;
 }
 
-export const getDishesControllerDeleteUrl = (id: string,) => {
+export const getUpdateDishUrl = (id: string,) => {
 
 
   return `http://localhost:3333/dishes/${id}`
 }
 
-export const dishesControllerDelete = async (id: string, options?: RequestInit): Promise<dishesControllerDeleteResponse> => {
+export const updateDish = async (id: string,
+    requestUpdateDishDTO: RequestUpdateDishDTO, options?: RequestInit): Promise<updateDishResponse> => {
   
-  const res = await fetch(getDishesControllerDeleteUrl(id),
+  const res = await fetch(getUpdateDishUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      requestUpdateDishDTO,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: updateDishResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as updateDishResponse
+}
+
+
+
+/**
+ * @summary Delete dish
+ */
+export type deleteDishResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteDishUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/${id}`
+}
+
+export const deleteDish = async (id: string, options?: RequestInit): Promise<deleteDishResponse> => {
+  
+  const res = await fetch(getDeleteDishUrl(id),
   {      
     ...options,
     method: 'DELETE'
@@ -568,9 +626,9 @@ export const dishesControllerDelete = async (id: string, options?: RequestInit):
 )
 
   const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: dishesControllerDeleteResponse['data'] = body ? JSON.parse(body) : {}
+  const data: deleteDishResponse['data'] = body ? JSON.parse(body) : {}
 
-  return { data, status: res.status, headers: res.headers } as dishesControllerDeleteResponse
+  return { data, status: res.status, headers: res.headers } as deleteDishResponse
 }
 
 
@@ -751,6 +809,40 @@ export const changePrice = async (id: string,
   const data: changePriceResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as changePriceResponse
+}
+
+
+
+/**
+ * @summary Get Dishes Extras
+ */
+export type getDishExtrasResponse = {
+  data: ResponseGetDishesExtraDTO[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetDishExtrasUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/dish-extras/${id}`
+}
+
+export const getDishExtras = async (id: string, options?: RequestInit): Promise<getDishExtrasResponse> => {
+  
+  const res = await fetch(getGetDishExtrasUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getDishExtrasResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getDishExtrasResponse
 }
 
 

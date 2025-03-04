@@ -1,5 +1,3 @@
-'use client';
-
 import {
   IconCandyOff,
   IconFlame,
@@ -10,19 +8,31 @@ import {
   IconSeeding,
   IconSnowflake,
 } from '@tabler/icons-react';
+import Link from 'next/link';
 
 import { ClassificationItem } from '@/components/data-display/classification-item/classification-item';
 import { Header } from '@/components/data-display/header';
 import { Button } from '@/components/inputs/button';
 import { StepperBar } from '@/components/inputs/stepper-bar';
 
-export default function PageAddItemClassification() {
+import { PageAddItemClassificationParams } from './add-item-classification.types';
+
+export default async function PageAddItemClassification({
+  params,
+}: PageAddItemClassificationParams) {
+  const { dishId } = await params;
+
   return (
     <>
       <div className='flex items-end justify-between px-6 pt-6'>
         <Header
-          backButton={{ onClick: () => {}, title: 'Voltar' }}
           title='Adicionar item'
+          backButton={{
+            title: '',
+            children: (
+              <Link href={`/add-item-additionals/${dishId}`}>Voltar</Link>
+            ),
+          }}
         />
         <StepperBar currentStepperIndex={3} />
       </div>
@@ -83,12 +93,14 @@ export default function PageAddItemClassification() {
       </div>
 
       <div className='border-border-default mt-auto flex justify-end gap-4 border-t px-8 py-4'>
-        <Button size='md' family='secondary'>
-          Cancelar
-        </Button>
-        <Button size='md' onClick={() => {}}>
-          Continuar
-        </Button>
+        <Link href='/menu-list'>
+          <Button size='md' family='secondary'>
+            Cancelar
+          </Button>
+        </Link>
+        <Link href={`/add-item-flavors/${dishId}`}>
+          <Button size='md'>Continuar</Button>
+        </Link>
       </div>
     </>
   );

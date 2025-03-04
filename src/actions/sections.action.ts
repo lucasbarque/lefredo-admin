@@ -66,7 +66,12 @@ export async function getSectionsWithItemsAPI() {
       },
       cache: 'force-cache',
       next: {
-        tags: ['delete-section', 'create-section', 'update-section'],
+        tags: [
+          'delete-section',
+          'create-section',
+          'update-section',
+          'delete-dish',
+        ],
       },
     }
   );

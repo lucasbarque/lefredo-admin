@@ -17,7 +17,10 @@ export function Select({
   ...props
 }: SelectProps) {
   return (
-    <div className='flex w-full flex-col'>
+    <div
+      data-is-disabled={props.disabled}
+      className='flex w-full flex-col data-[is-disabled=true]:cursor-not-allowed'
+    >
       {label && (
         <InputLabel
           name={name}

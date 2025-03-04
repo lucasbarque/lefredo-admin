@@ -1,3 +1,5 @@
+'use client';
+
 import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
 
 import { ItemAdditionalProps } from './add-item-additionals.types';

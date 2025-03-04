@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
-import { changePriceAPI, toggleDishAPI } from '@/actions/dish.action';
+import {
+  changePriceAPI,
+  deleteDishAPI,
+  toggleDishAPI,
+} from '@/actions/dish.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -89,6 +93,17 @@ export function DishItem({
     }
   }
 
+  async function handleDeleteDish(id: string) {
+    const responseStatus = await deleteDishAPI(id);
+
+    if (responseStatus === 200) {
+      return toast.success('Item deletado com sucesso', {
+        position: 'top-right',
+      });
+    }
+    toast.error('Item deletado com sucesso', { position: 'top-right' });
+  }
+
   return (
     <div className='flex items-center px-6 py-3'>
       <div className='flex w-[70%] items-center gap-4'>
@@ -148,14 +163,14 @@ export function DishItem({
                 dropdownItems={[
                   {
                     icon: <IconEdit size={20} className='text-gray-700' />,
-                    linkProps: { href: '#' },
+                    linkProps: { href: `edit-item-details/${id}` },
                     title: 'Editar item',
                   },
                 ]}
                 lastDropdownItems={[
                   {
                     icon: <IconTrash size={20} className='text-gray-700' />,
-                    linkProps: { href: '#' },
+                    linkProps: { onClick: () => handleDeleteDish(id) },
                     title: 'Excluir item',
                   },
                 ]}

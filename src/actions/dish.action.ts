@@ -3,10 +3,16 @@
 import {
   RequestChangePriceDTO,
   RequestCreateDishDTO,
+  RequestUpdateDishDTO,
   changePrice,
   createDish,
+  deleteDish,
+  getDishById,
+  getDishExtras,
   toggleDish,
+  updateDish,
 } from '@/http/api';
+import { revalidateTag } from 'next/cache';
 
 import { getCookiesHeader } from './utils.action';
 
@@ -57,4 +63,63 @@ export async function createDishAPI(data: RequestCreateDishDTO) {
   });
 
   return response;
+}
+
+export async function deleteDishAPI(id: string) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
+  const response = await deleteDish(id, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
+
+  if (response.status === 200) {
+    revalidateTag('delete-dish');
+  }
+
+  return response.status;
+}
+
+export async function getDishByIdAPI(id: string) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
+  const response = await getDishById(id, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
+  return response.data;
+}
+
+export async function updateDishAPI(id: string, data: RequestUpdateDishDTO) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
+  const response = await updateDish(id, data, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
+
+  return response.status;
+}
+
+export async function getDishExtrasAPI(id: string) {
+  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+
+  const response = await getDishExtras(id, {
+    headers: {
+      Cookie: cookies,
+      restaurantid,
+      menuid,
+    },
+  });
+
+  return response.data;
 }

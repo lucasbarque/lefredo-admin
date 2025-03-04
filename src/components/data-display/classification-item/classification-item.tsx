@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
