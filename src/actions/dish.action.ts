@@ -4,12 +4,14 @@ import {
   RequestChangePriceDTO,
   RequestCreateDishDTO,
   RequestUpdateDishDTO,
+  RequestUpdateDishExtrasOrderDTO,
   changePrice,
   createDish,
   deleteDish,
   getDishById,
   toggleDish,
   updateDish,
+  updateDishExtrasOrder,
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
@@ -79,6 +81,19 @@ export async function updateDishAPI(id: string, data: RequestUpdateDishDTO) {
   const headers = await getCookiesHeader();
 
   const response = await updateDish(id, data, {
+    headers,
+  });
+
+  return response.status;
+}
+
+export async function updateDishExtrasOrderAPI(
+  id: string,
+  data: RequestUpdateDishExtrasOrderDTO
+) {
+  const headers = await getCookiesHeader();
+
+  const response = await updateDishExtrasOrder(id, data, {
     headers,
   });
 

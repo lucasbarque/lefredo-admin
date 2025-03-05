@@ -105,6 +105,7 @@ export interface GetDishDTO {
   dishFlavors: DishFlavorsDTO[];
   dishMedias: DishMediasDTO[];
   dishSpecs: DishSpecsDTO[];
+  dishExtrasOrder: string[];
 }
 
 export interface GetDishesDTO {
@@ -146,6 +147,10 @@ export interface RequestUpdateDishDTO {
 
 export interface RequestChangePriceDTO {
   price: number;
+}
+
+export interface RequestUpdateDishExtrasOrderDTO {
+  orderUpdated: string[];
 }
 
 export interface ResponseGetDishesExtraDTO {
@@ -873,6 +878,42 @@ export const changePrice = async (id: string,
   const data: changePriceResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as changePriceResponse
+}
+
+
+
+/**
+ * @summary Update Dish Extras Order
+ */
+export type updateDishExtrasOrderResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getUpdateDishExtrasOrderUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/update-dish-extras-order/${id}`
+}
+
+export const updateDishExtrasOrder = async (id: string,
+    requestUpdateDishExtrasOrderDTO: RequestUpdateDishExtrasOrderDTO, options?: RequestInit): Promise<updateDishExtrasOrderResponse> => {
+  
+  const res = await fetch(getUpdateDishExtrasOrderUrl(id),
+  {      
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      requestUpdateDishExtrasOrderDTO,)
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: updateDishExtrasOrderResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as updateDishExtrasOrderResponse
 }
 
 

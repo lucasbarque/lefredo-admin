@@ -28,8 +28,8 @@ export function ItemAdditional({
   }
 
   return (
-    <div className='flex w-full items-center gap-3'>
-      <IconGripVertical className='text-text-default cursor-move' />
+    <div className='mb-2 flex w-full cursor-grab items-center gap-3'>
+      <IconGripVertical className='text-text-default' />
       <div className='border-border-default flex h-[3.125rem] w-full items-center justify-between rounded-md border px-4'>
         <span className='text-title-default font-semibold'>
           {`${name} - R$ ${new Intl.NumberFormat('pt-BR', {

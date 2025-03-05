@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { updateDishExtrasOrderAPI } from '@/actions/dish.action';
 import {
   createDishesExtraAPI,
   updateDishesExtraAPI,
@@ -9,6 +10,7 @@ import {
 import { createDishesExtraSchema } from '@/validations/dishes-extra-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
+import { Reorder } from 'motion/react';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -40,6 +42,7 @@ export function FormAddItemAdditionals({
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
+  const [dishExtrasList, setDishExtrasList] = useState(dishExtras);
 
   const onSubmit: SubmitHandler<
     z.infer<typeof createDishesExtraSchema>
@@ -102,21 +105,50 @@ export function FormAddItemAdditionals({
     }
   }
 
+  async function handleUpdateOrder() {
+    const orderItems = dishExtrasList.map((item) => item.id);
+    const responseStatus = await updateDishExtrasOrderAPI(dishId, {
+      orderUpdated: orderItems,
+    });
+
+    if (responseStatus === 200) {
+      toast.success('Ordem atualizada com sucesso', { position: 'top-right' });
+    } else {
+      toast.error('Falha ao atualizar ordem', { position: 'top-right' });
+    }
+  }
+
+  useEffect(() => {
+    setDishExtrasList(dishExtras);
+  }, [dishExtras]);
+
   return (
     <>
       {dishExtras.length > 0 && (
         <div className='mt-6 max-w-[780px] px-6'>
           <div className='space-y-3'>
-            {dishExtras.map((item) => (
-              <ItemAdditional
-                key={item.id}
-                id={item.id}
-                name={item.title}
-                price={item.price}
-                setEditItem={setEditItem}
-                handleCloseForm={handleCloseForm}
-              />
-            ))}
+            <Reorder.Group
+              values={dishExtrasList}
+              onReorder={setDishExtrasList}
+              axis='y'
+            >
+              {dishExtrasList.map((item) => (
+                <Reorder.Item
+                  key={item.id}
+                  value={item}
+                  onDragEnd={handleUpdateOrder}
+                >
+                  <ItemAdditional
+                    key={item.id}
+                    id={item.id}
+                    name={item.title}
+                    price={item.price}
+                    setEditItem={setEditItem}
+                    handleCloseForm={handleCloseForm}
+                  />
+                </Reorder.Item>
+              ))}
+            </Reorder.Group>
           </div>
         </div>
       )}
