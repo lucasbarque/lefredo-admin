@@ -2,10 +2,16 @@
 
 import { useState } from 'react';
 
+import {
+  createDishesExtraAPI,
+  updateDishesExtraAPI,
+} from '@/actions/dishes-extras.action';
+import { createDishesExtraSchema } from '@/validations/dishes-extra-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { Button } from '@/components/inputs/button';
@@ -13,53 +19,118 @@ import { Input } from '@/components/inputs/input';
 import { InputCashout } from '@/components/inputs/input-cashout';
 
 import { FormAddItemAdditionalsProps } from './add-item-additionals.types';
-
-const inputSchema = z.object({
-  name: z
-    .string()
-    .min(3, 'Digite no mínimo 3 caracteres')
-    .max(40, 'Digite no máximo 40 caracteres'),
-  price: z.string().nonempty('Digite o preço'),
-});
+import { ItemAdditional } from './item-additional';
 
 export function FormAddItemAdditionals({
   dishId,
+  dishExtras,
 }: FormAddItemAdditionalsProps) {
   const {
     control,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm<z.infer<typeof inputSchema>>({
-    resolver: zodResolver(inputSchema),
+  } = useForm<z.infer<typeof createDishesExtraSchema>>({
+    resolver: zodResolver(createDishesExtraSchema),
     defaultValues: {
-      name: '',
+      title: '',
       price: '',
     },
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isEditingId, setIsEditingId] = useState<string | null>(null);
 
-  const onSubmit: SubmitHandler<z.infer<typeof inputSchema>> = async () => {};
+  const onSubmit: SubmitHandler<
+    z.infer<typeof createDishesExtraSchema>
+  > = async (data) => {
+    if (isEditingId) {
+      const responseStatus = await updateDishesExtraAPI(isEditingId, data);
 
-  function handleCancel() {
+      if (responseStatus === 200) {
+        toast.success('Item adicional atualizado com sucesso', {
+          position: 'top-right',
+        });
+        handleCloseForm();
+      } else {
+        toast.error('Falha ao atualizar item adicional', {
+          position: 'top-right',
+        });
+      }
+      setIsEditingId(null);
+      handleCloseForm();
+    } else {
+      const responseStatus = await createDishesExtraAPI(dishId, data);
+      if (responseStatus === 201) {
+        toast.success('Item adicional cadastrado com sucesso', {
+          position: 'top-right',
+        });
+        handleCloseForm();
+      } else {
+        toast.error('Falha ao cadastrar item adicional', {
+          position: 'top-right',
+        });
+      }
+    }
+  };
+
+  function handleCloseForm() {
     reset();
     setIsFormOpen(false);
   }
 
+  function handleOpenCreateForm() {
+    setIsFormOpen(true);
+    setIsEditingId(null);
+  }
+
+  function setEditItem(id: string) {
+    const currentDish = dishExtras.find((dish) => dish.id === id);
+
+    if (currentDish) {
+      setIsFormOpen(true);
+      setIsEditingId(currentDish.id);
+      setValue('title', currentDish.title);
+      setValue(
+        'price',
+        new Intl.NumberFormat('pt-BR', {
+          style: 'decimal',
+          currency: 'BRL',
+          minimumFractionDigits: 2,
+        }).format(currentDish.price / 100) ?? '0,00'
+      );
+    }
+  }
+
   return (
     <>
+      {dishExtras.length > 0 && (
+        <div className='mt-6 max-w-[780px] px-6'>
+          <div className='space-y-3'>
+            {dishExtras.map((item) => (
+              <ItemAdditional
+                key={item.id}
+                id={item.id}
+                name={item.title}
+                price={item.price}
+                setEditItem={setEditItem}
+                handleCloseForm={handleCloseForm}
+              />
+            ))}
+          </div>
+        </div>
+      )}
       <div className='max-w-[780px] px-6'>
         {!isFormOpen && (
-          <div className='mt-2 flex items-center justify-center'>
-            <Button
-              family='tertiary'
-              size='sm'
-              onClick={() => setIsFormOpen(true)}
-            >
+          <div
+            data-has-additionals={dishExtras.length > 0}
+            className='mt-2 flex items-center data-[has-additionals=false]:justify-start data-[has-additionals=true]:justify-center'
+          >
+            <Button family='tertiary' size='sm' onClick={handleOpenCreateForm}>
               <Button.Icon>
                 <IconPlus size={18} />
               </Button.Icon>
-              Criar outro item adicional
+              Criar item adicional
             </Button>
           </div>
         )}
@@ -68,11 +139,11 @@ export function FormAddItemAdditionals({
           <form className='mt-4' onSubmit={handleSubmit(onSubmit)}>
             <div className='flex gap-3'>
               <Input
-                id='name'
-                name='name'
-                label='Nome'
+                id='title'
+                name='title'
+                label='Título'
                 control={control}
-                error={errors.name?.message}
+                error={errors.title?.message}
                 placeholder='Exemplo: Alface'
               />
 
@@ -91,7 +162,8 @@ export function FormAddItemAdditionals({
               <Button
                 size='sm'
                 family='secondary'
-                onClick={handleCancel}
+                onClick={handleCloseForm}
+                disabled={isSubmitting}
                 type='button'
               >
                 Cancelar
@@ -101,7 +173,7 @@ export function FormAddItemAdditionals({
                 disabled={isSubmitting}
                 onClick={handleSubmit(onSubmit)}
               >
-                Adicionar
+                {isEditingId ? 'Atualizar' : 'Adicionar'}
               </Button>
             </div>
           </form>

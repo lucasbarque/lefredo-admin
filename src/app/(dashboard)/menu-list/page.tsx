@@ -36,7 +36,7 @@ export default async function PageMenuList() {
         </p>
       </div>
       <div className='flex flex-col gap-6 pt-6'>
-        {categories.map((category) => (
+        {categories?.map((category) => (
           <CategoryListItems
             key={category.id}
             id={category.id}

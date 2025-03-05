@@ -11,7 +11,7 @@ export function StepperBar({ currentStepperIndex }: StepperBarProps) {
         <div key={index} className='flex items-center gap-3'>
           <button
             data-is-active={currentStepperIndex === index}
-            className='group flex cursor-pointer items-center gap-3'
+            className='group flex items-center gap-3'
           >
             <div className='group-data-[is-active=true]:border-brand-default font-work-sans group-data-[is-active=true]:text-brand-default flex h-6 w-6 items-center justify-center rounded-full border font-semibold text-gray-500'>
               {index + 1}

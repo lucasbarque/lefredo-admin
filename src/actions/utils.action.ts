@@ -17,7 +17,7 @@ export async function getCookiesHeader() {
     .map((cookie) => `${cookie.name}=${cookie.value}`);
 
   return {
-    cookies: cookieEntries.join('; '),
+    Cookie: cookieEntries.join('; '),
     restaurantid: user.publicMetadata.restaurantId,
     menuid: user.publicMetadata.menuId,
   };

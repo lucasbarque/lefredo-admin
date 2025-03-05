@@ -2,17 +2,48 @@
 
 import { useState } from 'react';
 
+import { toggleDishesSpecsAPI } from '@/actions/dishes-specs.action';
+import { toast } from 'sonner';
+
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 
 import { ClassificatinItemProps } from './classification-item.types';
 
 export function ClassificationItem({
+  dishId,
   title,
   description,
+  hashKey,
   icon,
   isActive = false,
 }: ClassificatinItemProps) {
   const [isItemActive, setIsItemActive] = useState(isActive);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function handleToggle() {
+    setIsLoading(true);
+
+    const response = await toggleDishesSpecsAPI(dishId, { key: hashKey });
+
+    if (response.status === 200) {
+      if (response.data.newStateIsActive !== isItemActive) {
+        toast.success('Classificação do item atualizada com sucesso', {
+          position: 'top-right',
+        });
+        setIsItemActive(!isItemActive);
+      } else {
+        toast.error('Falha ao atualizar classificação do item', {
+          position: 'top-right',
+        });
+      }
+    } else {
+      toast.error('Falha ao atualizar classificação do item', {
+        position: 'top-right',
+      });
+    }
+
+    setIsLoading(false);
+  }
 
   return (
     <div
@@ -20,9 +51,12 @@ export function ClassificationItem({
       data-is-active={isItemActive}
     >
       <ToggleSwitch
-        id='teste'
-        onCheckedChange={setIsItemActive}
+        disabled={isLoading}
+        onCheckedChange={handleToggle}
         defaultChecked={isItemActive}
+        checked={isItemActive}
+        id={`is-${hashKey}-active`}
+        name={`is-${hashKey}-active`}
       />
       <div>
         <div className='text-title-secondary font-semibold'>{title}</div>

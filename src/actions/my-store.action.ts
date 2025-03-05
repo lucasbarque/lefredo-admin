@@ -14,14 +14,10 @@ import { revalidateTag } from 'next/cache';
 import { getCookiesHeader } from './utils.action';
 
 export async function getRestaurantData() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
-  const response = await getRestaurantById(restaurantid, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+  const response = await getRestaurantById(headers.restaurantid, {
+    headers,
     cache: 'force-cache',
     next: {
       tags: ['update-restaurant'],
@@ -40,14 +36,10 @@ export async function updateRestaurantData({
   restaurantId: string;
   data: UpdateResturantDTO;
 }) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await updateRestaurant(restaurantId, data, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   if (response.status === 200) {
@@ -61,42 +53,30 @@ export async function changeRestaurantLogo(
   restaurantId: string,
   file: ChangeLogoDTO
 ) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await changeLogoRestaurant(restaurantId, file, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   return response;
 }
 
 export async function deleteRestaurantLogo(restaurantId: string) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await deleteLogoRestaurant(restaurantId, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   return response;
 }
 
 export async function getRestaurantIsFirstCategoryAPI() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
-  const response = await getRestaurantIsFirstCategory(restaurantid, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+  const response = await getRestaurantIsFirstCategory(headers.restaurantid, {
+    headers,
     cache: 'force-cache',
     next: {
       tags: ['update-restaurant-first-category'],

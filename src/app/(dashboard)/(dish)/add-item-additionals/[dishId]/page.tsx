@@ -1,4 +1,4 @@
-import { getDishExtrasAPI } from '@/actions/dish.action';
+import { getDishExtrasAPI } from '@/actions/dishes-extras.action';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';
@@ -6,7 +6,6 @@ import { StepperBar } from '@/components/inputs/stepper-bar';
 
 import { PageAddItemAdditionalsParams } from './add-item-additionals.types';
 import { FormAddItemAdditionals } from './form-add-item-additionals';
-import { ItemAdditional } from './item-additional';
 
 export default async function PageAddItemAdditionals({
   params,
@@ -27,7 +26,7 @@ export default async function PageAddItemAdditionals({
         <StepperBar currentStepperIndex={2} />
       </div>
 
-      <div className='p-6'>
+      <div className='px-6 pt-6'>
         <div className='text-title-default text-2xl font-extrabold'>
           Itens adicionais
         </div>
@@ -36,20 +35,7 @@ export default async function PageAddItemAdditionals({
         </p>
       </div>
 
-      <div className='max-w-[780px] px-6'>
-        <div className='space-y-3'>
-          {dishExtras.map((item) => (
-            <ItemAdditional
-              key={item.id}
-              id={item.id}
-              name={item.title}
-              price={item.price}
-            />
-          ))}
-        </div>
-      </div>
-
-      <FormAddItemAdditionals dishId={dishId} />
+      <FormAddItemAdditionals dishId={dishId} dishExtras={dishExtras} />
     </>
   );
 }

@@ -5,14 +5,10 @@ import { changeOnboardingStatus, getUserByRestaurantId } from '@/http/api';
 import { getCookiesHeader } from './utils.action';
 
 export async function getUsersByRestaurantIdAPI() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
-  const response = await getUserByRestaurantId(restaurantid, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+  const response = await getUserByRestaurantId(headers.restaurantid, {
+    headers,
   });
 
   if (response.status !== 200) throw new Error('Unauthorized');
@@ -21,14 +17,10 @@ export async function getUsersByRestaurantIdAPI() {
 }
 
 export async function changeOnboardingStatusAPI() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
-  const userAPI = await getUserByRestaurantId(restaurantid, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+  const userAPI = await getUserByRestaurantId(headers.restaurantid, {
+    headers,
   });
 
   if (!userAPI.data.id) {

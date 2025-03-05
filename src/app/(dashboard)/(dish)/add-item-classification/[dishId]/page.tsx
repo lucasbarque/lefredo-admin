@@ -1,3 +1,5 @@
+import { getDishesSpecsAPI } from '@/actions/dishes-specs.action';
+import { RequestDishSpecsToggleDTOKey } from '@/http/api';
 import {
   IconCandyOff,
   IconFlame,
@@ -21,6 +23,8 @@ export default async function PageAddItemClassification({
   params,
 }: PageAddItemClassificationParams) {
   const { dishId } = await params;
+
+  const dishSpecs = await getDishesSpecsAPI(dishId);
 
   return (
     <>
@@ -49,45 +53,83 @@ export default async function PageAddItemClassification({
 
       <div className='grid grid-cols-3 gap-3 px-6'>
         <ClassificationItem
+          dishId={dishId}
           title='Vegetariano'
           description='Sem carne de nenhum tipo'
+          hashKey={RequestDishSpecsToggleDTOKey.vegetarian}
           icon={<IconMeatOff />}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'vegetarian'
+          )}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Zero lactose'
           description='Não contém lactose, ou seja, leite e seus derivados'
+          hashKey={RequestDishSpecsToggleDTOKey.lactfree}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'lactfree'
+          )}
           icon={<IconMilkOff />}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Vegano'
           description='Sem produtos de origem animal, como carne, ovo ou leite'
+          hashKey={RequestDishSpecsToggleDTOKey.vegan}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'vegan'
+          )}
           icon={<IconSeeding />}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Servido Gelado'
           description='Da geladeira direto para o consumidor'
+          hashKey={RequestDishSpecsToggleDTOKey.cold}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'cold'
+          )}
           icon={<IconSnowflake />}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Servido Quente'
           description='Produto que acabou de sair do forno'
           icon={<IconFlame />}
-          isActive
+          hashKey={RequestDishSpecsToggleDTOKey.hot}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'hot'
+          )}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Orgânico'
           description='Cultivado sem agrotóxicos, segundo a lei 10.831'
+          hashKey={RequestDishSpecsToggleDTOKey.organic}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'organic'
+          )}
           icon={<IconLeaf />}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Sem açúcar'
           description='Não contém nenhum tipo de açúcar (cristal, orgânico, mascavo, etc.)'
           icon={<IconCandyOff />}
-          isActive
+          hashKey={RequestDishSpecsToggleDTOKey.suggarfree}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'suggarfree'
+          )}
         />
         <ClassificationItem
+          dishId={dishId}
           title='Natural'
           description='Preparado na hora com frutas frescas'
+          hashKey={RequestDishSpecsToggleDTOKey.natural}
+          isActive={dishSpecs.some(
+            (dishSpec) => dishSpec.DishSpecs.key === 'natural'
+          )}
           icon={<IconPlant2 />}
         />
       </div>

@@ -15,16 +15,12 @@ import { revalidateTag } from 'next/cache';
 import { getCookiesHeader } from './utils.action';
 
 export async function getSectionsAPI() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await getSections(
-    { menuId: menuid },
+    { menuId: headers.menuid },
     {
-      headers: {
-        Cookie: cookies,
-        restaurantid,
-        menuid,
-      },
+      headers,
       cache: 'force-cache',
       next: {
         tags: ['create-section', 'delete-section'],
@@ -36,14 +32,10 @@ export async function getSectionsAPI() {
 }
 
 export async function getSectionByIdAPI(id: string) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await getSectionById(id, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
     cache: 'force-cache',
     next: {
       tags: ['update-section'],
@@ -54,16 +46,12 @@ export async function getSectionByIdAPI(id: string) {
 }
 
 export async function getSectionsWithItemsAPI() {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await getSectionsWithItems(
-    { menuId: menuid },
+    { menuId: headers.menuid },
     {
-      headers: {
-        Cookie: cookies,
-        restaurantid,
-        menuid,
-      },
+      headers,
       cache: 'force-cache',
       next: {
         tags: [
@@ -83,16 +71,12 @@ export async function createSectionAPI(data: {
   title: string;
   description: string | null;
 }) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await createSection(
-    { ...data, menuId: menuid },
+    { ...data, menuId: headers.menuid },
     {
-      headers: {
-        Cookie: cookies,
-        restaurantid,
-        menuid,
-      },
+      headers,
     }
   );
 
@@ -104,14 +88,10 @@ export async function createSectionAPI(data: {
 }
 
 export async function deleteSectionAPI(id: string) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await deleteSection(id, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   if (response.status === 200) {
@@ -122,14 +102,10 @@ export async function deleteSectionAPI(id: string) {
 }
 
 export async function toggleSectionAPI(id: string) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await toggleSection(id, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   // if (response.status === 200) {
@@ -143,14 +119,10 @@ export async function updateSectionAPI(
   id: string,
   data: RequestUpdateSectionDTO
 ) {
-  const { cookies, restaurantid, menuid } = await getCookiesHeader();
+  const headers = await getCookiesHeader();
 
   const response = await updateSection(id, data, {
-    headers: {
-      Cookie: cookies,
-      restaurantid,
-      menuid,
-    },
+    headers,
   });
 
   revalidateTag('update-section');
