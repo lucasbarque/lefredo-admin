@@ -8,17 +8,13 @@ import {
 import { toggleSectionAPI } from '@/actions/sections.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  IconCamera,
-  IconDotsVertical,
-  IconEdit,
-  IconTrash,
-} from '@tabler/icons-react';
+import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { EmptyImage } from '@/components/data-display/empty-image';
 import { InputCashout } from '@/components/inputs/input-cashout';
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 import { DropdownMenu } from '@/components/navigation/dropdown-menu';
@@ -128,9 +124,7 @@ export function DishItem({
             quality={80}
           />
         ) : (
-          <div className='border-line flex h-16 w-16 items-center justify-center rounded-2xl border border-dashed'>
-            <IconCamera size={24} className='text-border-default' />
-          </div>
+          <EmptyImage size='sm' />
         )}
 
         <div className='text-title-secondary text-sm font-semibold'>

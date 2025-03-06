@@ -1,3 +1,4 @@
+import { deleteDishesFlavorsAPI } from '@/actions/dishes-flavors.action';
 import { formatCurrency } from '@/lib/utils';
 import {
   IconEdit,
@@ -6,35 +7,65 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
+import { EmptyImage } from '@/components/data-display/empty-image';
 import Tooltip from '@/components/data-display/tooltip/tooltip';
 
 import { ItemFlavorProps } from './add-item-flavors.types';
 
 export function ItemFlavor({
+  id,
   label,
   title,
   price,
   description,
+  dish,
+  dishFlavorsMedias,
+  handleCloseForm,
+  setEditItem,
 }: ItemFlavorProps) {
+  const descriptionText =
+    description || dish.data.description || '(sem descrição cadastrada)';
+
+  const priceValue = price || dish.data.price;
+
+  async function handleDeleteItem() {
+    const responseStatus = await deleteDishesFlavorsAPI(id);
+    if (responseStatus === 200) {
+      toast.success('Sabor deletado com sucesso', {
+        position: 'top-right',
+      });
+    } else {
+      toast.error('Falha ao deletar sabor', {
+        position: 'top-right',
+      });
+    }
+    handleCloseForm();
+  }
+
   return (
     <div className='mb-2 flex w-full cursor-grab items-center gap-2'>
       <IconGripVertical size={24} className='text-text-default' />
       <div className='border-line flex h-full w-full items-center justify-between gap-3 rounded-md border bg-white p-3'>
-        <Image
-          src='/assets/images/coxinha.jpg'
-          alt=''
-          className='h-[5.625rem] w-[5.625rem] rounded-md object-cover'
-          height={90}
-          width={90}
-        />
+        {dishFlavorsMedias.length === 0 && <EmptyImage />}
+
+        {dishFlavorsMedias.length > 0 && (
+          <Image
+            src={process.env.NEXT_PUBLIC_BUCKET_URL + dishFlavorsMedias[0].url}
+            alt=''
+            className='h-[5.625rem] w-[5.625rem] rounded-md object-cover'
+            height={90}
+            width={90}
+          />
+        )}
 
         <div className='flex flex-1 flex-col gap-2'>
           <span className='text-title-default line-clamp-1 text-lg font-semibold'>
             {title}
           </span>
           <p className='text-text-default line-clamp-1 flex items-center gap-1 text-sm'>
-            {description ? description : '(sem descrição cadastrada)'}
+            <span dangerouslySetInnerHTML={{ __html: descriptionText }} />
             <Tooltip>
               <Tooltip.Trigger asChild>
                 <button
@@ -77,7 +108,7 @@ export function ItemFlavor({
             </Tooltip>
           </p>
           <div className='text-title-default flex items-center gap-1 text-sm font-semibold'>
-            {formatCurrency(price, 'to-real')}
+            {formatCurrency(priceValue / 100, 'to-real')}
             <Tooltip>
               <Tooltip.Trigger asChild>
                 <button
@@ -135,6 +166,7 @@ export function ItemFlavor({
               <IconEdit
                 size={24}
                 className='text-title-secondary cursor-pointer'
+                onClick={() => setEditItem(id)}
               />
             </Tooltip.Trigger>
             <Tooltip.Content sideOffset={5}>
@@ -148,6 +180,7 @@ export function ItemFlavor({
               <IconTrash
                 size={24}
                 className='text-title-secondary cursor-pointer'
+                onClick={handleDeleteItem}
               />
             </Tooltip.Trigger>
             <Tooltip.Content sideOffset={5}>

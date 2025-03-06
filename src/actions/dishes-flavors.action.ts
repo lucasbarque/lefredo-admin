@@ -1,15 +1,14 @@
 'use server';
 
 import {
-  // RequestCreateDishesExtraDTO,
-  // RequestUpdateDishesExtraDTO,
-  // createDishesExtra,
-  // deleteDishesExtra,
+  RequestCreateDishesFlavorsDTO,
+  RequestUpdateDishesFlavorsDTO,
+  createDishesFlavors,
+  deleteDishesFlavors,
   getDishesFlavors,
-  // updateDishesExtra,
+  updateDishesFlavors,
 } from '@/http/api';
-
-// import { revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
 import { getCookiesHeader } from './utils.action';
 
@@ -31,49 +30,49 @@ export async function getDishFlavorsAPI(id: string) {
   return response.data;
 }
 
-// export async function createDishesExtraAPI(
-//   dishId: string,
-//   data: RequestCreateDishesExtraDTO
-// ) {
-//   const headers = await getCookiesHeader();
+export async function createDishesFlavorsAPI(
+  dishId: string,
+  data: RequestCreateDishesFlavorsDTO
+) {
+  const headers = await getCookiesHeader();
+  console.log(data);
 
-//   const response = await createDishesExtra(dishId, data, {
-//     headers,
-//   });
+  const response = await createDishesFlavors(dishId, data, {
+    headers,
+  });
 
-//   if (response.status === 201) {
-//     revalidateTag('create-dishes-extra');
-//   }
+  if (response.status === 201) {
+    revalidateTag('create-dishes-flavors');
+  }
 
-//   return response.status;
-// }
+  return response.status;
+}
 
-// export async function deleteDishesExtraAPI(id: string) {
-//   const headers = await getCookiesHeader();
+export async function deleteDishesFlavorsAPI(id: string) {
+  const headers = await getCookiesHeader();
 
-//   const response = await deleteDishesExtra(id, {
-//     headers,
-//   });
+  const response = await deleteDishesFlavors(id, {
+    headers,
+  });
 
-//   if (response.status === 200) {
-//     revalidateTag('delete-dishes-extra');
-//   }
+  if (response.status === 200) {
+    revalidateTag('delete-dishes-flavors');
+  }
 
-//   return response.status;
-// }
+  return response.status;
+}
 
-// export async function updateDishesExtraAPI(
-//   id: string,
-//   data: RequestUpdateDishesExtraDTO
-// ) {
-//   const headers = await getCookiesHeader();
-//   console.log(headers);
-//   const response = await updateDishesExtra(id, data, {
-//     headers,
-//   });
-//   console.log(response);
+export async function updateDishesFlavorsAPI(
+  id: string,
+  data: RequestUpdateDishesFlavorsDTO
+) {
+  const headers = await getCookiesHeader();
 
-//   revalidateTag('update-dish-extra');
+  const response = await updateDishesFlavors(id, data, {
+    headers,
+  });
 
-//   return response.status;
-// }
+  revalidateTag('update-dish-flavors');
+
+  return response.status;
+}

@@ -1,4 +1,5 @@
 import { getDishFlavorsAPI } from '@/actions/dishes-flavors.action';
+import { getDishById } from '@/http/api';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';
@@ -13,6 +14,7 @@ export default async function PageAddItemFlavors({
 }: PageAddItemFlavorsParams) {
   const { dishId } = await params;
   const dishFlavors = await getDishFlavorsAPI(dishId);
+  const dish = await getDishById(dishId);
 
   return (
     <div className='flex h-[calc(100vh-80px)] w-full flex-col overflow-y-auto'>
@@ -38,7 +40,7 @@ export default async function PageAddItemFlavors({
         </p>
       </div>
 
-      <FormAddItemFlavors dishFlavors={dishFlavors} />
+      <FormAddItemFlavors dishFlavors={dishFlavors} dish={dish} />
 
       <div className='border-border-default mt-auto flex justify-end gap-4 border-t px-8 py-4'>
         <Link href='/menu-list'>

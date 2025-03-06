@@ -5,6 +5,7 @@ import {
   RequestCreateDishDTO,
   RequestUpdateDishDTO,
   RequestUpdateDishExtrasOrderDTO,
+  RequestUpdateDishFlavorsOrderDTO,
   changePrice,
   createDish,
   deleteDish,
@@ -12,6 +13,7 @@ import {
   toggleDish,
   updateDish,
   updateDishExtrasOrder,
+  updateDishFlavorsOrder,
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
@@ -102,6 +104,19 @@ export async function updateDishExtrasOrderAPI(
   const headers = await getCookiesHeader();
 
   const response = await updateDishExtrasOrder(id, data, {
+    headers,
+  });
+
+  return response.status;
+}
+
+export async function updateDishFlavorsOrderAPI(
+  id: string,
+  data: RequestUpdateDishFlavorsOrderDTO
+) {
+  const headers = await getCookiesHeader();
+
+  const response = await updateDishFlavorsOrder(id, data, {
     headers,
   });
 
