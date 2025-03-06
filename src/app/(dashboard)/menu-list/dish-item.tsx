@@ -5,6 +5,7 @@ import {
   deleteDishAPI,
   toggleDishAPI,
 } from '@/actions/dish.action';
+import { toggleSectionAPI } from '@/actions/sections.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -26,8 +27,10 @@ interface ItemListProps {
   id: string;
   title: string;
   price: number;
+  isLast: boolean;
   isActive: boolean;
   coverPhoto?: string;
+  sectionId: string;
 }
 const inputSchema = z.object({
   price: z
@@ -43,7 +46,9 @@ export function DishItem({
   title,
   price,
   isActive,
+  isLast,
   coverPhoto,
+  sectionId,
 }: ItemListProps) {
   const { control, watch } = useForm<FormPriceSchema>({
     resolver: zodResolver(inputSchema),
@@ -63,6 +68,9 @@ export function DishItem({
     setIsLoadingActiveDish(true);
     const responseStatus = await toggleDishAPI(id);
     if (responseStatus === 200) {
+      if (isLast && isActiveItem) {
+        await toggleSectionAPI(sectionId);
+      }
       toast.success(
         `O item foi ${isActiveItem ? 'desativado' : 'ativado'} com sucesso`,
         { position: 'top-right' }
@@ -97,6 +105,9 @@ export function DishItem({
     const responseStatus = await deleteDishAPI(id);
 
     if (responseStatus === 200) {
+      if (isLast) {
+        await toggleSectionAPI(sectionId);
+      }
       return toast.success('Item deletado com sucesso', {
         position: 'top-right',
       });

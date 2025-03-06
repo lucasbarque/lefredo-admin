@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/inputs/button';
@@ -18,10 +18,16 @@ const inputSchema = z.object({
 });
 type InputSchema = z.infer<typeof inputSchema>;
 
-export function FormAddFlavor() {
+interface FormAddFlavorProps {
+  setIsFormOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+export function FormAddFlavor({ setIsFormOpen }: FormAddFlavorProps) {
   const {
     control,
     formState: { errors },
+    reset,
+    handleSubmit,
   } = useForm<InputSchema>({
     resolver: zodResolver(inputSchema),
     defaultValues: {
@@ -33,10 +39,17 @@ export function FormAddFlavor() {
 
   const [imageData, setImageData] = useState<FileUploaded>();
 
+  const onSubmit: SubmitHandler<z.infer<typeof inputSchema>> = async () => {};
+
+  function handleCloseForm() {
+    reset();
+    setIsFormOpen(false);
+  }
+
   return (
     <div>
       <div className='border-border-default mt-3 rounded-md border p-6'>
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className='mb-2 flex gap-3'>
             <Input
               id='title'
@@ -80,10 +93,15 @@ export function FormAddFlavor() {
         />
       </div>
       <div className='mt-2 flex items-center justify-end gap-2'>
-        <Button size='sm' family='secondary'>
+        <Button
+          size='sm'
+          type='button'
+          onClick={handleCloseForm}
+          family='secondary'
+        >
           Cancelar
         </Button>
-        <Button size='sm' onClick={() => {}}>
+        <Button size='sm' type='submit' onClick={() => {}}>
           Continuar
         </Button>
       </div>

@@ -106,6 +106,8 @@ export function FormAddItemAdditionals({
   }
 
   async function handleUpdateOrder() {
+    if (dishExtrasList.length < 2) return;
+
     const orderItems = dishExtrasList.map((item) => item.id);
     const responseStatus = await updateDishExtrasOrderAPI(dishId, {
       orderUpdated: orderItems,
@@ -124,7 +126,7 @@ export function FormAddItemAdditionals({
 
   return (
     <>
-      {dishExtras.length > 0 && (
+      {dishExtrasList.length > 0 && (
         <div className='mt-6 max-w-[780px] px-6'>
           <div className='space-y-3'>
             <Reorder.Group
@@ -132,14 +134,13 @@ export function FormAddItemAdditionals({
               onReorder={setDishExtrasList}
               axis='y'
             >
-              {dishExtrasList.map((item) => (
+              {dishExtrasList?.map((item) => (
                 <Reorder.Item
                   key={item.id}
                   value={item}
                   onDragEnd={handleUpdateOrder}
                 >
                   <ItemAdditional
-                    key={item.id}
                     id={item.id}
                     name={item.title}
                     price={item.price}
@@ -155,7 +156,7 @@ export function FormAddItemAdditionals({
       <div className='max-w-[780px] px-6'>
         {!isFormOpen && (
           <div
-            data-has-additionals={dishExtras.length > 0}
+            data-has-additionals={dishExtrasList.length > 0}
             className='mt-2 flex items-center data-[has-additionals=false]:justify-start data-[has-additionals=true]:justify-center'
           >
             <Button family='tertiary' size='sm' onClick={handleOpenCreateForm}>

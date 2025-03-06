@@ -24,6 +24,10 @@ export async function toggleDishAPI(id: string) {
     headers,
   });
 
+  if (response.status === 200) {
+    revalidateTag('toggle-dish');
+  }
+
   return response.status;
 }
 
@@ -50,6 +54,10 @@ export async function createDishAPI(data: RequestCreateDishDTO) {
   const response = await createDish(data, {
     headers,
   });
+
+  if (response.status === 201) {
+    revalidateTag('create-dish');
+  }
 
   return response;
 }

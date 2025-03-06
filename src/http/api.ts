@@ -218,6 +218,14 @@ export interface ResponseDishSpecsToggleDTO {
   newStateIsActive: boolean;
 }
 
+export interface ResponseGetDishesFlavorsDTO {
+  id: string;
+  title: string;
+  label: string;
+  description: string;
+  price: number;
+}
+
 export interface GetRestaurantBySlugDTO {
   id: string;
   name: string;
@@ -1124,6 +1132,40 @@ export const toggleDishesSpec = async (dishId: string,
   const data: toggleDishesSpecResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as toggleDishesSpecResponse
+}
+
+
+
+/**
+ * @summary Get Dishes Flavors
+ */
+export type getDishesFlavorsResponse = {
+  data: ResponseGetDishesFlavorsDTO[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetDishesFlavorsUrl = (dishId: string,) => {
+
+
+  return `http://localhost:3333/dishes-flavors/${dishId}`
+}
+
+export const getDishesFlavors = async (dishId: string, options?: RequestInit): Promise<getDishesFlavorsResponse> => {
+  
+  const res = await fetch(getGetDishesFlavorsUrl(dishId),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getDishesFlavorsResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getDishesFlavorsResponse
 }
 
 

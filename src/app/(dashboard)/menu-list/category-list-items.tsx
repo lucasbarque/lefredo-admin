@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { deleteSectionAPI, toggleSectionAPI } from '@/actions/sections.action';
 import { DishMediasDTO } from '@/http/api';
@@ -60,7 +60,7 @@ export function CategoryListItems({
       setIsCategoryActive(!isCategoryActive);
     } else if (responseStatus === 428) {
       toast.error(
-        'Para ativar a categoria é necessário cadastrar, pelo menos 1 item.',
+        'Para ativar a categoria é necessário ter pelo menos 01 item ativo',
         { position: 'top-right' }
       );
       setIsCategoryActive(false);
@@ -92,6 +92,10 @@ export function CategoryListItems({
     }
     setIsLoadingCategory(false);
   }
+
+  useEffect(() => {
+    setIsCategoryActive(isActive);
+  }, [isActive]);
 
   return (
     <div
@@ -194,6 +198,8 @@ export function CategoryListItems({
                 title={dish.title}
                 price={dish.price}
                 isActive={dish.isActive}
+                isLast={dishes.length === 1}
+                sectionId={id}
                 coverPhoto={dish?.dishMedias[0]?.url}
               />
             ))}

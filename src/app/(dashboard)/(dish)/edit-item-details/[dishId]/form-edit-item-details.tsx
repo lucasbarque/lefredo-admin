@@ -25,7 +25,7 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<z.infer<typeof createDishDetailsSchema>>({
     resolver: zodResolver(createDishDetailsSchema),
     defaultValues: {
@@ -38,7 +38,7 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
           minimumFractionDigits: 2,
         }).format(data.price / 100) ?? '0,00',
       flagged: String(isFlagged),
-      prepTime: data.prepTime,
+      prepTime: data.prepTime || '',
       description: data.description || '',
       sectionId: data.section.id,
     },
@@ -48,6 +48,8 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
   const onSubmit: SubmitHandler<
     z.infer<typeof createDishDetailsSchema>
   > = async (dataToUpdate) => {
+    if (!isDirty) return router.replace(`/add-item-photos/${data.id}`);
+
     const responseStatus = await updateDishAPI(data.id, dataToUpdate);
 
     if (responseStatus !== 200) {

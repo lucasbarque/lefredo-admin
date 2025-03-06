@@ -58,7 +58,10 @@ export async function getSectionsWithItemsAPI() {
           'delete-section',
           'create-section',
           'update-section',
+          'toggle-section',
           'delete-dish',
+          'create-dish',
+          'toggle-dish',
         ],
       },
     }
@@ -108,9 +111,9 @@ export async function toggleSectionAPI(id: string) {
     headers,
   });
 
-  // if (response.status === 200) {
-  //   revalidateTag('delete-section');
-  // }
+  if (response.status === 200) {
+    revalidateTag('toggle-section');
+  }
 
   return response.status;
 }
