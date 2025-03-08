@@ -227,7 +227,8 @@ export interface RequestCreateDishesFlavorsDTO {
   label: string;
   /** @nullable */
   price: string | null;
-  description: string;
+  /** @nullable */
+  description: string | null;
 }
 
 export interface ResponseCreateDishesFlavorsDTO {
@@ -242,7 +243,8 @@ export interface RequestUpdateDishesFlavorsDTO {
   label: string;
   /** @nullable */
   price: string | null;
-  description: string;
+  /** @nullable */
+  description: string | null;
 }
 
 export interface GetRestaurantBySlugDTO {

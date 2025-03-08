@@ -72,7 +72,9 @@ export async function updateDishesFlavorsAPI(
     headers,
   });
 
-  revalidateTag('update-dish-flavors');
+  if (response.status === 200) {
+    revalidateTag('update-dish-flavors');
+  }
 
   return response.status;
 }

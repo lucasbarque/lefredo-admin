@@ -12,7 +12,7 @@ export function Navbar({ children }: NavbarProps) {
 
   return (
     <>
-      <div className='flex h-20 w-full items-center justify-between gap-2 px-6 shadow-[0px_2px_2px_0px_rgba(0,_0,_0,_0.1)]'>
+      <div className='relative z-0 flex h-20 w-full items-center justify-between gap-2 px-6 shadow-[0px_2px_2px_0px_rgba(0,_0,_0,_0.1)]'>
         <Link href='/welcome'>
           <Image
             src='/assets/images/logo.svg'

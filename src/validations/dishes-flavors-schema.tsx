@@ -12,5 +12,5 @@ export const createFlavorSchema = z.object({
   price: z
     .string()
     .transform((value) => value.replace('.', '').replace(',', '.')),
-  description: z.string(),
+  description: z.string().nullable(),
 });

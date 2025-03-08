@@ -1,6 +1,7 @@
 import { deleteDishesFlavorsAPI } from '@/actions/dishes-flavors.action';
 import { formatCurrency } from '@/lib/utils';
 import {
+  IconCameraUp,
   IconEdit,
   IconGripVertical,
   IconQuestionMark,
@@ -24,6 +25,7 @@ export function ItemFlavor({
   dishFlavorsMedias,
   handleCloseForm,
   setEditItem,
+  handleOpenModalImage,
 }: ItemFlavorProps) {
   const descriptionText =
     description || dish.data.description || '(sem descrição cadastrada)';
@@ -161,6 +163,20 @@ export function ItemFlavor({
           </Tooltip>
         </div>
         <div className='flex items-center gap-2.5'>
+          <Tooltip>
+            <Tooltip.Trigger asChild>
+              <IconCameraUp
+                size={24}
+                className='text-title-secondary cursor-pointer'
+                onClick={() => handleOpenModalImage(id)}
+              />
+            </Tooltip.Trigger>
+            <Tooltip.Content sideOffset={5}>
+              Atualizar imagens
+              <Tooltip.Arrow className='fill-title-default' />
+            </Tooltip.Content>
+          </Tooltip>
+
           <Tooltip>
             <Tooltip.Trigger asChild>
               <IconEdit

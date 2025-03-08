@@ -17,6 +17,7 @@ export interface ItemFlavorProps extends DishFlavorsDTO {
   dish: getDishByIdResponse;
   handleCloseForm: () => void;
   setEditItem: (id: string) => void;
+  handleOpenModalImage: (id: string) => void;
 }
 
 export interface RadioSelectCreateFlavorProps {

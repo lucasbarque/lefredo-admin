@@ -15,12 +15,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import Modal from '@/components/data-display/modal/modal';
 import { Button } from '@/components/inputs/button';
 
 import { FormAddItemFlavorsProps } from './add-item-flavors.types';
 import { Form } from './form';
 import { ItemFlavor } from './item-flavor';
 import { RadioSelectCreateFlavor } from './radio-select-create-flavor';
+import { UploadImagesComponent } from './upload-images-component';
 
 export function FormAddItemFlavors({
   dishFlavors,
@@ -30,7 +32,11 @@ export function FormAddItemFlavors({
     dishFlavors.length > 0
   );
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isModalUploadImageOpen, setIsModalUploadImageOpen] = useState(false);
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
+  const [currentFlavorImageId, setCurrentFlavorImageId] = useState<
+    string | null
+  >(null);
   const [dishFlavorsList, setDishFlavorsList] = useState(dishFlavors);
 
   const {
@@ -60,9 +66,7 @@ export function FormAddItemFlavors({
         });
         handleCloseForm();
       } else {
-        toast.error('Falha ao atualizar sabor', {
-          position: 'top-right',
-        });
+        toast.error('Falha ao atualizar sabor', { position: 'top-right' });
       }
       setIsEditingId(null);
       handleCloseForm();
@@ -74,9 +78,7 @@ export function FormAddItemFlavors({
         });
         handleCloseForm();
       } else {
-        toast.error('Falha ao cadastrar sabor', {
-          position: 'top-right',
-        });
+        toast.error('Falha ao cadastrar sabor', { position: 'top-right' });
       }
     }
   };
@@ -102,6 +104,7 @@ export function FormAddItemFlavors({
   }
 
   function setEditItem(id: string) {
+    reset();
     const currentDishFlavor = dishFlavors.find((dish) => dish.id === id);
 
     if (currentDishFlavor) {
@@ -115,17 +118,25 @@ export function FormAddItemFlavors({
             style: 'decimal',
             currency: 'BRL',
             minimumFractionDigits: 2,
-          }).format(currentDishFlavor.price / 100) ?? null
+          }).format(currentDishFlavor.price / 100) ?? ''
         );
       }
-      setIsFormOpen(true);
       setIsEditingId(currentDishFlavor.id);
+      handleOpenForm('edit');
     }
   }
 
-  function handleOpenCreateForm() {
+  function handleOpenForm(type: 'create' | 'edit') {
     setIsFormOpen(true);
-    setIsEditingId(null);
+    if (type === 'create') {
+      reset();
+      setIsEditingId(null);
+    }
+  }
+
+  function handleOpenModalImage(flavorId: string) {
+    setIsModalUploadImageOpen(true);
+    setCurrentFlavorImageId(flavorId);
   }
 
   useEffect(() => {
@@ -165,6 +176,7 @@ export function FormAddItemFlavors({
                       dishFlavorsMedias={item.dishFlavorsMedias}
                       handleCloseForm={handleCloseForm}
                       setEditItem={setEditItem}
+                      handleOpenModalImage={handleOpenModalImage}
                     />
                   </Reorder.Item>
                 ))}
@@ -177,7 +189,7 @@ export function FormAddItemFlavors({
               <Button
                 size='sm'
                 family='tertiary'
-                onClick={handleOpenCreateForm}
+                onClick={() => handleOpenForm('create')}
               >
                 <Button.Icon>
                   <IconPlus size={16} />
@@ -187,16 +199,43 @@ export function FormAddItemFlavors({
             </div>
           )}
 
-          {isFormOpen && (
-            <Form
-              control={control}
-              handleCloseForm={handleCloseForm}
-              handleSubmit={handleSubmit}
-              errors={errors}
-              onSubmit={onSubmit}
-              isEditingId={isEditingId}
-            />
-          )}
+          <Modal open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Modal.Wrapper
+                title={isEditingId ? 'Atualizar sabor' : 'Adicionar sabor'}
+                size='lg'
+                actionButtonText='Salvar'
+                actionButtonFunction={() => onSubmit}
+              >
+                <Form
+                  control={control}
+                  errors={errors}
+                  isEditingId={isEditingId}
+                />
+              </Modal.Wrapper>
+            </form>
+          </Modal>
+
+          <Modal
+            open={isModalUploadImageOpen}
+            onOpenChange={setIsModalUploadImageOpen}
+          >
+            <Modal.Wrapper
+              title='Atualizar imagens'
+              size='lg'
+              hideCloseButton
+              actionButtonText='Fechar'
+              actionButtonFunction={() => setIsModalUploadImageOpen(false)}
+            >
+              <UploadImagesComponent
+                imagesFlavor={
+                  dishFlavors.find(
+                    (flavor) => flavor.id === currentFlavorImageId
+                  )?.dishFlavorsMedias || []
+                }
+              />
+            </Modal.Wrapper>
+          </Modal>
         </>
       )}
     </div>

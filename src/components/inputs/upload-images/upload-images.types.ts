@@ -7,9 +7,10 @@ export interface CropData {
 }
 
 export interface FileUploaded {
-  file: File;
+  file: File | null; // Atualizado para permitir null enquanto a imagem estiver carregando
   url: string;
   cropData?: CropData;
+  isLoading?: boolean; // Propriedade para indicar estado de carregamento
 }
 
 export interface UploadImageProps {
@@ -17,4 +18,9 @@ export interface UploadImageProps {
   currentImages?: FileUploaded[];
   additionalInfo?: string;
   onSubmit?: (files: FileUploaded[]) => void;
+  previewConfig: {
+    height: number;
+  };
+  maxImages?: number;
+  maxFileSize?: number;
 }
