@@ -228,6 +228,11 @@ export function FormAddItemFlavors({
               actionButtonFunction={() => setIsModalUploadImageOpen(false)}
             >
               <UploadImagesComponent
+                id={
+                  dishFlavors.find(
+                    (flavor) => flavor.id === currentFlavorImageId
+                  )?.id || null
+                }
                 imagesFlavor={
                   dishFlavors.find(
                     (flavor) => flavor.id === currentFlavorImageId

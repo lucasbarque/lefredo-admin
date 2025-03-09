@@ -3,10 +3,13 @@
 import {
   RequestCreateDishesFlavorsDTO,
   RequestUpdateDishesFlavorsDTO,
+  RequestUploadDishFlavorImageDTO,
   createDishesFlavors,
+  deleteDishFlavorMediaImage,
   deleteDishesFlavors,
   getDishesFlavors,
   updateDishesFlavors,
+  uploadDishFlavorImage,
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
@@ -23,6 +26,8 @@ export async function getDishFlavorsAPI(id: string) {
         'create-dishes-flavors',
         'delete-dishes-flavors',
         'update-dish-flavors',
+        'upload-image-dish-flavors-media',
+        'delete-image-dish-flavors-media',
       ],
     },
   });
@@ -77,4 +82,35 @@ export async function updateDishesFlavorsAPI(
   }
 
   return response.status;
+}
+
+export async function uploadDishesFlavorsImageAPI(
+  id: string,
+  file: RequestUploadDishFlavorImageDTO
+) {
+  const headers = await getCookiesHeader();
+
+  const response = await uploadDishFlavorImage(id, file, {
+    headers,
+  });
+
+  if (response.status === 200) {
+    revalidateTag('delete-image-dish-flavors-media');
+  }
+
+  return response;
+}
+
+export async function deleteDishesFlavorsImageAPI(id: string) {
+  const headers = await getCookiesHeader();
+
+  const response = await deleteDishFlavorMediaImage(id, {
+    headers,
+  });
+
+  if (response.status === 200) {
+    revalidateTag('upload-image-dish-flavors-media');
+  }
+
+  return response;
 }

@@ -247,6 +247,16 @@ export interface RequestUpdateDishesFlavorsDTO {
   description: string | null;
 }
 
+export interface RequestUploadDishFlavorImageDTO {
+  file: string;
+}
+
+export interface ResponseUploadDishFlavorImageDTO {
+  id: string;
+  title: string;
+  url: string;
+}
+
 export interface GetRestaurantBySlugDTO {
   id: string;
   name: string;
@@ -1329,6 +1339,78 @@ export const deleteDishesFlavors = async (id: string, options?: RequestInit): Pr
   const data: deleteDishesFlavorsResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as deleteDishesFlavorsResponse
+}
+
+
+
+/**
+ * @summary Upload dish flavor image
+ */
+export type uploadDishFlavorImageResponse = {
+  data: ResponseUploadDishFlavorImageDTO;
+  status: number;
+  headers: Headers;
+}
+
+export const getUploadDishFlavorImageUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes-flavors/${id}/upload-image`
+}
+
+export const uploadDishFlavorImage = async (id: string,
+    requestUploadDishFlavorImageDTO: RequestUploadDishFlavorImageDTO, options?: RequestInit): Promise<uploadDishFlavorImageResponse> => {
+    const formData = new FormData();
+formData.append('file', requestUploadDishFlavorImageDTO.file)
+
+  const res = await fetch(getUploadDishFlavorImageUrl(id),
+  {      
+    ...options,
+    method: 'PATCH'
+    ,
+    body: 
+      formData,
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: uploadDishFlavorImageResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as uploadDishFlavorImageResponse
+}
+
+
+
+/**
+ * @summary Delete Dish Flavor Media image
+ */
+export type deleteDishFlavorMediaImageResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteDishFlavorMediaImageUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes-flavors/delete-image/${id}`
+}
+
+export const deleteDishFlavorMediaImage = async (id: string, options?: RequestInit): Promise<deleteDishFlavorMediaImageResponse> => {
+  
+  const res = await fetch(getDeleteDishFlavorMediaImageUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: deleteDishFlavorMediaImageResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as deleteDishFlavorMediaImageResponse
 }
 
 

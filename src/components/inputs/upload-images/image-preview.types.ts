@@ -1,8 +1,8 @@
 export interface ImagePreviewProps {
+  id: string;
   url: string;
-  index: number;
-  handleEdit: (index: number) => void;
-  handleRemove: (index: number) => void;
+  handleEdit: (id: string) => void;
+  handleRemove: (id: string) => void;
   height?: number;
-  isLoading?: boolean; // Propriedade adicionada para exibir loading no preview
+  isLoading?: boolean;
 }

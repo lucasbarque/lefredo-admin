@@ -58,7 +58,8 @@ export function ItemFlavor({
             alt=''
             className='h-[5.625rem] w-[5.625rem] rounded-md object-cover'
             height={90}
-            width={90}
+            width={130}
+            quality={80}
           />
         )}
 

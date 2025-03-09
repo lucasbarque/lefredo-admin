@@ -1,12 +1,14 @@
+'use client';
+
 import { IconEdit, IconX } from '@tabler/icons-react';
 import Image from 'next/image';
 
 import { ImagePreviewProps } from './image-preview.types';
 
 export function ImagePreview({
+  id,
   url,
   handleEdit,
-  index,
   handleRemove,
   height = 300,
   isLoading,
@@ -35,13 +37,13 @@ export function ImagePreview({
       )}
       <div className='absolute top-2 right-2 flex gap-1'>
         <button
-          onClick={() => handleEdit(index)}
+          onClick={() => handleEdit(id)}
           className='cursor-pointer rounded bg-white p-1'
         >
           <IconEdit />
         </button>
         <button
-          onClick={() => handleRemove(index)}
+          onClick={() => handleRemove(id)}
           className='cursor-pointer rounded bg-white p-1'
         >
           <IconX />

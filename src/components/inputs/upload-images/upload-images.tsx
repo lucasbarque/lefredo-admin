@@ -12,6 +12,7 @@ export function UploadImages({
   label,
   additionalInfo,
   onSubmit,
+  onRemove, // Recebe o id da imagem a ser deletada
   currentImages = [],
   previewConfig,
   maxImages,
@@ -77,10 +78,14 @@ export function UploadImages({
       return false;
     }
 
+    // Marcar as novas imagens com isNew: true e gerar um id temporário.
+    // Importante: definir isLoading: true para disparar o efeito de upload.
     const newImages: FileUploaded[] = validFiles.map((file) => ({
+      id: String(Date.now() + Math.random()), // id temporário; será substituído após o upload
       file,
       url: URL.createObjectURL(file),
-      isLoading: false,
+      isLoading: true,
+      isNew: true,
     }));
     const updatedImages = [...images, ...newImages];
     setImages(updatedImages);
@@ -102,24 +107,33 @@ export function UploadImages({
     }
   };
 
-  const handleRemove = (index: number) => {
-    const updatedImages = images.filter((_, i) => i !== index);
-    setImages(updatedImages);
-    if (onSubmit) onSubmit(updatedImages);
+  // Se a função onRemove for fornecida pelo pai, a chamamos com o id; caso contrário, removemos localmente.
+  const handleRemove = (id: string) => {
+    if (onRemove) {
+      onRemove(id);
+    } else {
+      const updatedImages = images.filter((item) => item.id !== id);
+      setImages(updatedImages);
+      if (onSubmit) onSubmit(updatedImages);
+    }
   };
 
-  const handleEdit = (index: number) => {
-    setCurrentEditingIndex(index);
-    if (images[index].cropData) {
-      setCrop(images[index].cropData!.crop);
-      setZoom(images[index].cropData!.zoom);
-      setCroppedArea(images[index].cropData!.croppedArea);
-    } else {
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedArea({ x: 0, y: 0, width: 533, height: 430 });
+  // Para editar, procuramos a imagem pelo id e definimos o índice correspondente
+  const handleEdit = (id: string) => {
+    const index = images.findIndex((item) => item.id === id);
+    if (index !== -1) {
+      setCurrentEditingIndex(index);
+      if (images[index].cropData) {
+        setCrop(images[index].cropData!.crop);
+        setZoom(images[index].cropData!.zoom);
+        setCroppedArea(images[index].cropData!.croppedArea);
+      } else {
+        setCrop({ x: 0, y: 0 });
+        setZoom(1);
+        setCroppedArea({ x: 0, y: 0, width: 533, height: 430 });
+      }
+      setIsCropModalOpen(true);
     }
-    setIsCropModalOpen(true);
   };
 
   const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
@@ -140,7 +154,6 @@ export function UploadImages({
 
     const imageObj = images[currentEditingIndex];
 
-    // Verifica se o arquivo existe antes de criar o URL
     if (!imageObj.file) {
       console.error('Arquivo inexistente para a imagem selecionada.');
       return;
@@ -175,6 +188,8 @@ export function UploadImages({
           url: base64Image,
           cropData: { crop, zoom, croppedArea },
           isLoading: false,
+          isNew: imageObj.isNew,
+          id: imageObj.id,
         };
         setImages(updatedImages);
         if (onSubmit) onSubmit(updatedImages);
@@ -204,12 +219,12 @@ export function UploadImages({
         <>
           <hr className='border-border-default mt-4' />
           <div className='mt-4 grid grid-cols-3 gap-4'>
-            {images.map((img, index) => (
+            {images.map((img) => (
               <ImagePreview
-                key={index}
+                key={img.id}
+                id={img.id}
                 url={img.url}
                 handleEdit={handleEdit}
-                index={index}
                 handleRemove={handleRemove}
                 height={previewConfig.height}
                 isLoading={img.isLoading}
