@@ -1,5 +1,5 @@
-import { getRestaurantIsFirstCategoryAPI } from '@/actions/my-store.action';
-import { getSectionsAPI } from '@/actions/sections.action';
+import { getRestaurantIsFirstCategoryAPI } from '@/actions/restaurant.action';
+import { getSectionsAPI } from '@/actions/section.action';
 import { IconDeviceMobileSearch } from '@tabler/icons-react';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';

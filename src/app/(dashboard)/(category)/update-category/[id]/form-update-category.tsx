@@ -1,6 +1,6 @@
 'use client';
 
-import { updateSectionAPI } from '@/actions/sections.action';
+import { updateSectionAPI } from '@/actions/section.action';
 import { updateCategorySchema } from '@/validations/sections-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';

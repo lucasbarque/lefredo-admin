@@ -5,7 +5,7 @@ import {
   deleteDishAPI,
   toggleDishAPI,
 } from '@/actions/dish.action';
-import { toggleSectionAPI } from '@/actions/sections.action';
+import { toggleSectionAPI } from '@/actions/section.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
@@ -108,7 +108,7 @@ export function DishItem({
         position: 'top-right',
       });
     }
-    toast.error('Item deletado com sucesso', { position: 'top-right' });
+    toast.error('Falha ao deletar item', { position: 'top-right' });
   }
 
   return (
@@ -117,8 +117,8 @@ export function DishItem({
         {coverPhoto ? (
           <Image
             className='h-16 w-16 rounded-2xl object-cover'
-            width={64}
-            height={64}
+            width={100}
+            height={100}
             src={process.env.NEXT_PUBLIC_BUCKET_URL + coverPhoto}
             alt=''
             quality={80}

@@ -1,7 +1,7 @@
 'use client';
 
-import { getRestaurantIsFirstCategoryAPI } from '@/actions/my-store.action';
-import { getUsersByRestaurantIdAPI } from '@/actions/users.action';
+import { getRestaurantIsFirstCategoryAPI } from '@/actions/restaurant.action';
+import { getUsersByRestaurantIdAPI } from '@/actions/user.action';
 import { useClerk } from '@clerk/nextjs';
 import { IconBook, IconBuildingStore, IconLogout2 } from '@tabler/icons-react';
 import { usePathname, useRouter } from 'next/navigation';

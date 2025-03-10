@@ -11,6 +11,8 @@ import {
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
+import { RevalidateTags } from '@/constants/tags-revalidate';
+
 import { getCookiesHeader } from './utils.action';
 
 export async function getRestaurantData() {
@@ -20,7 +22,7 @@ export async function getRestaurantData() {
     headers,
     cache: 'force-cache',
     next: {
-      tags: ['update-restaurant'],
+      tags: [RevalidateTags.restaurant['update-restaurant']],
     },
   });
 
@@ -43,7 +45,7 @@ export async function updateRestaurantData({
   });
 
   if (response.status === 200) {
-    revalidateTag('update-restaurant');
+    revalidateTag(RevalidateTags.restaurant['update-restaurant']);
   }
 
   return response;
@@ -77,10 +79,6 @@ export async function getRestaurantIsFirstCategoryAPI() {
 
   const response = await getRestaurantIsFirstCategory(headers.restaurantid, {
     headers,
-    cache: 'force-cache',
-    next: {
-      tags: ['update-restaurant-first-category'],
-    },
   });
 
   if (response.status !== 200) throw new Error('Unauthorized');

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteSectionAPI } from '@/actions/sections.action';
+import { deleteSectionAPI } from '@/actions/section.action';
 import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
 import { toast } from 'sonner';
 

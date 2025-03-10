@@ -1,4 +1,4 @@
-import { ResponseGetDishesExtraDTO } from '@/http/api';
+import { ResponseGetDishExtraDTO } from '@/http/api';
 
 export interface PageAddItemAdditionalsParams {
   params: Promise<{
@@ -16,5 +16,5 @@ export interface ItemAdditionalProps {
 
 export interface FormAddItemAdditionalsProps {
   dishId: string;
-  dishExtras: ResponseGetDishesExtraDTO[];
+  dishExtras: ResponseGetDishExtraDTO[];
 }

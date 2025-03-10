@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-import { updateDishFlavorsOrderAPI } from '@/actions/dish.action';
 import {
   createDishesFlavorsAPI,
   updateDishesFlavorsAPI,
-} from '@/actions/dishes-flavors.action';
+} from '@/actions/dish-flavor.action';
+import { updateDishFlavorsOrderAPI } from '@/actions/dish.action';
 import { createFlavorSchema } from '@/validations/dishes-flavors-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
@@ -216,31 +216,31 @@ export function FormAddItemFlavors({
             </form>
           </Modal>
 
-          <Modal
-            open={isModalUploadImageOpen}
-            onOpenChange={setIsModalUploadImageOpen}
-          >
-            <Modal.Wrapper
-              title='Atualizar imagens'
-              size='lg'
-              hideCloseButton
-              actionButtonText='Fechar'
-              actionButtonFunction={() => setIsModalUploadImageOpen(false)}
+          {dishFlavors.length > 0 && (
+            <Modal
+              open={isModalUploadImageOpen}
+              onOpenChange={setIsModalUploadImageOpen}
             >
-              <UploadImagesComponent
-                id={
-                  dishFlavors.find(
-                    (flavor) => flavor.id === currentFlavorImageId
-                  )?.id || null
-                }
-                imagesFlavor={
-                  dishFlavors.find(
-                    (flavor) => flavor.id === currentFlavorImageId
-                  )?.dishFlavorsMedias || []
-                }
-              />
-            </Modal.Wrapper>
-          </Modal>
+              <Modal.Wrapper
+                title='Atualizar imagens'
+                size='lg'
+                hideActionButton
+              >
+                <UploadImagesComponent
+                  id={
+                    dishFlavors.find(
+                      (flavor) => flavor.id === currentFlavorImageId
+                    )?.id || null
+                  }
+                  imagesFlavor={
+                    dishFlavors.find(
+                      (flavor) => flavor.id === currentFlavorImageId
+                    )?.dishFlavorsMedias || []
+                  }
+                />
+              </Modal.Wrapper>
+            </Modal>
+          )}
         </>
       )}
     </div>

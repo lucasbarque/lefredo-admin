@@ -6,18 +6,36 @@ import {
   RequestUpdateDishDTO,
   RequestUpdateDishExtrasOrderDTO,
   RequestUpdateDishFlavorsOrderDTO,
+  RequestUploadDishImageDTO,
   changePrice,
   createDish,
   deleteDish,
+  deleteDishImage,
   getDishById,
   toggleDish,
   updateDish,
   updateDishExtrasOrder,
   updateDishFlavorsOrder,
+  uploadDishImage,
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
+import { RevalidateTags } from '@/constants/tags-revalidate';
+
 import { getCookiesHeader } from './utils.action';
+
+export async function getDishByIdAPI(id: string) {
+  const headers = await getCookiesHeader();
+
+  const response = await getDishById(id, {
+    headers,
+    cache: 'force-cache',
+    next: {
+      tags: [RevalidateTags.dish['upload-image-dish-media']],
+    },
+  });
+  return response.data;
+}
 
 export async function toggleDishAPI(id: string) {
   const headers = await getCookiesHeader();
@@ -27,7 +45,7 @@ export async function toggleDishAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('toggle-dish');
+    revalidateTag(RevalidateTags.dish['toggle-dish']);
   }
 
   return response.status;
@@ -58,7 +76,7 @@ export async function createDishAPI(data: RequestCreateDishDTO) {
   });
 
   if (response.status === 201) {
-    revalidateTag('create-dish');
+    revalidateTag(RevalidateTags.dish['create-dish']);
   }
 
   return response;
@@ -72,19 +90,10 @@ export async function deleteDishAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('delete-dish');
+    revalidateTag(RevalidateTags.dish['delete-dish']);
   }
 
   return response.status;
-}
-
-export async function getDishByIdAPI(id: string) {
-  const headers = await getCookiesHeader();
-
-  const response = await getDishById(id, {
-    headers,
-  });
-  return response.data;
 }
 
 export async function updateDishAPI(id: string, data: RequestUpdateDishDTO) {
@@ -121,4 +130,31 @@ export async function updateDishFlavorsOrderAPI(
   });
 
   return response.status;
+}
+
+export async function uploadDishImageAPI(
+  id: string,
+  file: RequestUploadDishImageDTO
+) {
+  const headers = await getCookiesHeader();
+
+  const response = await uploadDishImage(id, file, {
+    headers,
+  });
+
+  if (response.status === 200) {
+    revalidateTag(RevalidateTags.dish['upload-image-dish-media']);
+  }
+
+  return response;
+}
+
+export async function deleteDishImageAPI(id: string) {
+  const headers = await getCookiesHeader();
+
+  const response = await deleteDishImage(id, {
+    headers,
+  });
+
+  return response;
 }

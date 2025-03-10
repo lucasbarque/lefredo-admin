@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 
-import { updateDishExtrasOrderAPI } from '@/actions/dish.action';
 import {
   createDishesExtraAPI,
   updateDishesExtraAPI,
-} from '@/actions/dishes-extras.action';
+} from '@/actions/dish-extra.action';
+import { updateDishExtrasOrderAPI } from '@/actions/dish.action';
 import { createDishesExtraSchema } from '@/validations/dishes-extra-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';

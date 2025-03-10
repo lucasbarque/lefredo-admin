@@ -1,4 +1,4 @@
-import { getSectionByIdAPI } from '@/actions/sections.action';
+import { getSectionByIdAPI } from '@/actions/section.action';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';

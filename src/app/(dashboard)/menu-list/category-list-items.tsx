@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { deleteSectionAPI, toggleSectionAPI } from '@/actions/sections.action';
+import { deleteSectionAPI, toggleSectionAPI } from '@/actions/section.action';
 import { DishMediasDTO } from '@/http/api';
 import {
   IconChevronUp,

@@ -12,6 +12,8 @@ import {
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
+import { RevalidateTags } from '@/constants/tags-revalidate';
+
 import { getCookiesHeader } from './utils.action';
 
 export async function getSectionsAPI() {
@@ -23,7 +25,10 @@ export async function getSectionsAPI() {
       headers,
       cache: 'force-cache',
       next: {
-        tags: ['create-section', 'delete-section'],
+        tags: [
+          RevalidateTags.section['create-section'],
+          RevalidateTags.section['delete-section'],
+        ],
       },
     }
   );
@@ -38,7 +43,7 @@ export async function getSectionByIdAPI(id: string) {
     headers,
     cache: 'force-cache',
     next: {
-      tags: ['update-section'],
+      tags: [RevalidateTags.section['update-section']],
     },
   });
 
@@ -55,13 +60,13 @@ export async function getSectionsWithItemsAPI() {
       cache: 'force-cache',
       next: {
         tags: [
-          'delete-section',
-          'create-section',
-          'update-section',
-          'toggle-section',
-          'delete-dish',
-          'create-dish',
-          'toggle-dish',
+          RevalidateTags.section['create-section'],
+          RevalidateTags.section['update-section'],
+          RevalidateTags.section['delete-section'],
+          RevalidateTags.section['toggle-section'],
+          RevalidateTags.dish['create-dish'],
+          RevalidateTags.dish['toggle-dish'],
+          RevalidateTags.dish['delete-dish'],
         ],
       },
     }
@@ -84,7 +89,7 @@ export async function createSectionAPI(data: {
   );
 
   if (response.status === 201) {
-    revalidateTag('create-section');
+    revalidateTag(RevalidateTags.section['create-section']);
   }
 
   return response.status;
@@ -98,7 +103,7 @@ export async function deleteSectionAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('delete-section');
+    revalidateTag(RevalidateTags.section['delete-section']);
   }
 
   return response.status;
@@ -112,7 +117,7 @@ export async function toggleSectionAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('toggle-section');
+    revalidateTag(RevalidateTags.section['toggle-section']);
   }
 
   return response.status;
@@ -128,7 +133,7 @@ export async function updateSectionAPI(
     headers,
   });
 
-  revalidateTag('update-section');
+  revalidateTag(RevalidateTags.section['update-section']);
 
   return response.status;
 }

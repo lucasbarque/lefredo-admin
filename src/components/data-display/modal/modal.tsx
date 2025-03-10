@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as DialogPrimitive from '@radix-ui/react-alert-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { IconX } from '@tabler/icons-react';
 import clsx from 'clsx';
 
@@ -82,14 +83,16 @@ const ModalWrapper = React.forwardRef<
           <h3 className='text-title-secondary font-semibold'>{title}</h3>
         </DialogPrimitive.Title>
       )}
-      {description && (
-        <DialogPrimitive.Description asChild>
+      <DialogPrimitive.Description asChild>
+        {description ? (
           <p
             className='font-nunito-sans text-body-2-regular text-gray-7 pt-2'
             dangerouslySetInnerHTML={{ __html: description }}
           />
-        </DialogPrimitive.Description>
-      )}
+        ) : (
+          <VisuallyHidden.Root>{description}</VisuallyHidden.Root>
+        )}
+      </DialogPrimitive.Description>
       {children}
       {(!hideActionButton || !hideActionButton) && (
         <div className='mt-10 flex justify-end gap-4'>

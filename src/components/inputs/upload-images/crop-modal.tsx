@@ -28,7 +28,7 @@ export function CropModal({
         <div className='relative mt-5 h-[400px] w-full'>
           {currentEditingIndex !== null && images[currentEditingIndex] && (
             <Cropper
-              // Sempre utiliza a imagem original para o crop
+              // @ts-ignore
               image={URL.createObjectURL(images[currentEditingIndex].file)}
               crop={crop}
               zoom={zoom}

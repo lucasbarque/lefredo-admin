@@ -1,4 +1,4 @@
-import { getDishExtrasAPI } from '@/actions/dishes-extras.action';
+import { getDishExtrasAPI } from '@/actions/dish-extra.action';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';

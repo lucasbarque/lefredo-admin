@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { createSectionAPI } from '@/actions/sections.action';
+import { createSectionAPI } from '@/actions/section.action';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
 import { useForm } from 'react-hook-form';

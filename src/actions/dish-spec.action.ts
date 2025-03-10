@@ -7,6 +7,8 @@ import {
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
+import { RevalidateTags } from '@/constants/tags-revalidate';
+
 import { getCookiesHeader } from './utils.action';
 
 export async function getDishesSpecsAPI(id: string) {
@@ -16,7 +18,7 @@ export async function getDishesSpecsAPI(id: string) {
     headers,
     cache: 'force-cache',
     next: {
-      tags: ['toggle-dishes-specs'],
+      tags: [RevalidateTags.dishSpec['toggle-dish-spec']],
     },
   });
 
@@ -34,7 +36,7 @@ export async function toggleDishesSpecsAPI(
   });
 
   if (response.status === 200) {
-    revalidateTag('toggle-dishes-specs');
+    revalidateTag(RevalidateTags.dishSpec['toggle-dish-spec']);
   }
 
   return response;

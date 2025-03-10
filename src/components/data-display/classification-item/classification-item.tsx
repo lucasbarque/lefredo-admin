@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { toggleDishesSpecsAPI } from '@/actions/dishes-specs.action';
+import { toggleDishesSpecsAPI } from '@/actions/dish-spec.action';
 import { toast } from 'sonner';
 
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';

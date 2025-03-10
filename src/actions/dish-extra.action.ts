@@ -1,14 +1,16 @@
 'use server';
 
 import {
-  RequestCreateDishesExtraDTO,
-  RequestUpdateDishesExtraDTO,
+  RequestCreateDishExtraDTO,
+  RequestUpdateDishExtraDTO,
   createDishesExtra,
   deleteDishesExtra,
   getDishesExtras,
   updateDishesExtra,
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
+
+import { RevalidateTags } from '@/constants/tags-revalidate';
 
 import { getCookiesHeader } from './utils.action';
 
@@ -19,7 +21,11 @@ export async function getDishExtrasAPI(id: string) {
     headers,
     cache: 'force-cache',
     next: {
-      tags: ['create-dishes-extra', 'delete-dishes-extra', 'update-dish-extra'],
+      tags: [
+        RevalidateTags.dishExtra['create-dish-extra'],
+        RevalidateTags.dishExtra['delete-dish-extra'],
+        RevalidateTags.dishExtra['update-dish-extra'],
+      ],
     },
   });
 
@@ -28,7 +34,7 @@ export async function getDishExtrasAPI(id: string) {
 
 export async function createDishesExtraAPI(
   dishId: string,
-  data: RequestCreateDishesExtraDTO
+  data: RequestCreateDishExtraDTO
 ) {
   const headers = await getCookiesHeader();
 
@@ -37,7 +43,7 @@ export async function createDishesExtraAPI(
   });
 
   if (response.status === 201) {
-    revalidateTag('create-dishes-extra');
+    revalidateTag(RevalidateTags.dishExtra['create-dish-extra']);
   }
 
   return response.status;
@@ -51,7 +57,7 @@ export async function deleteDishesExtraAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('delete-dishes-extra');
+    revalidateTag(RevalidateTags.dishExtra['delete-dish-extra']);
   }
 
   return response.status;
@@ -59,16 +65,14 @@ export async function deleteDishesExtraAPI(id: string) {
 
 export async function updateDishesExtraAPI(
   id: string,
-  data: RequestUpdateDishesExtraDTO
+  data: RequestUpdateDishExtraDTO
 ) {
   const headers = await getCookiesHeader();
-  console.log(headers);
   const response = await updateDishesExtra(id, data, {
     headers,
   });
-  console.log(response);
 
-  revalidateTag('update-dish-extra');
+  revalidateTag(RevalidateTags.dishExtra['update-dish-extra']);
 
   return response.status;
 }

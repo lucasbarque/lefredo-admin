@@ -5,7 +5,7 @@ import {
   changeRestaurantLogo,
   deleteRestaurantLogo,
   updateRestaurantData,
-} from '@/actions/my-store.action';
+} from '@/actions/restaurant.action';
 import { GetRestaurantByIdDTO } from '@/http/api';
 import { updateStoreSchema } from '@/validations/update-store';
 import { zodResolver } from '@hookform/resolvers/zod';

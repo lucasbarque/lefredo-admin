@@ -1,4 +1,4 @@
-import { GetDishDTO } from '@/http/api';
+import { DishDTO } from '@/http/api';
 
 export interface PageEditItemDetailsParams {
   params: Promise<{
@@ -7,5 +7,5 @@ export interface PageEditItemDetailsParams {
 }
 
 export interface FormEditItemDetailsProps {
-  data: GetDishDTO;
+  data: DishDTO;
 }

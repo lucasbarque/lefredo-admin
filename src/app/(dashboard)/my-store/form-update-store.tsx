@@ -52,7 +52,7 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
       />
 
       <UploadImage
-        label='Adicione uma imagem'
+        label='Resolução sugerida 100x50px'
         currentImage={imageData}
         onSubmit={setImageData}
         onDelete={deleteImageData}

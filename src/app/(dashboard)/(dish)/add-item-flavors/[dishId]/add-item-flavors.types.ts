@@ -1,6 +1,10 @@
 import { Dispatch, SetStateAction } from 'react';
 
-import { DishFlavorsDTO, getDishByIdResponse } from '@/http/api';
+import {
+  DishFlavorsDTO,
+  DishFlavorsMediaDTO,
+  getDishByIdResponse,
+} from '@/http/api';
 
 export interface PageAddItemFlavorsParams {
   params: Promise<{
@@ -24,4 +28,9 @@ export interface RadioSelectCreateFlavorProps {
   setCreateVariation: Dispatch<SetStateAction<boolean>>;
   createVariation: boolean;
   dishFlavors: DishFlavorsDTO[];
+}
+
+export interface UploadImagesComponentProps {
+  id: string | null;
+  imagesFlavor: DishFlavorsMediaDTO[] | [];
 }

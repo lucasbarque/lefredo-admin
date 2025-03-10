@@ -1,4 +1,4 @@
-import { createSectionAPI } from '@/actions/sections.action';
+import { createSectionAPI } from '@/actions/section.action';
 import { createCategorySchema } from '@/validations/sections-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';

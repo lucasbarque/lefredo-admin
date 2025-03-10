@@ -1,20 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { deleteDishImageAPI, uploadDishImageAPI } from '@/actions/dish.action';
 
 import { UploadImages } from '@/components/inputs/upload-images';
-import { FileUploaded } from '@/components/inputs/upload-images/upload-images.types';
+import { useUploadImages } from '@/components/inputs/upload-images/use-upload-images';
 
-export function FormUploadImages() {
-  const [images, setImages] = useState<FileUploaded[]>([]);
+import { FormUploadImagesProps } from './add-item-photos.types';
+
+export function FormUploadImages({
+  dishMedias,
+  dishId,
+}: FormUploadImagesProps) {
+  const { images, setImages, handleDeleteImage, handleImageUpdate } =
+    useUploadImages({
+      parentId: dishId,
+      medias: dishMedias,
+      fnDeleteImages: deleteDishImageAPI,
+      fnUploadImages: uploadDishImageAPI,
+    });
 
   return (
     <div className='p-6'>
       <UploadImages
         label='Fotos do item'
-        additionalInfo='Resolução sugerida 533x430 | Formatos: JPG, JPEG, PNG - Máximo 10MB'
+        additionalInfo='Resolução sugerida 480x360 | Formatos: JPG, JPEG, PNG - Máximo 5MB'
         currentImages={images}
         onSubmit={setImages}
+        onRemove={handleDeleteImage}
+        onImageUpdate={handleImageUpdate}
+        previewConfig={{ height: 180 }}
+        maxImages={3}
+        maxFileSize={5}
       />
     </div>
   );

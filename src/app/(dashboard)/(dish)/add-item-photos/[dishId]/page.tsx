@@ -1,3 +1,4 @@
+import { getDishByIdAPI } from '@/actions/dish.action';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';
@@ -12,6 +13,8 @@ export default async function PageAddItemPhotos({
 }: PageAddItemPhotosParams) {
   const { dishId } = await params;
 
+  const dish = await getDishByIdAPI(dishId);
+
   return (
     <>
       <div className='flex items-end justify-between px-6 pt-6'>
@@ -25,7 +28,7 @@ export default async function PageAddItemPhotos({
         <StepperBar currentStepperIndex={1} />
       </div>
 
-      <FormUploadImages />
+      <FormUploadImages dishMedias={dish.dishMedias} dishId={dishId} />
 
       <div className='border-border-default mt-auto flex justify-end gap-4 border-t px-8 py-4'>
         <Link href='/menu-list'>

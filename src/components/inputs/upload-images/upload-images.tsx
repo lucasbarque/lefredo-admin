@@ -13,6 +13,7 @@ export function UploadImages({
   additionalInfo,
   onSubmit,
   onRemove, // Recebe o id da imagem a ser deletada
+  onImageUpdate,
   currentImages = [],
   previewConfig,
   maxImages,
@@ -36,7 +37,7 @@ export function UploadImages({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sincroniza o estado "images" sempre que "currentImages" mudar
+  // Atualiza o estado local quando currentImages mudar
   useEffect(() => {
     setImages(currentImages);
   }, [currentImages]);
@@ -44,12 +45,10 @@ export function UploadImages({
   const addNewImages = (newFiles: File[]) => {
     const errorMessages: string[] = [];
     let validFiles = newFiles;
-
     if (maxFileSize) {
       const maxBytes = maxFileSize * 1024 * 1024;
       const invalidFiles = newFiles.filter((file) => file.size > maxBytes);
       validFiles = newFiles.filter((file) => file.size <= maxBytes);
-
       if (invalidFiles.length > 0) {
         const messages = invalidFiles.map(
           (file) =>
@@ -58,7 +57,6 @@ export function UploadImages({
         errorMessages.push(...messages);
       }
     }
-
     if (maxImages) {
       const availableSlots = maxImages - images.length;
       if (validFiles.length > availableSlots) {
@@ -72,16 +70,13 @@ export function UploadImages({
         validFiles = filesToAdd;
       }
     }
-
     if (validFiles.length === 0) {
       setErrorMessage(errorMessages.join('\n'));
       return false;
     }
-
-    // Marcar as novas imagens com isNew: true e gerar um id temporário.
-    // Importante: definir isLoading: true para disparar o efeito de upload.
+    // Marcar as novas imagens com isNew: true, gerar um id temporário e definir isLoading: true para disparar o efeito de upload.
     const newImages: FileUploaded[] = validFiles.map((file) => ({
-      id: String(Date.now() + Math.random()), // id temporário; será substituído após o upload
+      id: String(Date.now() + Math.random()),
       file,
       url: URL.createObjectURL(file),
       isLoading: true,
@@ -90,7 +85,6 @@ export function UploadImages({
     const updatedImages = [...images, ...newImages];
     setImages(updatedImages);
     if (onSubmit) onSubmit(updatedImages);
-
     setErrorMessage(errorMessages.join('\n'));
     return true;
   };
@@ -107,7 +101,7 @@ export function UploadImages({
     }
   };
 
-  // Se a função onRemove for fornecida pelo pai, a chamamos com o id; caso contrário, removemos localmente.
+  // Se onRemove for fornecida pelo pai, usa-a; senão, remove localmente.
   const handleRemove = (id: string) => {
     if (onRemove) {
       onRemove(id);
@@ -118,7 +112,7 @@ export function UploadImages({
     }
   };
 
-  // Para editar, procuramos a imagem pelo id e definimos o índice correspondente
+  // Para editar, encontra o índice a partir do id
   const handleEdit = (id: string) => {
     const index = images.findIndex((item) => item.id === id);
     if (index !== -1) {
@@ -151,9 +145,7 @@ export function UploadImages({
 
   const onSubmitImage = () => {
     if (currentEditingIndex === null) return;
-
     const imageObj = images[currentEditingIndex];
-
     if (!imageObj.file) {
       console.error('Arquivo inexistente para a imagem selecionada.');
       return;
@@ -162,7 +154,6 @@ export function UploadImages({
     const originalUrl = URL.createObjectURL(imageObj.file);
     const image = new Image();
     image.src = originalUrl;
-
     image.onload = () => {
       const canvas = document.createElement('canvas');
       canvas.width = croppedArea.width;
@@ -181,18 +172,17 @@ export function UploadImages({
           croppedArea.width,
           croppedArea.height
         );
-        const base64Image = canvas.toDataURL('image/png');
-        const updatedImages = [...images];
-        updatedImages[currentEditingIndex] = {
-          file: imageObj.file,
-          url: base64Image,
-          cropData: { crop, zoom, croppedArea },
-          isLoading: false,
-          isNew: imageObj.isNew,
-          id: imageObj.id,
-        };
-        setImages(updatedImages);
-        if (onSubmit) onSubmit(updatedImages);
+
+        canvas.toBlob((blob) => {
+          if (!blob) return;
+          const newFile = new File([blob], imageObj.file!.name, {
+            type: blob.type,
+          });
+          // Notifica o componente pai com os dados necessários para a deleção e o upload
+          if (onImageUpdate) {
+            onImageUpdate(imageObj.id, newFile, { crop, zoom, croppedArea });
+          }
+        }, 'image/png');
       }
       setIsCropModalOpen(false);
       setCurrentEditingIndex(null);
@@ -208,13 +198,11 @@ export function UploadImages({
         label={label}
         additionalInfo={additionalInfo}
       />
-
       {errorMessage && (
         <div className='mt-2 text-sm whitespace-pre-line text-red-500'>
           {errorMessage}
         </div>
       )}
-
       {images.length > 0 && (
         <>
           <hr className='border-border-default mt-4' />
@@ -233,7 +221,6 @@ export function UploadImages({
           </div>
         </>
       )}
-
       <input
         type='file'
         id='upload-file'
@@ -242,7 +229,6 @@ export function UploadImages({
         onChange={handleFileChange}
         ref={inputRef}
       />
-
       <CropModal
         isCropModalOpen={isCropModalOpen}
         setIsCropModalOpen={setIsCropModalOpen}

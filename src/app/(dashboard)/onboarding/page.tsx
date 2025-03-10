@@ -1,4 +1,4 @@
-import { changeOnboardingStatusAPI } from '@/actions/users.action';
+import { changeOnboardingStatusAPI } from '@/actions/user.action';
 import { IconDeviceMobileSearch } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';

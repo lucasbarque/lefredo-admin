@@ -1,4 +1,4 @@
-import { getDishFlavorsAPI } from '@/actions/dishes-flavors.action';
+import { getDishFlavorsAPI } from '@/actions/dish-flavor.action';
 import { getDishById } from '@/http/api';
 import Link from 'next/link';
 

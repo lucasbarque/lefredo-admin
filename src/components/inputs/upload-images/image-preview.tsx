@@ -31,20 +31,22 @@ export function ImagePreview({
           width={280}
           style={{ height: height + 'px' }}
           height={height}
-          className='h-auto w-full object-cover'
+          className='h-full w-full object-cover'
           quality={60}
         />
       )}
       <div className='absolute top-2 right-2 flex gap-1'>
         <button
           onClick={() => handleEdit(id)}
-          className='cursor-pointer rounded bg-white p-1'
+          className='cursor-pointer rounded bg-white p-1 disabled:opacity-40'
+          disabled={isLoading}
         >
           <IconEdit />
         </button>
         <button
           onClick={() => handleRemove(id)}
-          className='cursor-pointer rounded bg-white p-1'
+          className='cursor-pointer rounded bg-white p-1 disabled:opacity-40'
+          disabled={isLoading}
         >
           <IconX />
         </button>

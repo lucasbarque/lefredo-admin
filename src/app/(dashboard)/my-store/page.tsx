@@ -1,4 +1,4 @@
-import { getRestaurantData } from '@/actions/my-store.action';
+import { getRestaurantData } from '@/actions/restaurant.action';
 
 import { Header } from '@/components/data-display/header';
 

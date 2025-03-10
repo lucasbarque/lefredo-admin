@@ -32,13 +32,14 @@ export interface CreateMenuDTO { [key: string]: unknown }
 
 export interface UpdateMenuDTO { [key: string]: unknown }
 
-export interface Section {
+export interface SectionDTO {
   id: string;
   title: string;
   description: string;
+  slug: string;
 }
 
-export interface DishExtrasDTO {
+export interface DishExtraDTO {
   id: string;
   title: string;
   price: number;
@@ -85,6 +86,8 @@ export interface DishSpec {
   id: string;
   title: string;
   key: DishSpecKey;
+  /** @nullable */
+  description: string | null;
 }
 
 export interface DishSpecsDTO {
@@ -93,22 +96,22 @@ export interface DishSpecsDTO {
   DishSpecs: DishSpec;
 }
 
-export interface GetDishDTO {
+export interface DishDTO {
   id: string;
   title: string;
   description: string;
   price: number;
   portion: string;
   prepTime: string;
-  section: Section;
-  dishExtras: DishExtrasDTO[];
+  section: SectionDTO;
+  dishExtras: DishExtraDTO[];
   dishFlavors: DishFlavorsDTO[];
   dishMedias: DishMediasDTO[];
   dishSpecs: DishSpecsDTO[];
   dishExtrasOrder: string[];
 }
 
-export interface GetDishesDTO {
+export interface ResponseGetDishesDTO {
   id: string;
   title: string;
   price: number;
@@ -157,25 +160,35 @@ export interface RequestUpdateDishFlavorsOrderDTO {
   orderUpdated: string[];
 }
 
-export interface ResponseGetDishesExtraDTO {
+export interface RequestUploadDishImageDTO {
+  file: string;
+}
+
+export interface ResponseUploadDishImageDTO {
+  id: string;
+  title: string;
+  url: string;
+}
+
+export interface ResponseGetDishExtraDTO {
   id: string;
   title: string;
   price: number;
 }
 
-export interface RequestCreateDishesExtraDTO {
+export interface RequestCreateDishExtraDTO {
   title: string;
   price: string;
 }
 
-export interface ResponseCreateDishesExtraDTO {
+export interface ResponseCreateDishExtraDTO {
   id: string;
   title: string;
   price: number;
   dishId: string;
 }
 
-export interface RequestUpdateDishesExtraDTO {
+export interface RequestUpdateDishExtraDTO {
   title: string;
   price: string;
 }
@@ -291,13 +304,6 @@ export interface GetRestaurantIsFirstCategoryDTO {
 }
 
 export interface CreateResturantDTO { [key: string]: unknown }
-
-export interface GetSectionsDTO {
-  id: string;
-  title: string;
-  description: string;
-  slug: string;
-}
 
 export interface Dish {
   id: string;
@@ -641,7 +647,7 @@ export const menusControllerUpdate = async (id: string,
  * @summary Get Dish By Id
  */
 export type getDishByIdResponse = {
-  data: GetDishDTO;
+  data: DishDTO;
   status: number;
   headers: Headers;
 }
@@ -744,8 +750,42 @@ export const deleteDish = async (id: string, options?: RequestInit): Promise<del
 /**
  * @summary Get Dishes
  */
+export type getDishesBySlugResponse = {
+  data: ResponseGetDishesDTO[];
+  status: number;
+  headers: Headers;
+}
+
+export const getGetDishesBySlugUrl = (slug: string,) => {
+
+
+  return `http://localhost:3333/dishes/slug/${slug}`
+}
+
+export const getDishesBySlug = async (slug: string, options?: RequestInit): Promise<getDishesBySlugResponse> => {
+  
+  const res = await fetch(getGetDishesBySlugUrl(slug),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: getDishesBySlugResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as getDishesBySlugResponse
+}
+
+
+
+/**
+ * @summary Get Dishes
+ */
 export type getDishesBySectionIdResponse = {
-  data: GetDishesDTO[];
+  data: ResponseGetDishesDTO[];
   status: number;
   headers: Headers;
 }
@@ -813,40 +853,6 @@ export const createDish = async (requestCreateDishDTO: RequestCreateDishDTO, opt
   const data: createDishResponse['data'] = body ? JSON.parse(body) : {}
 
   return { data, status: res.status, headers: res.headers } as createDishResponse
-}
-
-
-
-/**
- * @summary Get Dishes
- */
-export type getDishesBySlugResponse = {
-  data: GetDishesDTO[];
-  status: number;
-  headers: Headers;
-}
-
-export const getGetDishesBySlugUrl = (slug: string,) => {
-
-
-  return `http://localhost:3333/dishes/slug/${slug}`
-}
-
-export const getDishesBySlug = async (slug: string, options?: RequestInit): Promise<getDishesBySlugResponse> => {
-  
-  const res = await fetch(getGetDishesBySlugUrl(slug),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-)
-
-  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
-  const data: getDishesBySlugResponse['data'] = body ? JSON.parse(body) : {}
-
-  return { data, status: res.status, headers: res.headers } as getDishesBySlugResponse
 }
 
 
@@ -994,10 +1000,82 @@ export const updateDishFlavorsOrder = async (id: string,
 
 
 /**
+ * @summary Upload dish image
+ */
+export type uploadDishImageResponse = {
+  data: ResponseUploadDishImageDTO;
+  status: number;
+  headers: Headers;
+}
+
+export const getUploadDishImageUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/${id}/upload-image`
+}
+
+export const uploadDishImage = async (id: string,
+    requestUploadDishImageDTO: RequestUploadDishImageDTO, options?: RequestInit): Promise<uploadDishImageResponse> => {
+    const formData = new FormData();
+formData.append('file', requestUploadDishImageDTO.file)
+
+  const res = await fetch(getUploadDishImageUrl(id),
+  {      
+    ...options,
+    method: 'PATCH'
+    ,
+    body: 
+      formData,
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: uploadDishImageResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as uploadDishImageResponse
+}
+
+
+
+/**
+ * @summary Delete Dish image
+ */
+export type deleteDishImageResponse = {
+  data: void;
+  status: number;
+  headers: Headers;
+}
+
+export const getDeleteDishImageUrl = (id: string,) => {
+
+
+  return `http://localhost:3333/dishes/delete-image/${id}`
+}
+
+export const deleteDishImage = async (id: string, options?: RequestInit): Promise<deleteDishImageResponse> => {
+  
+  const res = await fetch(getDeleteDishImageUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+)
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text()
+  const data: deleteDishImageResponse['data'] = body ? JSON.parse(body) : {}
+
+  return { data, status: res.status, headers: res.headers } as deleteDishImageResponse
+}
+
+
+
+/**
  * @summary Get Dishes Extras
  */
 export type getDishesExtrasResponse = {
-  data: ResponseGetDishesExtraDTO[];
+  data: ResponseGetDishExtraDTO[];
   status: number;
   headers: Headers;
 }
@@ -1031,7 +1109,7 @@ export const getDishesExtras = async (dishId: string, options?: RequestInit): Pr
  * @summary Create Dish Extra
  */
 export type createDishesExtraResponse = {
-  data: ResponseCreateDishesExtraDTO[];
+  data: ResponseCreateDishExtraDTO[];
   status: number;
   headers: Headers;
 }
@@ -1043,7 +1121,7 @@ export const getCreateDishesExtraUrl = (dishId: string,) => {
 }
 
 export const createDishesExtra = async (dishId: string,
-    requestCreateDishesExtraDTO: RequestCreateDishesExtraDTO, options?: RequestInit): Promise<createDishesExtraResponse> => {
+    requestCreateDishExtraDTO: RequestCreateDishExtraDTO, options?: RequestInit): Promise<createDishesExtraResponse> => {
   
   const res = await fetch(getCreateDishesExtraUrl(dishId),
   {      
@@ -1051,7 +1129,7 @@ export const createDishesExtra = async (dishId: string,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      requestCreateDishesExtraDTO,)
+      requestCreateDishExtraDTO,)
   }
 )
 
@@ -1079,7 +1157,7 @@ export const getUpdateDishesExtraUrl = (id: string,) => {
 }
 
 export const updateDishesExtra = async (id: string,
-    requestUpdateDishesExtraDTO: RequestUpdateDishesExtraDTO, options?: RequestInit): Promise<updateDishesExtraResponse> => {
+    requestUpdateDishExtraDTO: RequestUpdateDishExtraDTO, options?: RequestInit): Promise<updateDishesExtraResponse> => {
   
   const res = await fetch(getUpdateDishesExtraUrl(id),
   {      
@@ -1087,7 +1165,7 @@ export const updateDishesExtra = async (id: string,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
-      requestUpdateDishesExtraDTO,)
+      requestUpdateDishExtraDTO,)
   }
 )
 
@@ -1699,7 +1777,7 @@ export const getRestaurantIsFirstCategory = async (id: string, options?: Request
  * @summary Get Sections
  */
 export type getSectionsResponse = {
-  data: GetSectionsDTO[];
+  data: SectionDTO[];
   status: number;
   headers: Headers;
 }

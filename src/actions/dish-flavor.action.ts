@@ -13,6 +13,8 @@ import {
 } from '@/http/api';
 import { revalidateTag } from 'next/cache';
 
+import { RevalidateTags } from '@/constants/tags-revalidate';
+
 import { getCookiesHeader } from './utils.action';
 
 export async function getDishFlavorsAPI(id: string) {
@@ -23,11 +25,11 @@ export async function getDishFlavorsAPI(id: string) {
     cache: 'force-cache',
     next: {
       tags: [
-        'create-dishes-flavors',
-        'delete-dishes-flavors',
-        'update-dish-flavors',
-        'upload-image-dish-flavors-media',
-        'delete-image-dish-flavors-media',
+        RevalidateTags.dishFlavor['create-dish-flavor'],
+        RevalidateTags.dishFlavor['delete-dish-flavor'],
+        RevalidateTags.dishFlavor['update-dish-flavor'],
+        RevalidateTags.dishFlavor['upload-image-dish-flavor'],
+        RevalidateTags.dishFlavor['delete-image-dish-flavor'],
       ],
     },
   });
@@ -40,14 +42,13 @@ export async function createDishesFlavorsAPI(
   data: RequestCreateDishesFlavorsDTO
 ) {
   const headers = await getCookiesHeader();
-  console.log(data);
 
   const response = await createDishesFlavors(dishId, data, {
     headers,
   });
 
   if (response.status === 201) {
-    revalidateTag('create-dishes-flavors');
+    revalidateTag(RevalidateTags.dishFlavor['create-dish-flavor']);
   }
 
   return response.status;
@@ -61,7 +62,7 @@ export async function deleteDishesFlavorsAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('delete-dishes-flavors');
+    revalidateTag(RevalidateTags.dishFlavor['delete-dish-flavor']);
   }
 
   return response.status;
@@ -78,7 +79,7 @@ export async function updateDishesFlavorsAPI(
   });
 
   if (response.status === 200) {
-    revalidateTag('update-dish-flavors');
+    revalidateTag(RevalidateTags.dishFlavor['update-dish-flavor']);
   }
 
   return response.status;
@@ -95,7 +96,7 @@ export async function uploadDishesFlavorsImageAPI(
   });
 
   if (response.status === 200) {
-    revalidateTag('delete-image-dish-flavors-media');
+    revalidateTag(RevalidateTags.dishFlavor['upload-image-dish-flavor']);
   }
 
   return response;
@@ -109,7 +110,7 @@ export async function deleteDishesFlavorsImageAPI(id: string) {
   });
 
   if (response.status === 200) {
-    revalidateTag('upload-image-dish-flavors-media');
+    revalidateTag(RevalidateTags.dishFlavor['delete-image-dish-flavor']);
   }
 
   return response;

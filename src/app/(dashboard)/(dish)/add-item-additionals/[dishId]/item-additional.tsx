@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteDishesExtraAPI } from '@/actions/dishes-extras.action';
+import { deleteDishesExtraAPI } from '@/actions/dish-extra.action';
 import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
 import { toast } from 'sonner';
 

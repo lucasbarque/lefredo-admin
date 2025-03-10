@@ -1,4 +1,4 @@
-import { deleteDishesFlavorsAPI } from '@/actions/dishes-flavors.action';
+import { deleteDishesFlavorsAPI } from '@/actions/dish-flavor.action';
 import { formatCurrency } from '@/lib/utils';
 import {
   IconCameraUp,
@@ -57,8 +57,8 @@ export function ItemFlavor({
             src={process.env.NEXT_PUBLIC_BUCKET_URL + dishFlavorsMedias[0].url}
             alt=''
             className='h-[5.625rem] w-[5.625rem] rounded-md object-cover'
-            height={90}
-            width={130}
+            height={120}
+            width={120}
             quality={80}
           />
         )}
@@ -68,7 +68,10 @@ export function ItemFlavor({
             {title}
           </span>
           <p className='text-text-default line-clamp-1 flex items-center gap-1 text-sm'>
-            <span dangerouslySetInnerHTML={{ __html: descriptionText }} />
+            <span
+              className='line-clamp-1'
+              dangerouslySetInnerHTML={{ __html: descriptionText }}
+            />
             <Tooltip>
               <Tooltip.Trigger asChild>
                 <button

@@ -1,4 +1,4 @@
-import { getDishesSpecsAPI } from '@/actions/dishes-specs.action';
+import { getDishesSpecsAPI } from '@/actions/dish-spec.action';
 import { RequestDishSpecsToggleDTOKey } from '@/http/api';
 import {
   IconCandyOff,

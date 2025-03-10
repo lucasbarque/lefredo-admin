@@ -1,31 +1,24 @@
 'use client';
 
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 
-import {
-  deleteDishesFlavorsImageAPI,
-  uploadDishesFlavorsImageAPI,
-} from '@/actions/dish-flavor.action';
 import { toast } from 'sonner';
 
-import { UploadImages } from '@/components/inputs/upload-images';
-import {
-  CropData,
-  FileUploaded,
-} from '@/components/inputs/upload-images/upload-images.types';
+import { CropData, FileUploaded } from './upload-images.types';
+import { UseUploadImagesProps } from './use-upload-images.types';
 
-import { UploadImagesComponentProps } from './add-item-flavors.types';
-
-export function UploadImagesComponent({
-  id,
-  imagesFlavor,
-}: UploadImagesComponentProps) {
+export function useUploadImages({
+  parentId,
+  medias,
+  fnDeleteImages,
+  fnUploadImages,
+}: UseUploadImagesProps) {
   const [images, setImages] = useState<FileUploaded[]>([]);
 
   async function loadImages() {
-    // Cria placeholders para as imagens já persistidas
-    const placeholders: FileUploaded[] = imagesFlavor.map((image) => ({
-      id: image.id, // id vindo da API
+    const placeholders: FileUploaded[] = medias.map((image) => ({
+      id: image.id,
       file: null,
       url: '',
       isLoading: true,
@@ -33,8 +26,7 @@ export function UploadImagesComponent({
     }));
     setImages(placeholders);
 
-    // Carrega as imagens em paralelo
-    const loadPromises = imagesFlavor.map(async (image, index) => {
+    const loadPromises = medias.map(async (image, index) => {
       const imageUrl = process.env.NEXT_PUBLIC_BUCKET_URL + image.url;
       try {
         const response = await fetch(imageUrl);
@@ -79,7 +71,6 @@ export function UploadImagesComponent({
     });
   }
 
-  // Função de delete atualizada: ativa o loading e desabilita o botão até o processo terminar.
   async function handleDeleteImage(idImage: string) {
     setImages((prev) =>
       prev.map((item) =>
@@ -90,7 +81,7 @@ export function UploadImagesComponent({
     const img = images.find((item) => item.id === idImage);
     if (img) {
       try {
-        const response = await deleteDishesFlavorsImageAPI(idImage);
+        const response = await fnDeleteImages(idImage);
         if (response.status !== 200) {
           console.error('Erro ao deletar a imagem:', img.url);
           setImages((prev) =>
@@ -118,8 +109,6 @@ export function UploadImagesComponent({
     newFile: File,
     cropData: CropData
   ) {
-    if (!id) return null;
-    // Atualiza o estado para exibir loading na imagem que está sendo atualizada
     setImages((prev) =>
       prev.map((image) =>
         image.id === oldImageId ? { ...image, isLoading: true } : image
@@ -127,13 +116,11 @@ export function UploadImagesComponent({
     );
 
     try {
-      // Primeiro, dispara a request para deletar a imagem antiga
-      const deleteResponse = await deleteDishesFlavorsImageAPI(oldImageId);
+      const deleteResponse = await fnDeleteImages(oldImageId);
       if (deleteResponse.status !== 200) {
         toast.error('Erro ao deletar a imagem. Tente novamente mais tarde', {
           position: 'top-right',
         });
-        // Remove o loading em caso de erro
         setImages((prev) =>
           prev.map((image) =>
             image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -142,8 +129,7 @@ export function UploadImagesComponent({
         return;
       }
 
-      // Em seguida, dispara a request para realizar o upload da nova imagem
-      const uploadResponse = await uploadDishesFlavorsImageAPI(id, {
+      const uploadResponse = await fnUploadImages(parentId, {
         // @ts-ignore
         file: newFile,
       });
@@ -152,7 +138,6 @@ export function UploadImagesComponent({
           'Ocorreu um erro ao realizar o upload da nova imagem. Tente novamente mais tarde',
           { position: 'top-right' }
         );
-        // Remove o loading em caso de erro
         setImages((prev) =>
           prev.map((image) =>
             image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -161,13 +146,12 @@ export function UploadImagesComponent({
         return;
       }
 
-      // Atualiza o estado com os dados retornados da API e remove o loading
       setImages((prev) =>
         prev.map((image) =>
           image.id === oldImageId
             ? {
                 ...image,
-                id: uploadResponse.data.id, // novo id retornado pela API
+                id: uploadResponse.data.id,
                 url:
                   process.env.NEXT_PUBLIC_BUCKET_URL + uploadResponse.data.url,
                 isLoading: false,
@@ -182,7 +166,6 @@ export function UploadImagesComponent({
       toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
         position: 'top-right',
       });
-      // Remove o loading em caso de erro
       setImages((prev) =>
         prev.map((image) =>
           image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -192,23 +175,24 @@ export function UploadImagesComponent({
   }
 
   useEffect(() => {
-    if (imagesFlavor.length > 0) {
+    if (medias.length > 0) {
       loadImages();
     }
-  }, [imagesFlavor]);
+  }, [medias]);
 
-  // Efeito para disparar o upload das imagens novas em lote.
   useEffect(() => {
-    if (id === null) return;
+    if (parentId === null) return;
+
     const imagesToUpload = images.filter(
       (img) => img.isNew && img.isLoading && img.file
     );
+
     if (imagesToUpload.length === 0) return;
 
     Promise.all(
       imagesToUpload.map(async (img) => {
         try {
-          const response = await uploadDishesFlavorsImageAPI(id, {
+          const response = await fnUploadImages(parentId, {
             //@ts-ignore
             file: img.file,
           });
@@ -269,21 +253,12 @@ export function UploadImagesComponent({
         }, [])
       );
     });
-  }, [id, images]);
+  }, [parentId, images]);
 
-  return (
-    <div className='mt-4'>
-      <UploadImages
-        label='Fotos do item'
-        additionalInfo='Resolução sugerida 480x360 | Formatos: JPG, JPEG, PNG - Máximo 5MB'
-        currentImages={images}
-        onSubmit={setImages}
-        onRemove={handleDeleteImage}
-        onImageUpdate={handleImageUpdate}
-        previewConfig={{ height: 150 }}
-        maxImages={3}
-        maxFileSize={5}
-      />
-    </div>
-  );
+  return {
+    images,
+    setImages,
+    handleDeleteImage,
+    handleImageUpdate,
+  };
 }

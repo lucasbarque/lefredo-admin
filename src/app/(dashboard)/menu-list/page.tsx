@@ -1,4 +1,4 @@
-import { getSectionsWithItemsAPI } from '@/actions/sections.action';
+import { getSectionsWithItemsAPI } from '@/actions/section.action';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 
