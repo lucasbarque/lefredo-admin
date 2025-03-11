@@ -7,10 +7,14 @@ export default defineConfig({
       target: './src/http/api.ts',
       client: 'fetch',
       httpClient: 'fetch',
-      baseUrl: 'http://localhost:3333',
+      // baseUrl: 'http://localhost:3333',
       override: {
         fetch: {
           includeHttpResponseReturnType: true,
+        },
+        mutator: {
+          path: './custom-fetch.ts',
+          name: 'customFetch',
         },
       },
     },

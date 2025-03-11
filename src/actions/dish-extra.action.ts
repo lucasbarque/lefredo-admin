@@ -38,6 +38,7 @@ export async function createDishesExtraAPI(
 ) {
   const headers = await getCookiesHeader();
 
+  console.log({ dishId, data });
   const response = await createDishesExtra(dishId, data, {
     headers,
   });
