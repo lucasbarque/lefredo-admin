@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 
 import CharacterCount from '@tiptap/extension-character-count';

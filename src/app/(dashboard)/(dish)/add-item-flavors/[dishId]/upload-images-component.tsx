@@ -16,6 +16,8 @@ import {
 
 import { UploadImagesComponentProps } from './add-item-flavors.types';
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 export function UploadImagesComponent({
   id,
   imagesFlavor,
