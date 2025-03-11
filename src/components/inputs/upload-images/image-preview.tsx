@@ -16,10 +16,7 @@ export function ImagePreview({
   return (
     <div className='relative'>
       {isLoading ? (
-        <div
-          className='flex animate-pulse items-center justify-center bg-gray-100'
-          style={{ height: height + 'px' }}
-        >
+        <div className='flex aspect-video animate-pulse items-center justify-center bg-gray-100'>
           <span className='text-sm font-semibold text-gray-600'>
             Carregando...
           </span>
@@ -29,9 +26,8 @@ export function ImagePreview({
           src={url}
           alt='Imagem'
           width={280}
-          style={{ height: height + 'px' }}
           height={height}
-          className='h-full w-full object-cover'
+          className='aspect-video h-full w-full object-cover'
           quality={60}
         />
       )}

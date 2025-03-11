@@ -34,7 +34,7 @@ export async function getDishByIdAPI(id: string) {
       tags: [RevalidateTags.dish['upload-image-dish-media']],
     },
   });
-  return response.data;
+  return response;
 }
 
 export async function toggleDishAPI(id: string) {

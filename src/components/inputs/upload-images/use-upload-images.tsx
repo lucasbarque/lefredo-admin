@@ -175,7 +175,7 @@ export function useUploadImages({
   }
 
   useEffect(() => {
-    if (medias.length > 0) {
+    if (medias?.length > 0) {
       loadImages();
     }
   }, [medias]);

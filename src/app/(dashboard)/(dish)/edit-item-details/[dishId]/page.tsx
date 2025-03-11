@@ -27,7 +27,7 @@ export default async function PageAddItemDetails({
         <StepperBar currentStepperIndex={0} />
       </div>
 
-      <FormEditItemDetails data={dish} />
+      <FormEditItemDetails data={dish.data} />
     </div>
   );
 }

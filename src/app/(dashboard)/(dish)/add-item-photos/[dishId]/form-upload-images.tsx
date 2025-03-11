@@ -28,7 +28,7 @@ export function FormUploadImages({
         onSubmit={setImages}
         onRemove={handleDeleteImage}
         onImageUpdate={handleImageUpdate}
-        previewConfig={{ height: 180 }}
+        previewConfig={{ height: 400 }}
         maxImages={3}
         maxFileSize={5}
       />

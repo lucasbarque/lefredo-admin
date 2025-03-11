@@ -28,7 +28,7 @@ export default async function PageAddItemPhotos({
         <StepperBar currentStepperIndex={1} />
       </div>
 
-      <FormUploadImages dishMedias={dish.dishMedias} dishId={dishId} />
+      <FormUploadImages dishMedias={dish.data.dishMedias} dishId={dishId} />
 
       <div className='border-border-default mt-auto flex justify-end gap-4 border-t px-8 py-4'>
         <Link href='/menu-list'>
