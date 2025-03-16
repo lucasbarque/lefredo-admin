@@ -1,4 +1,3 @@
-import { getDishExtrasAPI } from '@/actions/dish-extra.action';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';
@@ -11,7 +10,6 @@ export default async function PageAddItemAdditionals({
   params,
 }: PageAddItemAdditionalsParams) {
   const { dishId } = await params;
-  const dishExtras = await getDishExtrasAPI(dishId);
 
   return (
     <>
@@ -35,7 +33,7 @@ export default async function PageAddItemAdditionals({
         </p>
       </div>
 
-      <FormAddItemAdditionals dishId={dishId} dishExtras={dishExtras} />
+      <FormAddItemAdditionals dishId={dishId} />
     </>
   );
 }

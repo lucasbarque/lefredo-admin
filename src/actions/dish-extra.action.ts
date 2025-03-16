@@ -8,9 +8,6 @@ import {
   getDishesExtras,
   updateDishesExtra,
 } from '@/http/api';
-import { revalidateTag } from 'next/cache';
-
-import { RevalidateTags } from '@/constants/tags-revalidate';
 
 import { getCookiesHeader } from './utils.action';
 
@@ -19,17 +16,9 @@ export async function getDishExtrasAPI(id: string) {
 
   const response = await getDishesExtras(id, {
     headers,
-    cache: 'force-cache',
-    next: {
-      tags: [
-        RevalidateTags.dishExtra['create-dish-extra'],
-        RevalidateTags.dishExtra['delete-dish-extra'],
-        RevalidateTags.dishExtra['update-dish-extra'],
-      ],
-    },
   });
 
-  return response.data;
+  return response;
 }
 
 export async function createDishesExtraAPI(
@@ -42,11 +31,7 @@ export async function createDishesExtraAPI(
     headers,
   });
 
-  if (response.status === 201) {
-    revalidateTag(RevalidateTags.dishExtra['create-dish-extra']);
-  }
-
-  return response.status;
+  return response;
 }
 
 export async function deleteDishesExtraAPI(id: string) {
@@ -56,10 +41,6 @@ export async function deleteDishesExtraAPI(id: string) {
     headers,
   });
 
-  if (response.status === 200) {
-    revalidateTag(RevalidateTags.dishExtra['delete-dish-extra']);
-  }
-
   return response.status;
 }
 
@@ -68,11 +49,10 @@ export async function updateDishesExtraAPI(
   data: RequestUpdateDishExtraDTO
 ) {
   const headers = await getCookiesHeader();
+
   const response = await updateDishesExtra(id, data, {
     headers,
   });
 
-  revalidateTag(RevalidateTags.dishExtra['update-dish-extra']);
-
-  return response.status;
+  return response;
 }

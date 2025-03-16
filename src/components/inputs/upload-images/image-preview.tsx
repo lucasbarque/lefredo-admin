@@ -25,7 +25,7 @@ export function ImagePreview({
         <Image
           src={url}
           alt='Imagem'
-          width={280}
+          width={400}
           height={height}
           className='aspect-video h-full w-full object-cover'
           quality={60}

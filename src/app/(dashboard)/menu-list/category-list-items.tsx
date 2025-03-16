@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { deleteSectionAPI, toggleSectionAPI } from '@/actions/section.action';
-import { DishMediasDTO } from '@/http/api';
+import { revalidateSectionsWithItems } from '@/app/actions';
 import {
   IconChevronUp,
   IconDotsVertical,
@@ -20,33 +20,20 @@ import { Button } from '@/components/inputs/button';
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 import { DropdownMenu } from '@/components/navigation/dropdown-menu';
 
-import { DishItem } from './dish-item';
-
-interface DishesProps {
-  id: string;
-  title: string;
-  price: number;
-  dishMedias: DishMediasDTO[];
-  isActive: boolean;
-}
+import { DishesList } from './dishes-list';
 
 interface CategoryListProps {
   id: string;
   title: string;
   isActive: boolean;
-  dishes: DishesProps[];
   slug: string;
 }
 
-export function CategoryListItems({
-  id,
-  title,
-  isActive,
-  dishes,
-}: CategoryListProps) {
+export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
   const [isCategoryActive, setIsCategoryActive] = useState(isActive);
   const [isCategoryVisible, setIsCategoryVisible] = useState(false);
   const [isLoadingCategory, setIsLoadingCategory] = useState(false);
+
   const router = useRouter();
 
   async function handleToggleSection(id: string) {
@@ -77,6 +64,7 @@ export function CategoryListItems({
     setIsLoadingCategory(true);
     const responseStatus = await deleteSectionAPI(id);
     if (responseStatus === 200) {
+      await revalidateSectionsWithItems();
       toast.success('Categoria deletada com sucesso', {
         position: 'top-right',
       });
@@ -104,7 +92,6 @@ export function CategoryListItems({
       className={clsx(
         'border-line group rounded-md border pt-6 data-[is-category-visible=false]:pb-6',
         {
-          'pb-6': dishes.length === 0,
           'animation-pulse': isLoadingCategory,
         }
       )}
@@ -132,13 +119,11 @@ export function CategoryListItems({
             />
           </div>
           <div className='flex items-center gap-2'>
-            {dishes.length > 0 && (
-              <IconChevronUp
-                size={22}
-                onClick={() => setIsCategoryVisible(!isCategoryVisible)}
-                className='cursor-pointer text-gray-600 transition-all duration-300 group-data-[is-category-visible=true]:rotate-180'
-              />
-            )}
+            <IconChevronUp
+              size={22}
+              onClick={() => setIsCategoryVisible(!isCategoryVisible)}
+              className='cursor-pointer text-gray-600 transition-all duration-300 group-data-[is-category-visible=true]:rotate-180'
+            />
 
             <DropdownMenu>
               <DropdownMenu.Item>
@@ -174,38 +159,9 @@ export function CategoryListItems({
         </div>
       </div>
 
-      <div className='group-data-[is-category-visible=false]:hidden'>
-        {dishes.length > 0 && (
-          <div className='border-line mt-6 flex items-center border-b px-6 pb-3'>
-            <div className='text-title-secondary w-[70%] font-semibold'>
-              Item
-            </div>
-            <div className='text-title-secondary w-[15%] text-center font-semibold'>
-              Preço
-            </div>
-            <div className='text-title-secondary w-[15%] text-center font-semibold'>
-              Status de venda
-            </div>
-          </div>
-        )}
-
-        {dishes.length > 0 && (
-          <div className='divide-line flex flex-col divide-y-1'>
-            {dishes.map((dish) => (
-              <DishItem
-                key={dish.id}
-                id={dish.id}
-                title={dish.title}
-                price={dish.price}
-                isActive={dish.isActive}
-                isLast={dishes.length === 1}
-                sectionId={id}
-                coverPhoto={dish?.dishMedias[0]?.url}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      {isCategoryVisible && (
+        <DishesList sectionId={id} isCategoryActive={isCategoryActive} />
+      )}
     </div>
   );
 }

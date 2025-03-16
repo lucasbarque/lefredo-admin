@@ -1,4 +1,5 @@
 import { createSectionAPI } from '@/actions/section.action';
+import { revalidateSectionsWithItems } from '@/app/actions';
 import { createCategorySchema } from '@/validations/sections-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -12,6 +13,7 @@ export function useCreateCategory() {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof createCategorySchema>>({
     resolver: zodResolver(createCategorySchema),
@@ -24,17 +26,28 @@ export function useCreateCategory() {
   const onSubmit: SubmitHandler<z.infer<typeof createCategorySchema>> = async (
     data
   ) => {
-    const responseStatus = await createSectionAPI(data);
+    // @ts-ignore
+    const response = await createSectionAPI(data);
 
-    if (responseStatus === 201) {
+    if (response.status === 201) {
       toast.success('Categoria criada com sucesso', {
         position: 'top-right',
       });
+      await revalidateSectionsWithItems();
       return router.push('/menu-list');
+    } else if (response.status === 409) {
+      setError('title', {
+        message:
+          'Digite um título diferente, já existe uma categoria com este título cadastrado.',
+      });
+      toast.error('Falha ao cadastrar categoria. Título já existe.', {
+        position: 'top-right',
+      });
+    } else {
+      toast.error('Falha ao cadastrar categoria. Tente novamente mais tarde', {
+        position: 'top-right',
+      });
     }
-    toast.error('Falha ao cadastrar categoria. Tente novamente mais tarde', {
-      position: 'top-right',
-    });
   };
 
   return {

@@ -1,4 +1,4 @@
-import { getSectionsWithItemsAPI } from '@/actions/section.action';
+import { getSectionsAPI } from '@/actions/section.action';
 import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 
@@ -8,7 +8,7 @@ import { Button } from '@/components/inputs/button';
 import { CategoryListItems } from './category-list-items';
 
 export default async function PageMenuList() {
-  const categories = await getSectionsWithItemsAPI();
+  const sections = await getSectionsAPI();
 
   return (
     <section className='pb-64'>
@@ -36,14 +36,13 @@ export default async function PageMenuList() {
         </p>
       </div>
       <div className='flex flex-col gap-6 pt-6'>
-        {categories?.map((category) => (
+        {sections?.map((section) => (
           <CategoryListItems
-            key={category.id}
-            id={category.id}
-            title={category.title}
-            slug={category.slug}
-            isActive={category.isActive}
-            dishes={category.Dish}
+            key={section.id}
+            id={section.id}
+            title={section.title}
+            slug={section.slug}
+            isActive={section.isActive}
           />
         ))}
       </div>

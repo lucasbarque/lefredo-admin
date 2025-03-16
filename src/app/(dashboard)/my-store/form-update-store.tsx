@@ -1,30 +1,151 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
+
+import {
+  changeRestaurantLogo,
+  deleteRestaurantLogo,
+  updateRestaurantData,
+} from '@/actions/restaurant.action';
 import { GetRestaurantByIdDTO } from '@/http/api';
+import { updateStoreSchema } from '@/validations/update-store';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 import { Button } from '@/components/inputs/button';
 import { Input } from '@/components/inputs/input';
 import { InputEditor } from '@/components/inputs/input-editor';
 import { UploadImage } from '@/components/inputs/upload-image/upload-image';
-
-import { useMyStore } from './use-my-store';
+import { FileUploaded } from '@/components/inputs/upload-image/upload-image.types';
 
 export interface FormProps {
   restaurantData: GetRestaurantByIdDTO;
 }
 
 export function FormUpdateStore({ restaurantData }: FormProps) {
+  const queryClient = useQueryClient();
+
   const {
     control,
-    errors,
-    imageData,
-    setImageData,
     handleSubmit,
-    onSubmit,
-    isLoadingUploadImage,
-    deleteImageData,
-    isSubmitting,
-  } = useMyStore({ restaurantData });
+    formState: { errors },
+  } = useForm<z.infer<typeof updateStoreSchema>>({
+    resolver: zodResolver(updateStoreSchema),
+    defaultValues: {
+      name: restaurantData.name || '',
+      logo: restaurantData.logo || '',
+      welcomeMessage: restaurantData.welcomeMessage || '',
+    },
+  });
+
+  // Status for the image and to identify if it is new (triggered by UploadImage)
+  const [imageData, setImageData] = useState<FileUploaded>();
+  const [isNewImage, setIsNewImage] = useState(false);
+
+  // Mutation to update restaurant data
+  const updateMutation = useMutation({
+    mutationFn: (data: z.infer<typeof updateStoreSchema>) =>
+      updateRestaurantData({
+        restaurantId: restaurantData.id,
+        data: { name: data.name, welcomeMessage: data.welcomeMessage || '' },
+      }),
+    onSuccess: () => {
+      toast.success('Restaurante atualizado com sucesso', {
+        position: 'top-right',
+      });
+      queryClient.invalidateQueries({ queryKey: ['restaurantData'] });
+    },
+    onError: () => {
+      toast.error(
+        'Falha ao atualizar restaurante. Tente novamente mais tarde.',
+        { position: 'top-right' }
+      );
+    },
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof updateStoreSchema>> = (data) => {
+    updateMutation.mutate(data);
+  };
+
+  // Function to load the current image (if it exists)
+  const loadImage = useCallback(async () => {
+    if (!restaurantData.logo) return;
+    try {
+      const imageUrl = process.env.NEXT_PUBLIC_BUCKET_URL + restaurantData.logo;
+      const response = await fetch(imageUrl);
+      const blob = await response.blob();
+      const file = new File([blob], imageUrl, { type: blob.type });
+      setImageData({ file, url: imageUrl });
+    } catch (error) {
+      console.error('Erro ao carregar imagem:', error);
+    }
+  }, [restaurantData.logo]);
+
+  // Mutation to upload logo
+  const uploadMutation = useMutation({
+    mutationFn: (file: File) =>
+      //@ts-ignore
+      changeRestaurantLogo(restaurantData.id, { file }),
+    onSuccess: () => {
+      toast.success('Logo atualizada com sucesso', { position: 'top-right' });
+      queryClient.invalidateQueries({ queryKey: ['restaurantData'] });
+      // After successful upload, we consider the image updated
+      setIsNewImage(false);
+    },
+    onError: async () => {
+      await loadImage();
+      toast.error(
+        'Falha ao atualizar imagem. Por favor, faça o upload de um arquivo de imagem',
+        { position: 'top-right' }
+      );
+    },
+  });
+
+  // Mutation to delete the logo
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteRestaurantLogo(restaurantData.id),
+    onSuccess: () => {
+      toast.success('Logo deletada com sucesso', { position: 'top-right' });
+      queryClient.invalidateQueries({ queryKey: ['restaurantData'] });
+    },
+    onError: () => {
+      toast.error('Falha ao deletar a logo. Tente novamente mais tarde.', {
+        position: 'top-right',
+      });
+    },
+  });
+
+  // Function to start uploading – called when we identify that the image is new
+  const uploadImage = useCallback(() => {
+    if (!imageData?.file) return;
+    uploadMutation.mutate(imageData.file);
+  }, [imageData, uploadMutation]);
+
+  // Function to delete the image (triggered by UploadImage via onDelete)
+  const deleteImageData = useCallback(() => {
+    deleteMutation.mutate();
+  }, [deleteMutation]);
+
+  // Load the image when mounting the component
+  useEffect(() => {
+    loadImage();
+  }, [loadImage]);
+
+  // When the image changes and is marked as new, it triggers the upload only once
+  useEffect(() => {
+    if (isNewImage && imageData) {
+      uploadImage();
+    }
+  }, [isNewImage, imageData]);
+
+  // Handler for UploadImage: updates the image and marks it as new
+  const handleImageChange = useCallback((newImageData: FileUploaded) => {
+    setImageData(newImageData);
+    setIsNewImage(true);
+  }, []);
 
   return (
     <form
@@ -52,16 +173,16 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
       />
 
       <UploadImage
-        label='Resolução sugerida 100x50px'
+        label='Resolução sugerida 100x50'
         currentImage={imageData}
-        onSubmit={setImageData}
+        onSubmit={handleImageChange}
         onDelete={deleteImageData}
-        isLoading={isLoadingUploadImage}
+        isLoading={uploadMutation.isPending || deleteMutation.isPending}
       />
 
       <div className='mt-4'>
-        <Button type='submit' isLoading={isSubmitting}>
-          {isSubmitting ? 'Carregando...' : 'Salvar alterações'}
+        <Button type='submit' isLoading={updateMutation.isPending}>
+          {updateMutation.isPending ? 'Carregando...' : 'Salvar alterações'}
         </Button>
       </div>
     </form>

@@ -12,13 +12,14 @@ import {
   deleteDish,
   deleteDishImage,
   getDishById,
+  getDishesBySectionId,
   toggleDish,
   updateDish,
   updateDishExtrasOrder,
   updateDishFlavorsOrder,
   uploadDishImage,
 } from '@/http/api';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 import { RevalidateTags } from '@/constants/tags-revalidate';
 
@@ -37,13 +38,24 @@ export async function getDishByIdAPI(id: string) {
   return response;
 }
 
+export async function getDishesBySectionIdAPI(sectionId: string) {
+  const headers = await getCookiesHeader();
+
+  const response = await getDishesBySectionId(
+    { sectionId },
+    {
+      headers,
+    }
+  );
+  return response.data;
+}
+
 export async function toggleDishAPI(id: string) {
   const headers = await getCookiesHeader();
 
   const response = await toggleDish(id, {
     headers,
   });
-
   if (response.status === 200) {
     revalidateTag(RevalidateTags.dish['toggle-dish']);
   }
@@ -76,7 +88,7 @@ export async function createDishAPI(data: RequestCreateDishDTO) {
   });
 
   if (response.status === 201) {
-    revalidateTag(RevalidateTags.dish['create-dish']);
+    revalidatePath('/menu-list');
   }
 
   return response;

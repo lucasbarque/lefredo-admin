@@ -1,3 +1,4 @@
+import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Nunito, Work_Sans } from 'next/font/google';
@@ -34,8 +35,10 @@ export default function RootLayout({
         className={`${nunitoSans.variable} ${workSans.variable}`}
       >
         <body>
-          <Toaster richColors />
-          {children}
+          <ReactQueryProvider>
+            <Toaster richColors />
+            {children}
+          </ReactQueryProvider>
         </body>
       </html>
     </ClerkProvider>

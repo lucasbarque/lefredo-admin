@@ -4,9 +4,12 @@ import { useEffect, useState } from 'react';
 
 import {
   createDishesExtraAPI,
+  deleteDishesExtraAPI,
+  getDishExtrasAPI,
   updateDishesExtraAPI,
 } from '@/actions/dish-extra.action';
 import { updateDishExtrasOrderAPI } from '@/actions/dish.action';
+import { DishExtraDTO } from '@/http/api';
 import { createDishesExtraSchema } from '@/validations/dishes-extra-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
@@ -25,7 +28,6 @@ import { ItemAdditional } from './item-additional';
 
 export function FormAddItemAdditionals({
   dishId,
-  dishExtras,
 }: FormAddItemAdditionalsProps) {
   const {
     control,
@@ -42,18 +44,23 @@ export function FormAddItemAdditionals({
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
-  const [dishExtrasList, setDishExtrasList] = useState(dishExtras);
+  const [dishExtras, setDishExtras] = useState<DishExtraDTO[]>([]);
 
   const onSubmit: SubmitHandler<
     z.infer<typeof createDishesExtraSchema>
   > = async (data) => {
     if (isEditingId) {
-      const responseStatus = await updateDishesExtraAPI(isEditingId, data);
+      const response = await updateDishesExtraAPI(isEditingId, data);
 
-      if (responseStatus === 200) {
+      if (response.status === 200) {
         toast.success('Item adicional atualizado com sucesso', {
           position: 'top-right',
         });
+        setDishExtras((prevExtras) =>
+          prevExtras.map((item) =>
+            item.id === isEditingId ? response.data : item
+          )
+        );
         handleCloseForm();
       } else {
         toast.error('Falha ao atualizar item adicional', {
@@ -63,11 +70,12 @@ export function FormAddItemAdditionals({
       setIsEditingId(null);
       handleCloseForm();
     } else {
-      const responseStatus = await createDishesExtraAPI(dishId, data);
-      if (responseStatus === 201) {
+      const response = await createDishesExtraAPI(dishId, data);
+      if (response.status === 201) {
         toast.success('Item adicional cadastrado com sucesso', {
           position: 'top-right',
         });
+        setDishExtras((oldState) => [...oldState, response.data]);
         handleCloseForm();
       } else {
         toast.error('Falha ao cadastrar item adicional', {
@@ -88,7 +96,7 @@ export function FormAddItemAdditionals({
   }
 
   function setEditItem(id: string) {
-    const currentDish = dishExtras.find((dish) => dish.id === id);
+    const currentDish = dishExtras?.find((dish) => dish.id === id);
 
     if (currentDish) {
       setIsFormOpen(true);
@@ -106,9 +114,9 @@ export function FormAddItemAdditionals({
   }
 
   async function handleUpdateOrder() {
-    if (dishExtrasList.length < 2) return;
+    if (dishExtras?.length < 2) return;
 
-    const orderItems = dishExtrasList.map((item) => item.id);
+    const orderItems = dishExtras?.map((item) => item.id);
     const responseStatus = await updateDishExtrasOrderAPI(dishId, {
       orderUpdated: orderItems,
     });
@@ -120,21 +128,46 @@ export function FormAddItemAdditionals({
     }
   }
 
+  async function handleDeleteItem(id: string) {
+    const responseStatus = await deleteDishesExtraAPI(id);
+    if (responseStatus === 200) {
+      toast.success('Item adicional deletado com sucesso', {
+        position: 'top-right',
+      });
+      setDishExtras((prevExtras) =>
+        prevExtras.filter((item) => item.id !== id)
+      );
+    } else {
+      toast.error('Falha ao deletar item adicional', {
+        position: 'top-right',
+      });
+    }
+    handleCloseForm();
+  }
+
   useEffect(() => {
-    setDishExtrasList(dishExtras);
-  }, [dishExtras]);
+    async function getDishExtras() {
+      const response = await getDishExtrasAPI(dishId);
+
+      if (response.status === 200) {
+        setDishExtras(response.data);
+      }
+    }
+
+    getDishExtras();
+  }, [dishId]);
 
   return (
     <>
-      {dishExtrasList.length > 0 && (
+      {dishExtras.length > 0 && (
         <div className='mt-6 max-w-[780px] px-6'>
           <div className='space-y-3'>
             <Reorder.Group
-              values={dishExtrasList}
-              onReorder={setDishExtrasList}
+              values={dishExtras}
+              onReorder={setDishExtras}
               axis='y'
             >
-              {dishExtrasList?.map((item) => (
+              {dishExtras.map((item) => (
                 <Reorder.Item
                   key={item.id}
                   value={item}
@@ -145,7 +178,7 @@ export function FormAddItemAdditionals({
                     name={item.title}
                     price={item.price}
                     setEditItem={setEditItem}
-                    handleCloseForm={handleCloseForm}
+                    handleDeleteItem={handleDeleteItem}
                   />
                 </Reorder.Item>
               ))}
@@ -156,7 +189,7 @@ export function FormAddItemAdditionals({
       <div className='max-w-[780px] px-6'>
         {!isFormOpen && (
           <div
-            data-has-additionals={dishExtrasList.length > 0}
+            data-has-additionals={dishExtras.length > 0}
             className='mt-2 flex items-center data-[has-additionals=false]:justify-start data-[has-additionals=true]:justify-center'
           >
             <Button family='tertiary' size='sm' onClick={handleOpenCreateForm}>

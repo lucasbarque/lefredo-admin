@@ -1,6 +1,7 @@
 'use client';
 
 import { updateSectionAPI } from '@/actions/section.action';
+import { revalidateSectionsWithItems } from '@/app/actions';
 import { updateCategorySchema } from '@/validations/sections-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -18,6 +19,7 @@ export function FormUpdateCategory({ initialData }: FormUpdateCategoryProps) {
   const {
     control,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<z.infer<typeof updateCategorySchema>>({
     resolver: zodResolver(updateCategorySchema),
@@ -31,16 +33,27 @@ export function FormUpdateCategory({ initialData }: FormUpdateCategoryProps) {
   const onSubmit: SubmitHandler<z.infer<typeof updateCategorySchema>> = async (
     data
   ) => {
-    const responseStatus = await updateSectionAPI(initialData.id, data);
-    if (responseStatus === 200) {
+    //@ts-ignore
+    const response = await updateSectionAPI(initialData.id, data);
+    if (response.status === 200) {
+      await revalidateSectionsWithItems();
       toast.success('Categoria atualizada com sucesso', {
         position: 'top-right',
       });
       return router.push('/menu-list');
+    } else if (response.status === 409) {
+      setError('title', {
+        message:
+          'Digite um título diferente, já existe uma categoria com este título cadastrado.',
+      });
+      toast.error('Falha ao cadastrar categoria. Título já existe.', {
+        position: 'top-right',
+      });
+    } else {
+      toast.error('Falha ao atualizar categoria. Tente novamente mais tarde', {
+        position: 'top-right',
+      });
     }
-    toast.error('Falha ao atualizar categoria. Tente novamente mais tarde', {
-      position: 'top-right',
-    });
   };
 
   return (

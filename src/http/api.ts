@@ -38,6 +38,7 @@ export interface SectionDTO {
   title: string;
   description: string;
   slug: string;
+  isActive: boolean;
 }
 
 export interface DishExtraDTO {
@@ -120,6 +121,7 @@ export interface ResponseGetDishesDTO {
   prepTime: string;
   dishSpecs: DishSpecsDTO[];
   dishMedias: DishMediasDTO[];
+  isActive: boolean;
 }
 
 export interface RequestCreateDishDTO {
@@ -171,22 +173,9 @@ export interface ResponseUploadDishImageDTO {
   url: string;
 }
 
-export interface ResponseGetDishExtraDTO {
-  id: string;
-  title: string;
-  price: number;
-}
-
 export interface RequestCreateDishExtraDTO {
   title: string;
   price: string;
-}
-
-export interface ResponseCreateDishExtraDTO {
-  id: string;
-  title: string;
-  price: number;
-  dishId: string;
 }
 
 export interface RequestUpdateDishExtraDTO {
@@ -306,28 +295,6 @@ export interface GetRestaurantIsFirstCategoryDTO {
 
 export interface CreateResturantDTO { [key: string]: unknown }
 
-export interface Dish {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  portion: string;
-  /** @nullable */
-  prepTime: string | null;
-  dishMedias: DishMediasDTO[];
-  isActive: boolean;
-}
-
-export interface ResponseGetSectionsWithItemsDTO {
-  id: string;
-  title: string;
-  /** @nullable */
-  description: string | null;
-  slug: string;
-  Dish: Dish[];
-  isActive: boolean;
-}
-
 export interface ResponseGetSectionByIdDTO {
   id: string;
   title: string;
@@ -367,7 +334,7 @@ export type GetSectionsParams = {
 menuId: string;
 };
 
-export type GetSectionsWithItemsParams = {
+export type GetAllSectionsParams = {
 menuId: string;
 };
 
@@ -956,7 +923,7 @@ export const deleteDishImage = async (id: string, options?: RequestInit): Promis
  * @summary Get Dishes Extras
  */
 export type getDishesExtrasResponse = {
-  data: ResponseGetDishExtraDTO[];
+  data: DishExtraDTO[];
   status: number;
   headers: Headers;
 }
@@ -984,7 +951,7 @@ export const getDishesExtras = async (dishId: string, options?: RequestInit): Pr
  * @summary Create Dish Extra
  */
 export type createDishesExtraResponse = {
-  data: ResponseCreateDishExtraDTO[];
+  data: DishExtraDTO;
   status: number;
   headers: Headers;
 }
@@ -1014,7 +981,7 @@ export const createDishesExtra = async (dishId: string,
  * @summary Update Dish Extra
  */
 export type updateDishesExtraResponse = {
-  data: void;
+  data: DishExtraDTO;
   status: number;
   headers: Headers;
 }
@@ -1599,15 +1566,15 @@ export const createSection = async (requestCreateSectionDTO: RequestCreateSectio
 
 
 /**
- * @summary Get Sections with items
+ * @summary Get All Sections
  */
-export type getSectionsWithItemsResponse = {
-  data: ResponseGetSectionsWithItemsDTO[];
+export type getAllSectionsResponse = {
+  data: SectionDTO[];
   status: number;
   headers: Headers;
 }
 
-export const getGetSectionsWithItemsUrl = (params: GetSectionsWithItemsParams,) => {
+export const getGetAllSectionsUrl = (params: GetAllSectionsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
@@ -1617,12 +1584,12 @@ export const getGetSectionsWithItemsUrl = (params: GetSectionsWithItemsParams,) 
     }
   });
 
-  return normalizedParams.size ? `/sections/get-with-items?${normalizedParams.toString()}` : `/sections/get-with-items`
+  return normalizedParams.size ? `/sections/get-all?${normalizedParams.toString()}` : `/sections/get-all`
 }
 
-export const getSectionsWithItems = async (params: GetSectionsWithItemsParams, options?: RequestInit): Promise<getSectionsWithItemsResponse> => {
+export const getAllSections = async (params: GetAllSectionsParams, options?: RequestInit): Promise<getAllSectionsResponse> => {
   
-  return customFetch<getSectionsWithItemsResponse>(getGetSectionsWithItemsUrl(params),
+  return customFetch<getAllSectionsResponse>(getGetAllSectionsUrl(params),
   {      
     ...options,
     method: 'GET'

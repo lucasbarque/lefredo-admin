@@ -1,8 +1,6 @@
 'use client';
 
-import { deleteDishesExtraAPI } from '@/actions/dish-extra.action';
 import { IconEdit, IconGripVertical, IconTrash } from '@tabler/icons-react';
-import { toast } from 'sonner';
 
 import { ItemAdditionalProps } from './add-item-additionals.types';
 
@@ -11,22 +9,8 @@ export function ItemAdditional({
   name,
   price,
   setEditItem,
-  handleCloseForm,
+  handleDeleteItem,
 }: ItemAdditionalProps) {
-  async function handleDeleteItem() {
-    const responseStatus = await deleteDishesExtraAPI(id);
-    if (responseStatus === 200) {
-      toast.success('Item adicional deletado com sucesso', {
-        position: 'top-right',
-      });
-    } else {
-      toast.error('Falha ao deletar item adicional', {
-        position: 'top-right',
-      });
-    }
-    handleCloseForm();
-  }
-
   return (
     <div className='mb-2 flex w-full cursor-grab items-center gap-3'>
       <IconGripVertical className='text-text-default' />
@@ -49,7 +33,7 @@ export function ItemAdditional({
           <button
             type='button'
             className='cursor-pointer'
-            onClick={handleDeleteItem}
+            onClick={() => handleDeleteItem(id)}
           >
             <IconTrash className='text-title-secondary' />
           </button>

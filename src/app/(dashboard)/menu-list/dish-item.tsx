@@ -1,10 +1,8 @@
-import { useState } from 'react';
+'use client';
 
-import {
-  changePriceAPI,
-  deleteDishAPI,
-  toggleDishAPI,
-} from '@/actions/dish.action';
+import { useState, useTransition } from 'react';
+
+import { changePriceAPI, toggleDishAPI } from '@/actions/dish.action';
 import { toggleSectionAPI } from '@/actions/section.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +13,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 import { EmptyImage } from '@/components/data-display/empty-image';
+import { LoadingSpinner } from '@/components/data-display/loading-spinner/loading-spinner';
 import { InputCashout } from '@/components/inputs/input-cashout';
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 import { DropdownMenu } from '@/components/navigation/dropdown-menu';
@@ -23,11 +22,13 @@ interface ItemListProps {
   id: string;
   title: string;
   price: number;
-  isLast: boolean;
   isActive: boolean;
   coverPhoto?: string;
   sectionId: string;
+  handleDeleteDish: (id: string) => void;
+  isDeleting: boolean;
 }
+
 const inputSchema = z.object({
   price: z
     .string()
@@ -42,9 +43,10 @@ export function DishItem({
   title,
   price,
   isActive,
-  isLast,
   coverPhoto,
   sectionId,
+  handleDeleteDish,
+  isDeleting,
 }: ItemListProps) {
   const { control, watch } = useForm<FormPriceSchema>({
     resolver: zodResolver(inputSchema),
@@ -58,27 +60,25 @@ export function DishItem({
     },
   });
   const [isActiveItem, setActiveItem] = useState(isActive);
-  const [isLoadingActiveDish, setIsLoadingActiveDish] = useState(false);
+  const [isLoadingActiveDish, startTransitionActiveDish] = useTransition();
 
   async function handleToggleDish(id: string) {
-    setIsLoadingActiveDish(true);
-    const responseStatus = await toggleDishAPI(id);
-    if (responseStatus === 200) {
-      if (isLast && isActiveItem) {
+    startTransitionActiveDish(async () => {
+      const responseStatus = await toggleDishAPI(id);
+      if (responseStatus === 200) {
         await toggleSectionAPI(sectionId);
+        toast.success(
+          `O item foi ${isActiveItem ? 'desativado' : 'ativado'} com sucesso`,
+          { position: 'top-right' }
+        );
+        setActiveItem(!isActiveItem);
+      } else {
+        toast.error(
+          `Falha ao ${isActiveItem ? 'desativar' : 'ativar'} item. Tente novamente mais tarde`,
+          { position: 'top-right' }
+        );
       }
-      toast.success(
-        `O item foi ${isActiveItem ? 'desativado' : 'ativado'} com sucesso`,
-        { position: 'top-right' }
-      );
-      setActiveItem(!isActiveItem);
-    } else {
-      toast.error(
-        `Falha ao ${isActiveItem ? 'desativar' : 'ativar'} item. Tente novamente mais tarde`,
-        { position: 'top-right' }
-      );
-    }
-    setIsLoadingActiveDish(false);
+    });
   }
 
   async function handleSavePrice() {
@@ -97,21 +97,14 @@ export function DishItem({
     }
   }
 
-  async function handleDeleteDish(id: string) {
-    const responseStatus = await deleteDishAPI(id);
-
-    if (responseStatus === 200) {
-      if (isLast) {
-        await toggleSectionAPI(sectionId);
-      }
-      return toast.success('Item deletado com sucesso', {
-        position: 'top-right',
-      });
-    }
-    toast.error('Falha ao deletar item', { position: 'top-right' });
-  }
-
-  return (
+  return isDeleting ? (
+    <div className='flex h-[89px] animate-pulse items-center justify-center gap-4 px-6'>
+      <span className='text-brand-default font-semibold'>
+        Excluindo item...
+      </span>
+      <LoadingSpinner family='secondary' />
+    </div>
+  ) : (
     <div className='flex items-center px-6 py-3'>
       <div className='flex w-[70%] items-center gap-4'>
         {coverPhoto ? (
@@ -126,7 +119,6 @@ export function DishItem({
         ) : (
           <EmptyImage size='sm' />
         )}
-
         <div className='text-title-secondary text-sm font-semibold'>
           {title}
         </div>

@@ -1,5 +1,3 @@
-import { ResponseGetDishExtraDTO } from '@/http/api';
-
 export interface PageAddItemAdditionalsParams {
   params: Promise<{
     dishId: string;
@@ -11,10 +9,9 @@ export interface ItemAdditionalProps {
   name: string;
   price: number;
   setEditItem: (id: string) => void;
-  handleCloseForm: () => void;
+  handleDeleteItem: (id: string) => void;
 }
 
 export interface FormAddItemAdditionalsProps {
   dishId: string;
-  dishExtras: ResponseGetDishExtraDTO[];
 }
