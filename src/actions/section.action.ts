@@ -57,6 +57,7 @@ export async function deleteSectionAPI(id: string) {
   const response = await deleteSection(id, {
     headers,
   });
+  console.log(response);
 
   return response.status;
 }

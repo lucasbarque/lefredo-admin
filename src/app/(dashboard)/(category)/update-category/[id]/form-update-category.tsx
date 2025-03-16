@@ -1,9 +1,9 @@
 'use client';
 
 import { updateSectionAPI } from '@/actions/section.action';
-import { revalidateSectionsWithItems } from '@/app/actions';
 import { updateCategorySchema } from '@/validations/sections-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -16,11 +16,13 @@ import { InputEditor } from '@/components/inputs/input-editor';
 import { FormUpdateCategoryProps } from './update-category.types';
 
 export function FormUpdateCategory({ initialData }: FormUpdateCategoryProps) {
+  const router = useRouter();
+
   const {
     control,
     handleSubmit,
     setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<z.infer<typeof updateCategorySchema>>({
     resolver: zodResolver(updateCategorySchema),
     defaultValues: {
@@ -28,32 +30,47 @@ export function FormUpdateCategory({ initialData }: FormUpdateCategoryProps) {
       description: initialData.description || '',
     },
   });
-  const router = useRouter();
 
-  const onSubmit: SubmitHandler<z.infer<typeof updateCategorySchema>> = async (
-    data
-  ) => {
-    //@ts-ignore
-    const response = await updateSectionAPI(initialData.id, data);
-    if (response.status === 200) {
-      await revalidateSectionsWithItems();
-      toast.success('Categoria atualizada com sucesso', {
-        position: 'top-right',
-      });
-      return router.push('/menu-list');
-    } else if (response.status === 409) {
-      setError('title', {
-        message:
-          'Digite um título diferente, já existe uma categoria com este título cadastrado.',
-      });
-      toast.error('Falha ao cadastrar categoria. Título já existe.', {
-        position: 'top-right',
-      });
-    } else {
+  const updateCategoryMutation = useMutation({
+    mutationKey: ['updateCategory', initialData.id],
+    mutationFn: async (data: z.infer<typeof updateCategorySchema>) => {
+      //@ts-ignore
+      return await updateSectionAPI(initialData.id, data);
+    },
+    onSuccess: async (response) => {
+      if (response.status === 200) {
+        toast.success('Categoria atualizada com sucesso', {
+          position: 'top-right',
+        });
+        router.push('/menu-list');
+      } else if (response.status === 409) {
+        setError('title', {
+          message:
+            'Digite um título diferente, já existe uma categoria com este título cadastrado.',
+        });
+        toast.error('Falha ao cadastrar categoria. Título já existe.', {
+          position: 'top-right',
+        });
+      } else {
+        toast.error(
+          'Falha ao atualizar categoria. Tente novamente mais tarde',
+          {
+            position: 'top-right',
+          }
+        );
+      }
+    },
+    onError: () => {
       toast.error('Falha ao atualizar categoria. Tente novamente mais tarde', {
         position: 'top-right',
       });
-    }
+    },
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof updateCategorySchema>> = (
+    data
+  ) => {
+    updateCategoryMutation.mutate(data);
   };
 
   return (
@@ -79,23 +96,26 @@ export function FormUpdateCategory({ initialData }: FormUpdateCategoryProps) {
         isOptional
         maxLength={500}
       />
+
       <div className='mt-4 flex justify-end gap-2.5'>
         <Button
           size='sm'
           family='secondary'
           type='button'
-          disabled={isSubmitting}
+          disabled={updateCategoryMutation.isPending}
           onClick={() => router.push('/menu-list')}
         >
           Cancelar
         </Button>
         <Button
           size='sm'
-          disabled={isSubmitting}
+          disabled={updateCategoryMutation.isPending}
           type='submit'
-          isLoading={isSubmitting}
+          isLoading={updateCategoryMutation.isPending}
         >
-          {isSubmitting ? 'Carregando' : 'Atualizar categoria'}
+          {updateCategoryMutation.isPending
+            ? 'Carregando'
+            : 'Atualizar categoria'}
         </Button>
       </div>
     </form>

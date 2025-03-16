@@ -56,11 +56,19 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteSectionAPI(id),
-    onSuccess: () => {
-      toast.success('Categoria deletada com sucesso', {
-        position: 'top-right',
-      });
-      queryClient.invalidateQueries({ queryKey: ['sections'] });
+    onSuccess: (statusCode) => {
+      console.log(statusCode);
+      if (statusCode === 200) {
+        toast.success('Categoria deletada com sucesso', {
+          position: 'top-right',
+        });
+        queryClient.invalidateQueries({ queryKey: ['sections'] });
+      }
+      if (statusCode === 417) {
+        toast.warning('Para deletar a categoria, exclua primeiro os itens', {
+          position: 'top-right',
+        });
+      }
     },
     onError: () => {
       toast.error('Falha ao deletar categoria. Tente novamente mais tarde', {

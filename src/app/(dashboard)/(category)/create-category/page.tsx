@@ -1,15 +1,75 @@
 'use client';
 
+import { createSectionAPI } from '@/actions/section.action';
+import { createCategorySchema } from '@/validations/sections-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
+
 import { Header } from '@/components/data-display/header';
 import { Button } from '@/components/inputs/button';
 import { Input } from '@/components/inputs/input';
 import { InputEditor } from '@/components/inputs/input-editor';
 
-import { useCreateCategory } from './use-create-category';
-
 export default function PageCreateCategory() {
-  const { handleSubmit, onSubmit, control, errors, isSubmitting, router } =
-    useCreateCategory();
+  const router = useRouter();
+
+  const {
+    control,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<z.infer<typeof createCategorySchema>>({
+    resolver: zodResolver(createCategorySchema),
+    defaultValues: {
+      title: '',
+      description: '',
+    },
+  });
+
+  const createCategoryMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof createCategorySchema>) => {
+      // @ts-ignore
+      return await createSectionAPI(data);
+    },
+    onSuccess: async (response) => {
+      if (response.status === 201) {
+        toast.success('Categoria criada com sucesso', {
+          position: 'top-right',
+        });
+        router.push('/menu-list');
+      } else if (response.status === 409) {
+        setError('title', {
+          message:
+            'Digite um título diferente, já existe uma categoria com este título cadastrado.',
+        });
+        toast.error('Falha ao cadastrar categoria. Título já existe.', {
+          position: 'top-right',
+        });
+      } else {
+        toast.error(
+          'Falha ao cadastrar categoria. Tente novamente mais tarde',
+          {
+            position: 'top-right',
+          }
+        );
+      }
+    },
+    onError: () => {
+      toast.error('Falha ao cadastrar categoria. Tente novamente mais tarde', {
+        position: 'top-right',
+      });
+    },
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof createCategorySchema>> = (
+    data
+  ) => {
+    createCategoryMutation.mutate(data);
+  };
 
   return (
     <section>
@@ -49,18 +109,20 @@ export default function PageCreateCategory() {
               size='sm'
               family='secondary'
               type='button'
-              disabled={isSubmitting}
+              disabled={createCategoryMutation.isPending}
               onClick={() => router.push('/menu-list')}
             >
               Cancelar
             </Button>
             <Button
               size='sm'
-              disabled={isSubmitting}
+              disabled={createCategoryMutation.isPending}
               type='submit'
-              isLoading={isSubmitting}
+              isLoading={createCategoryMutation.isPending}
             >
-              {isSubmitting ? 'Carregando' : 'Criar categoria'}
+              {createCategoryMutation.isPending
+                ? 'Carregando'
+                : 'Criar categoria'}
             </Button>
           </div>
         </form>
