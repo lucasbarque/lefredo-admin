@@ -1,10 +1,10 @@
 'use client';
 
-import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useEffect } from 'react';
 
 import { deleteDishAPI, getDishesBySectionIdAPI } from '@/actions/dish.action';
 import { toggleSectionAPI } from '@/actions/section.action';
-import { revalidateSectionsWithItems } from '@/app/actions';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { DishItem } from './dish-item';
@@ -12,51 +12,79 @@ import { DishItem } from './dish-item';
 interface DishesListProps {
   sectionId: string;
   isCategoryActive: boolean;
+  onCategoryDeactivated: () => void;
 }
 
-export function DishesList({ sectionId, isCategoryActive }: DishesListProps) {
-  const [dishes, setDishes] = useState([]);
-  const [isPending, startTransition] = useTransition();
-  const [deletingDishId, setDeletingDishId] = useState<string | null>(null);
+export function DishesList({
+  sectionId,
+  isCategoryActive,
+  onCategoryDeactivated,
+}: DishesListProps) {
+  const queryClient = useQueryClient();
 
-  const getDish = useCallback(() => {
-    startTransition(async () => {
-      const response = await getDishesBySectionIdAPI(sectionId);
-      setDishes(response);
-    });
-  }, [sectionId, startTransition]);
+  const {
+    data: dishes,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['dishes', sectionId],
+    queryFn: () => getDishesBySectionIdAPI(sectionId),
+  });
 
-  async function handleDeleteDish(id: string) {
-    setDeletingDishId(id);
-    const isLastDish = dishes.length === 1;
-    const responseStatus = await deleteDishAPI(id);
-
-    if (responseStatus === 200) {
-      if (isLastDish && isCategoryActive) {
-        await toggleSectionAPI(sectionId);
-        await revalidateSectionsWithItems();
-      }
-      getDish();
+  const deleteMutation = useMutation({
+    mutationFn: (dishId: string) => deleteDishAPI(dishId),
+    onSuccess: () => {
       toast.success('Item deletado com sucesso', { position: 'top-right' });
-    } else {
+      queryClient.invalidateQueries({ queryKey: ['dishes', sectionId] });
+    },
+    onError: () => {
       toast.error('Falha ao deletar item', { position: 'top-right' });
-    }
-    setDeletingDishId(null);
+    },
+  });
+
+  function handleDeleteDish(dishId: string) {
+    deleteMutation.mutate(dishId);
   }
 
+  // Verifica se há pelo menos um prato ativo após a query atualizar
   useEffect(() => {
-    getDish();
-  }, [getDish]);
+    if (!isLoading && dishes && isCategoryActive) {
+      const activeCount = dishes.filter((dish: any) => dish.isActive).length;
+      if (activeCount === 0) {
+        // Se nenhum prato ativo, desativa a categoria
+        toggleSectionAPI(sectionId)
+          .then(() => {
+            toast.warning('Categoria desativada por não possuir itens ativos', {
+              position: 'top-right',
+            });
+            queryClient.invalidateQueries({ queryKey: ['sections'] });
+            onCategoryDeactivated();
+          })
+          .catch(() => {
+            toast.error('Falha ao atualizar categoria', {
+              position: 'top-right',
+            });
+          });
+      }
+    }
+  }, [
+    dishes,
+    isLoading,
+    isCategoryActive,
+    sectionId,
+    onCategoryDeactivated,
+    queryClient,
+  ]);
 
-  if (isPending) {
+  if (isLoading) {
     return (
       <div className='text-text-default flex items-center justify-center py-8 font-semibold'>
-        Carregando items...
+        Carregando itens...
       </div>
     );
   }
 
-  if (dishes.length === 0) {
+  if (isError || !dishes || dishes.length === 0) {
     return (
       <div className='text-text-default flex items-center justify-center py-8 font-semibold'>
         Nenhum item encontrado!
@@ -85,7 +113,10 @@ export function DishesList({ sectionId, isCategoryActive }: DishesListProps) {
             isActive={dish.isActive}
             sectionId={sectionId}
             handleDeleteDish={handleDeleteDish}
-            isDeleting={deletingDishId === dish.id}
+            isDeleting={
+              deleteMutation.isPending && deleteMutation.variables === dish.id
+            }
+            coverPhoto={dish?.dishMedias[0]?.url}
           />
         ))}
       </div>

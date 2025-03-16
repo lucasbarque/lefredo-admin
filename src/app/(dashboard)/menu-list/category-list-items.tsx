@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { deleteSectionAPI, toggleSectionAPI } from '@/actions/section.action';
-import { revalidateSectionsWithItems } from '@/app/actions';
 import {
   IconChevronUp,
   IconDotsVertical,
@@ -11,6 +10,7 @@ import {
   IconPlus,
   IconTrash,
 } from '@tabler/icons-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -30,60 +30,57 @@ interface CategoryListProps {
 }
 
 export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const [isCategoryActive, setIsCategoryActive] = useState(isActive);
   const [isCategoryVisible, setIsCategoryVisible] = useState(false);
-  const [isLoadingCategory, setIsLoadingCategory] = useState(false);
 
-  const router = useRouter();
-
-  async function handleToggleSection(id: string) {
-    setIsLoadingCategory(true);
-    const responseStatus = await toggleSectionAPI(id);
-    if (responseStatus === 200) {
+  const toggleMutation = useMutation({
+    mutationFn: () => toggleSectionAPI(id),
+    onSuccess: () => {
       toast.success(
         `Categoria foi ${isCategoryActive ? 'desativada' : 'ativada'} com sucesso`,
         { position: 'top-right' }
       );
-      setIsCategoryActive(!isCategoryActive);
-    } else if (responseStatus === 428) {
-      toast.error(
-        'Para ativar a categoria é necessário ter pelo menos 01 item ativo',
-        { position: 'top-right' }
-      );
-      setIsCategoryActive(false);
-    } else {
+      // Atualiza o estado invertendo o valor atual
+      setIsCategoryActive((prev) => !prev);
+      queryClient.invalidateQueries({ queryKey: ['sections'] });
+    },
+    onError: () => {
       toast.error(
         `Falha ao ${isCategoryActive ? 'desativar' : 'ativar'} categoria. Tente novamente mais tarde`,
         { position: 'top-right' }
       );
-    }
-    setIsLoadingCategory(false);
-  }
+    },
+  });
 
-  async function handleDeleteCategory(id: string) {
-    setIsLoadingCategory(true);
-    const responseStatus = await deleteSectionAPI(id);
-    if (responseStatus === 200) {
-      await revalidateSectionsWithItems();
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteSectionAPI(id),
+    onSuccess: () => {
       toast.success('Categoria deletada com sucesso', {
         position: 'top-right',
       });
-    } else if (responseStatus === 417) {
-      toast.error(
-        'Falha ao deletar a categoria, pois é necessário deletar os itens primeiro',
-        { position: 'top-right' }
-      );
-    } else {
+      queryClient.invalidateQueries({ queryKey: ['sections'] });
+    },
+    onError: () => {
       toast.error('Falha ao deletar categoria. Tente novamente mais tarde', {
         position: 'top-right',
       });
-    }
-    setIsLoadingCategory(false);
-  }
+    },
+  });
 
-  useEffect(() => {
-    setIsCategoryActive(isActive);
-  }, [isActive]);
+  const handleToggleSection = () => {
+    toggleMutation.mutate();
+  };
+
+  const handleDeleteCategory = () => {
+    deleteMutation.mutate();
+  };
+
+  // Callback para atualizar o switch (passado para o DishesList)
+  const handleCategoryDeactivated = () => {
+    setIsCategoryActive(false);
+  };
 
   return (
     <div
@@ -92,7 +89,8 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
       className={clsx(
         'border-line group rounded-md border pt-6 data-[is-category-visible=false]:pb-6',
         {
-          'animation-pulse': isLoadingCategory,
+          'animation-pulse':
+            toggleMutation.isPending || deleteMutation.isPending,
         }
       )}
     >
@@ -109,10 +107,9 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
           </Link>
           <div className='w-18'>
             <ToggleSwitch
-              disabled={isLoadingCategory}
+              disabled={toggleMutation.isPending || deleteMutation.isPending}
               label={isCategoryActive ? 'Ativada' : 'Desativada'}
-              onCheckedChange={() => handleToggleSection(id)}
-              defaultChecked={isCategoryActive}
+              onCheckedChange={handleToggleSection}
               checked={isCategoryActive}
               id={`is-category-active-${id}`}
               name={`is-category-active-${id}`}
@@ -124,7 +121,6 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
               onClick={() => setIsCategoryVisible(!isCategoryVisible)}
               className='cursor-pointer text-gray-600 transition-all duration-300 group-data-[is-category-visible=true]:rotate-180'
             />
-
             <DropdownMenu>
               <DropdownMenu.Item>
                 <DropdownMenu.Trigger>
@@ -146,9 +142,7 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
                   lastDropdownItems={[
                     {
                       icon: <IconTrash size={20} className='text-gray-700' />,
-                      linkProps: {
-                        onClick: () => handleDeleteCategory(id),
-                      },
+                      linkProps: { onClick: handleDeleteCategory },
                       title: 'Excluir categoria',
                     },
                   ]}
@@ -160,7 +154,11 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
       </div>
 
       {isCategoryVisible && (
-        <DishesList sectionId={id} isCategoryActive={isCategoryActive} />
+        <DishesList
+          sectionId={id}
+          isCategoryActive={isCategoryActive}
+          onCategoryDeactivated={handleCategoryDeactivated}
+        />
       )}
     </div>
   );

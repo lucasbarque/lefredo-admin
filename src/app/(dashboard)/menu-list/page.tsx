@@ -1,14 +1,44 @@
+'use client';
+
 import { getSectionsAPI } from '@/actions/section.action';
 import { IconPlus } from '@tabler/icons-react';
+import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
 import { Header } from '@/components/data-display/header';
+import { SkeletonItem } from '@/components/data-display/skeleton-item/skeleton-item';
 import { Button } from '@/components/inputs/button';
 
 import { CategoryListItems } from './category-list-items';
 
-export default async function PageMenuList() {
-  const sections = await getSectionsAPI();
+export default function PageMenuList() {
+  const {
+    data: sections,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['sections'],
+    queryFn: getSectionsAPI,
+  });
+
+  if (isLoading)
+    return (
+      <div className='flex flex-col'>
+        <SkeletonItem width='119px' height='28px' />
+        <SkeletonItem className='mt-2' width='756px' height='28px' />
+
+        <SkeletonItem className='mt-14 ml-auto' width='211px' height='44px' />
+
+        <SkeletonItem width='63px' height='32px' />
+        <SkeletonItem className='mt-2' width='650px' height='34px' />
+
+        <SkeletonItem className='mt-6' width='100%' height='94px' fullsize />
+        <SkeletonItem className='mt-6' width='100%' height='94px' fullsize />
+        <SkeletonItem className='mt-6' width='100%' height='94px' fullsize />
+      </div>
+    );
+
+  if (isError) return <div>Falha ao carregar o cardápio.</div>;
 
   return (
     <section className='pb-64'>

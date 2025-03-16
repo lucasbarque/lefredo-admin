@@ -5,6 +5,8 @@ import { IconUser } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { SkeletonItem } from '@/components/data-display/skeleton-item/skeleton-item';
+
 import { NavbarProps } from './navbar.types';
 
 export function Navbar({ children }: NavbarProps) {
@@ -28,7 +30,11 @@ export function Navbar({ children }: NavbarProps) {
             <IconUser size={24} />
           </div>
           <div className='text-title-default font-bold'>
-            {user?.firstName + ' ' + user?.lastName}
+            {!user ? (
+              <SkeletonItem className='w-28' width='100px' height='24px' />
+            ) : (
+              user.firstName + ' ' + user?.lastName
+            )}
           </div>
         </div>
       </div>

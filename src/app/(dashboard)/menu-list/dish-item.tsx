@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState } from 'react';
 
 import { changePriceAPI, toggleDishAPI } from '@/actions/dish.action';
-import { toggleSectionAPI } from '@/actions/section.action';
 import { formatCurrency } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconDotsVertical, IconEdit, IconTrash } from '@tabler/icons-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,6 +17,14 @@ import { LoadingSpinner } from '@/components/data-display/loading-spinner/loadin
 import { InputCashout } from '@/components/inputs/input-cashout';
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
 import { DropdownMenu } from '@/components/navigation/dropdown-menu';
+
+const inputSchema = z.object({
+  price: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/)
+    .transform((value) => value.replace('.', '').replace(',', '.')),
+});
+type FormPriceSchema = z.infer<typeof inputSchema>;
 
 interface ItemListProps {
   id: string;
@@ -29,15 +37,6 @@ interface ItemListProps {
   isDeleting: boolean;
 }
 
-const inputSchema = z.object({
-  price: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/)
-    .transform((value) => value.replace('.', '').replace(',', '.')),
-});
-
-type FormPriceSchema = z.infer<typeof inputSchema>;
-
 export function DishItem({
   id,
   title,
@@ -48,6 +47,7 @@ export function DishItem({
   handleDeleteDish,
   isDeleting,
 }: ItemListProps) {
+  const queryClient = useQueryClient();
   const { control, watch } = useForm<FormPriceSchema>({
     resolver: zodResolver(inputSchema),
     defaultValues: {
@@ -60,41 +60,45 @@ export function DishItem({
     },
   });
   const [isActiveItem, setActiveItem] = useState(isActive);
-  const [isLoadingActiveDish, startTransitionActiveDish] = useTransition();
 
-  async function handleToggleDish(id: string) {
-    startTransitionActiveDish(async () => {
-      const responseStatus = await toggleDishAPI(id);
-      if (responseStatus === 200) {
-        await toggleSectionAPI(sectionId);
-        toast.success(
-          `O item foi ${isActiveItem ? 'desativado' : 'ativado'} com sucesso`,
-          { position: 'top-right' }
-        );
-        setActiveItem(!isActiveItem);
-      } else {
-        toast.error(
-          `Falha ao ${isActiveItem ? 'desativar' : 'ativar'} item. Tente novamente mais tarde`,
-          { position: 'top-right' }
-        );
-      }
-    });
+  const toggleDishMutation = useMutation({
+    mutationFn: () => toggleDishAPI(id),
+    onSuccess: () => {
+      toast.success(
+        `O item foi ${isActiveItem ? 'desativado' : 'ativado'} com sucesso`,
+        { position: 'top-right' }
+      );
+      setActiveItem((prev) => !prev);
+      queryClient.invalidateQueries({ queryKey: ['dishes', sectionId] });
+    },
+    onError: () => {
+      toast.error(
+        `Falha ao ${isActiveItem ? 'desativar' : 'ativar'} item. Tente novamente mais tarde`,
+        { position: 'top-right' }
+      );
+    },
+  });
+
+  const changePriceMutation = useMutation({
+    mutationFn: (newPrice: number) => changePriceAPI(id, { price: newPrice }),
+    onSuccess: () => {
+      toast.success('Preço atualizado com sucesso', { position: 'top-right' });
+      queryClient.invalidateQueries({ queryKey: ['dishes', sectionId] });
+    },
+    onError: () => {
+      toast.error('Falha ao atualizar preço', { position: 'top-right' });
+    },
+  });
+
+  function handleToggleDish() {
+    toggleDishMutation.mutate();
   }
 
   async function handleSavePrice() {
     let priceToUpdate: string = watch('price');
     priceToUpdate = formatCurrency(priceToUpdate, 'to-decimal');
-
     if (price === Number(priceToUpdate)) return;
-
-    const responseStatus = await changePriceAPI(id, {
-      price: Number(priceToUpdate),
-    });
-    if (responseStatus === 200) {
-      toast.success('Preço atualizado com sucesso', { position: 'top-right' });
-    } else {
-      toast.error('Falha ao atualizar preço', { position: 'top-right' });
-    }
+    changePriceMutation.mutate(Number(priceToUpdate));
   }
 
   return isDeleting ? (
@@ -140,12 +144,11 @@ export function DishItem({
           <div className='flex-1'>
             <ToggleSwitch
               label={isActiveItem ? 'Ativado' : 'Desativado'}
-              onCheckedChange={() => handleToggleDish(id)}
-              defaultChecked={isActiveItem}
+              onCheckedChange={handleToggleDish}
+              checked={isActiveItem}
               id={`is-active-dish-${id}`}
               name={`is-active-dish-${id}`}
-              checked={isActiveItem}
-              disabled={isLoadingActiveDish}
+              disabled={toggleDishMutation.isPending}
             />
           </div>
           <DropdownMenu>
