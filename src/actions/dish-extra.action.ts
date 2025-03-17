@@ -41,7 +41,7 @@ export async function deleteDishesExtraAPI(id: string) {
     headers,
   });
 
-  return response.status;
+  return response;
 }
 
 export async function updateDishesExtraAPI(

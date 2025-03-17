@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import {
   createDishesExtraAPI,
@@ -9,10 +9,10 @@ import {
   updateDishesExtraAPI,
 } from '@/actions/dish-extra.action';
 import { updateDishExtrasOrderAPI } from '@/actions/dish.action';
-import { DishExtraDTO } from '@/http/api';
 import { createDishesExtraSchema } from '@/validations/dishes-extra-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Reorder } from 'motion/react';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -29,6 +29,8 @@ import { ItemAdditional } from './item-additional';
 export function FormAddItemAdditionals({
   dishId,
 }: FormAddItemAdditionalsProps) {
+  const queryClient = useQueryClient();
+
   const {
     control,
     handleSubmit,
@@ -44,23 +46,53 @@ export function FormAddItemAdditionals({
   });
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
-  const [dishExtras, setDishExtras] = useState<DishExtraDTO[]>([]);
 
-  const onSubmit: SubmitHandler<
-    z.infer<typeof createDishesExtraSchema>
-  > = async (data) => {
-    if (isEditingId) {
-      const response = await updateDishesExtraAPI(isEditingId, data);
+  // Query para buscar os extras do prato
+  const { data: dishExtras = [], refetch } = useQuery({
+    queryKey: ['dishExtras', dishId],
+    queryFn: async () => {
+      const response = await getDishExtrasAPI(dishId);
+      if (response.status === 200) return response.data;
+      throw new Error('Erro ao buscar extras');
+    },
+  });
 
+  // Mutation para criar um novo item adicional
+  const createExtraMutation = useMutation({
+    mutationKey: ['createDishesExtra', dishId],
+    mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
+      createDishesExtraAPI(dishId, data),
+    onSuccess: (response) => {
+      if (response.status === 201) {
+        toast.success('Item adicional cadastrado com sucesso', {
+          position: 'top-right',
+        });
+        refetch();
+        handleCloseForm();
+      } else {
+        toast.error('Falha ao cadastrar item adicional', {
+          position: 'top-right',
+        });
+      }
+    },
+    onError: () => {
+      toast.error('Falha ao cadastrar item adicional', {
+        position: 'top-right',
+      });
+    },
+  });
+
+  // Mutation para atualizar um item adicional existente
+  const updateExtraMutation = useMutation({
+    mutationKey: ['updateDishesExtra', dishId, isEditingId],
+    mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
+      updateDishesExtraAPI(isEditingId as string, data),
+    onSuccess: (response) => {
       if (response.status === 200) {
         toast.success('Item adicional atualizado com sucesso', {
           position: 'top-right',
         });
-        setDishExtras((prevExtras) =>
-          prevExtras.map((item) =>
-            item.id === isEditingId ? response.data : item
-          )
-        );
+        refetch();
         handleCloseForm();
       } else {
         toast.error('Falha ao atualizar item adicional', {
@@ -68,20 +100,75 @@ export function FormAddItemAdditionals({
         });
       }
       setIsEditingId(null);
+    },
+    onError: () => {
+      toast.error('Falha ao atualizar item adicional', {
+        position: 'top-right',
+      });
+      setIsEditingId(null);
       handleCloseForm();
-    } else {
-      const response = await createDishesExtraAPI(dishId, data);
-      if (response.status === 201) {
-        toast.success('Item adicional cadastrado com sucesso', {
+    },
+  });
+
+  // Mutation para deletar um item adicional
+  const deleteExtraMutation = useMutation({
+    mutationKey: ['deleteDishesExtra', dishId],
+    mutationFn: (id: string) => deleteDishesExtraAPI(id),
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        toast.success('Item adicional deletado com sucesso', {
           position: 'top-right',
         });
-        setDishExtras((oldState) => [...oldState, response.data]);
-        handleCloseForm();
+        refetch();
       } else {
-        toast.error('Falha ao cadastrar item adicional', {
+        toast.error('Falha ao deletar item adicional', {
           position: 'top-right',
         });
       }
+      handleCloseForm();
+    },
+    onError: () => {
+      toast.error('Falha ao deletar item adicional', {
+        position: 'top-right',
+      });
+      handleCloseForm();
+    },
+  });
+
+  // Mutation para atualizar a ordem dos itens adicionais
+  const updateOrderMutation = useMutation({
+    mutationKey: ['updateDishExtrasOrder', dishId],
+    mutationFn: (orderItems: string[]) =>
+      updateDishExtrasOrderAPI(dishId, { orderUpdated: orderItems }),
+    onSuccess: (response) => {
+      if (response === 200) {
+        toast.success('Ordem atualizada com sucesso', {
+          position: 'top-right',
+        });
+      } else {
+        toast.error('Falha ao atualizar ordem', { position: 'top-right' });
+      }
+    },
+    onError: () => {
+      toast.error('Falha ao atualizar ordem', { position: 'top-right' });
+    },
+  });
+
+  // Função para atualizar a ordem dos itens, usando a mutation
+  async function handleUpdateOrder(newOrder: typeof dishExtras) {
+    if (newOrder.length < 2) return;
+    const orderItems = newOrder.map((item) => item.id);
+    updateOrderMutation.mutate(orderItems);
+    queryClient.setQueryData(['dishExtras', dishId], newOrder);
+  }
+
+  const onSubmit: SubmitHandler<z.infer<typeof createDishesExtraSchema>> = (
+    data
+  ) => {
+    if (isEditingId) {
+      updateExtraMutation.mutate(data);
+    } else {
+      createExtraMutation.mutate(data);
     }
   };
 
@@ -96,66 +183,25 @@ export function FormAddItemAdditionals({
   }
 
   function setEditItem(id: string) {
-    const currentDish = dishExtras?.find((dish) => dish.id === id);
-
-    if (currentDish) {
+    const currentExtra = dishExtras.find((extra) => extra.id === id);
+    if (currentExtra) {
       setIsFormOpen(true);
-      setIsEditingId(currentDish.id);
-      setValue('title', currentDish.title);
+      setIsEditingId(currentExtra.id);
+      setValue('title', currentExtra.title);
       setValue(
         'price',
         new Intl.NumberFormat('pt-BR', {
           style: 'decimal',
           currency: 'BRL',
           minimumFractionDigits: 2,
-        }).format(currentDish.price / 100) ?? '0,00'
+        }).format(currentExtra.price / 100) ?? '0,00'
       );
     }
   }
 
-  async function handleUpdateOrder() {
-    if (dishExtras?.length < 2) return;
-
-    const orderItems = dishExtras?.map((item) => item.id);
-    const responseStatus = await updateDishExtrasOrderAPI(dishId, {
-      orderUpdated: orderItems,
-    });
-
-    if (responseStatus === 200) {
-      toast.success('Ordem atualizada com sucesso', { position: 'top-right' });
-    } else {
-      toast.error('Falha ao atualizar ordem', { position: 'top-right' });
-    }
+  function handleDeleteItem(id: string) {
+    deleteExtraMutation.mutate(id);
   }
-
-  async function handleDeleteItem(id: string) {
-    const responseStatus = await deleteDishesExtraAPI(id);
-    if (responseStatus === 200) {
-      toast.success('Item adicional deletado com sucesso', {
-        position: 'top-right',
-      });
-      setDishExtras((prevExtras) =>
-        prevExtras.filter((item) => item.id !== id)
-      );
-    } else {
-      toast.error('Falha ao deletar item adicional', {
-        position: 'top-right',
-      });
-    }
-    handleCloseForm();
-  }
-
-  useEffect(() => {
-    async function getDishExtras() {
-      const response = await getDishExtrasAPI(dishId);
-
-      if (response.status === 200) {
-        setDishExtras(response.data);
-      }
-    }
-
-    getDishExtras();
-  }, [dishId]);
 
   return (
     <>
@@ -164,15 +210,14 @@ export function FormAddItemAdditionals({
           <div className='space-y-3'>
             <Reorder.Group
               values={dishExtras}
-              onReorder={setDishExtras}
+              onReorder={(newOrder) => {
+                // Chama a função handleUpdateOrder com a nova ordem
+                handleUpdateOrder(newOrder);
+              }}
               axis='y'
             >
               {dishExtras.map((item) => (
-                <Reorder.Item
-                  key={item.id}
-                  value={item}
-                  onDragEnd={handleUpdateOrder}
-                >
+                <Reorder.Item key={item.id} value={item}>
                   <ItemAdditional
                     id={item.id}
                     name={item.title}
@@ -190,7 +235,7 @@ export function FormAddItemAdditionals({
         {!isFormOpen && (
           <div
             data-has-additionals={dishExtras.length > 0}
-            className='mt-2 flex items-center data-[has-additionals=false]:justify-start data-[has-additionals=true]:justify-center'
+            className='mt-2 flex items-center justify-center'
           >
             <Button family='tertiary' size='sm' onClick={handleOpenCreateForm}>
               <Button.Icon>
@@ -200,7 +245,6 @@ export function FormAddItemAdditionals({
             </Button>
           </div>
         )}
-
         {isFormOpen && (
           <form className='mt-4' onSubmit={handleSubmit(onSubmit)}>
             <div className='flex gap-3'>
@@ -212,7 +256,6 @@ export function FormAddItemAdditionals({
                 error={errors.title?.message}
                 placeholder='Exemplo: Alface'
               />
-
               <InputCashout
                 control={control}
                 name='price'
@@ -245,14 +288,12 @@ export function FormAddItemAdditionals({
           </form>
         )}
       </div>
-
       <div className='border-border-default mt-auto flex justify-end gap-4 border-t px-8 py-4'>
         <Link href='/menu-list'>
           <Button size='md' family='secondary'>
             Cancelar
           </Button>
         </Link>
-
         <Link href={`/add-item-classification/${dishId}`}>
           <Button size='md'>Continuar</Button>
         </Link>

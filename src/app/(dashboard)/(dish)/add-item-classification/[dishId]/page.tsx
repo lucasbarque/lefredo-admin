@@ -1,5 +1,5 @@
 import { getDishesSpecsAPI } from '@/actions/dish-spec.action';
-import { RequestDishSpecsToggleDTOKey } from '@/http/api';
+import { ClassificationItem } from '@/app/(dashboard)/(dish)/add-item-classification/[dishId]/classification-item';
 import {
   IconCandyOff,
   IconFlame,
@@ -12,7 +12,6 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 
-import { ClassificationItem } from '@/components/data-display/classification-item/classification-item';
 import { Header } from '@/components/data-display/header';
 import { Button } from '@/components/inputs/button';
 import { StepperBar } from '@/components/inputs/stepper-bar';
@@ -23,7 +22,6 @@ export default async function PageAddItemClassification({
   params,
 }: PageAddItemClassificationParams) {
   const { dishId } = await params;
-
   const dishSpecs = await getDishesSpecsAPI(dishId);
 
   return (
@@ -56,7 +54,7 @@ export default async function PageAddItemClassification({
           dishId={dishId}
           title='Vegetariano'
           description='Sem carne de nenhum tipo'
-          hashKey={RequestDishSpecsToggleDTOKey.vegetarian}
+          hashKey='vegetarian'
           icon={<IconMeatOff />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'vegetarian'
@@ -66,38 +64,38 @@ export default async function PageAddItemClassification({
           dishId={dishId}
           title='Zero lactose'
           description='Não contém lactose, ou seja, leite e seus derivados'
-          hashKey={RequestDishSpecsToggleDTOKey.lactfree}
+          hashKey='lactfree'
+          icon={<IconMilkOff />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'lactfree'
           )}
-          icon={<IconMilkOff />}
         />
         <ClassificationItem
           dishId={dishId}
           title='Vegano'
           description='Sem produtos de origem animal, como carne, ovo ou leite'
-          hashKey={RequestDishSpecsToggleDTOKey.vegan}
+          hashKey='vegan'
+          icon={<IconSeeding />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'vegan'
           )}
-          icon={<IconSeeding />}
         />
         <ClassificationItem
           dishId={dishId}
           title='Servido Gelado'
           description='Da geladeira direto para o consumidor'
-          hashKey={RequestDishSpecsToggleDTOKey.cold}
+          hashKey='cold'
+          icon={<IconSnowflake />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'cold'
           )}
-          icon={<IconSnowflake />}
         />
         <ClassificationItem
           dishId={dishId}
           title='Servido Quente'
           description='Produto que acabou de sair do forno'
+          hashKey='hot'
           icon={<IconFlame />}
-          hashKey={RequestDishSpecsToggleDTOKey.hot}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'hot'
           )}
@@ -106,18 +104,18 @@ export default async function PageAddItemClassification({
           dishId={dishId}
           title='Orgânico'
           description='Cultivado sem agrotóxicos, segundo a lei 10.831'
-          hashKey={RequestDishSpecsToggleDTOKey.organic}
+          hashKey='organic'
+          icon={<IconLeaf />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'organic'
           )}
-          icon={<IconLeaf />}
         />
         <ClassificationItem
           dishId={dishId}
           title='Sem açúcar'
           description='Não contém nenhum tipo de açúcar (cristal, orgânico, mascavo, etc.)'
+          hashKey='suggarfree'
           icon={<IconCandyOff />}
-          hashKey={RequestDishSpecsToggleDTOKey.suggarfree}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'suggarfree'
           )}
@@ -126,11 +124,11 @@ export default async function PageAddItemClassification({
           dishId={dishId}
           title='Natural'
           description='Preparado na hora com frutas frescas'
-          hashKey={RequestDishSpecsToggleDTOKey.natural}
+          hashKey='natural'
+          icon={<IconPlant2 />}
           isActive={dishSpecs.some(
             (dishSpec) => dishSpec.DishSpecs.key === 'natural'
           )}
-          icon={<IconPlant2 />}
         />
       </div>
 

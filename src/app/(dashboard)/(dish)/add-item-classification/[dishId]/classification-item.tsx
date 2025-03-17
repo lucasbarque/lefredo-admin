@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { toggleDishesSpecsAPI } from '@/actions/dish-spec.action';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { ToggleSwitch } from '@/components/inputs/toggle-switch';
@@ -18,31 +19,38 @@ export function ClassificationItem({
   isActive = false,
 }: ClassificatinItemProps) {
   const [isItemActive, setIsItemActive] = useState(isActive);
-  const [isLoading, setIsLoading] = useState(false);
 
-  async function handleToggle() {
-    setIsLoading(true);
-
-    const response = await toggleDishesSpecsAPI(dishId, { key: hashKey });
-
-    if (response.status === 200) {
-      if (response.data.newStateIsActive !== isItemActive) {
-        toast.success('Classificação do item atualizada com sucesso', {
-          position: 'top-right',
-        });
-        setIsItemActive(!isItemActive);
+  const toggleMutation = useMutation({
+    mutationKey: ['toggleDishSpecs', dishId, hashKey],
+    mutationFn: () => toggleDishesSpecsAPI(dishId, { key: hashKey }),
+    onSuccess: (response) => {
+      if (response.status === 200) {
+        // Supondo que a API retorne em response.data.newStateIsActive o novo estado
+        if (response.data.newStateIsActive !== isItemActive) {
+          setIsItemActive(response.data.newStateIsActive);
+          toast.success('Classificação do item atualizada com sucesso', {
+            position: 'top-right',
+          });
+        } else {
+          toast.error('Falha ao atualizar classificação do item', {
+            position: 'top-right',
+          });
+        }
       } else {
         toast.error('Falha ao atualizar classificação do item', {
           position: 'top-right',
         });
       }
-    } else {
+    },
+    onError: () => {
       toast.error('Falha ao atualizar classificação do item', {
         position: 'top-right',
       });
-    }
+    },
+  });
 
-    setIsLoading(false);
+  function handleToggle() {
+    toggleMutation.mutate();
   }
 
   return (
@@ -51,9 +59,8 @@ export function ClassificationItem({
       data-is-active={isItemActive}
     >
       <ToggleSwitch
-        disabled={isLoading}
+        disabled={toggleMutation.isPending}
         onCheckedChange={handleToggle}
-        defaultChecked={isItemActive}
         checked={isItemActive}
         id={`is-${hashKey}-active`}
         name={`is-${hashKey}-active`}
