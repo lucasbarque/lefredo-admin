@@ -1,8 +1,8 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { CropData, FileUploaded } from './upload-images.types';
@@ -13,9 +13,12 @@ export function useUploadImages({
   medias,
   fnDeleteImages,
   fnUploadImages,
+  keyPrefix, // chave dinâmica, por exemplo "dishImages"
 }: UseUploadImagesProps) {
+  const queryClient = useQueryClient();
   const [images, setImages] = useState<FileUploaded[]>([]);
 
+  // Carrega as imagens já existentes a partir de 'medias'
   async function loadImages() {
     const placeholders: FileUploaded[] = medias.map((image) => ({
       id: image.id,
@@ -71,39 +74,93 @@ export function useUploadImages({
     });
   }
 
-  async function handleDeleteImage(idImage: string) {
+  // Mutation para deleção de imagem
+  const deleteMutation = useMutation({
+    mutationKey: [keyPrefix, 'deleteImage', parentId],
+    mutationFn: (idImage: string) => fnDeleteImages(idImage),
+    onSuccess: (_data, idImage) => {
+      toast.success('Imagem deletada com sucesso');
+      setImages((prev) => prev.filter((item) => item.id !== idImage));
+      queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+    },
+    onError: () => {
+      toast.error('Falha ao deletar imagem');
+      setImages((prev) =>
+        prev.map((item) =>
+          item.isLoading ? { ...item, isLoading: false } : item
+        )
+      );
+    },
+  });
+
+  // Mutation para upload de imagem
+  const uploadMutation = useMutation({
+    mutationKey: [keyPrefix, 'uploadImage', parentId],
+    mutationFn: (file: File) => fnUploadImages(parentId, file),
+    onSuccess: (response, file) => {
+      //@ts-ignore
+      if (response.status !== 200) {
+        toast.error(
+          'Ocorreu um erro ao realizar o upload da imagem. Tente novamente mais tarde',
+          { position: 'top-right' }
+        );
+        // Marca a imagem como não nova para evitar reenvio
+        setImages((prev) =>
+          prev.map((item) =>
+            item.isNew && item.file === file
+              ? { ...item, isLoading: false, isNew: false }
+              : item
+          )
+        );
+        return;
+      }
+      setImages((prev) =>
+        prev.map((item) => {
+          if (item.isNew && item.isLoading && item.file === file) {
+            return {
+              ...item,
+              //@ts-ignore
+              id: response.data.id,
+              //@ts-ignore
+              url: process.env.NEXT_PUBLIC_BUCKET_URL + response.data.url,
+              isLoading: false,
+              isNew: false,
+            };
+          }
+          return item;
+        })
+      );
+      queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+      toast.success('Imagem enviada com sucesso');
+    },
+    onError: (error, file) => {
+      console.error('Erro ao fazer upload da imagem:', file, error);
+      toast.error(
+        'Erro ao fazer upload da imagem. Tente novamente mais tarde',
+        { position: 'top-right' }
+      );
+      // Marca a imagem como não nova para evitar reenvio contínuo
+      setImages((prev) =>
+        prev.map((item) =>
+          item.isNew && item.file === file
+            ? { ...item, isLoading: false, isNew: false }
+            : item
+        )
+      );
+    },
+  });
+
+  // Função para deletar uma imagem utilizando a mutation
+  function handleDeleteImage(idImage: string) {
     setImages((prev) =>
       prev.map((item) =>
         item.id === idImage ? { ...item, isLoading: true } : item
       )
     );
-
-    const img = images.find((item) => item.id === idImage);
-    if (img) {
-      try {
-        const response = await fnDeleteImages(idImage);
-        if (response.status !== 200) {
-          console.error('Erro ao deletar a imagem:', img.url);
-          setImages((prev) =>
-            prev.map((item) =>
-              item.id === idImage ? { ...item, isLoading: false } : item
-            )
-          );
-          return;
-        }
-      } catch (error) {
-        console.error('Erro ao deletar a imagem:', img.url, error);
-        setImages((prev) =>
-          prev.map((item) =>
-            item.id === idImage ? { ...item, isLoading: false } : item
-          )
-        );
-        return;
-      }
-    }
-    setImages((prev) => prev.filter((item) => item.id !== idImage));
+    deleteMutation.mutate(idImage);
   }
 
+  // Função para atualizar uma imagem (exclui a antiga e envia a nova)
   async function handleImageUpdate(
     oldImageId: string,
     newFile: File,
@@ -114,7 +171,6 @@ export function useUploadImages({
         image.id === oldImageId ? { ...image, isLoading: true } : image
       )
     );
-
     try {
       const deleteResponse = await fnDeleteImages(oldImageId);
       if (deleteResponse.status !== 200) {
@@ -128,42 +184,9 @@ export function useUploadImages({
         );
         return;
       }
-
-      const uploadResponse = await fnUploadImages(parentId, {
-        // @ts-ignore
-        file: newFile,
-      });
-      if (uploadResponse.status !== 200) {
-        toast.error(
-          'Ocorreu um erro ao realizar o upload da nova imagem. Tente novamente mais tarde',
-          { position: 'top-right' }
-        );
-        setImages((prev) =>
-          prev.map((image) =>
-            image.id === oldImageId ? { ...image, isLoading: false } : image
-          )
-        );
-        return;
-      }
-
-      setImages((prev) =>
-        prev.map((image) =>
-          image.id === oldImageId
-            ? {
-                ...image,
-                id: uploadResponse.data.id,
-                url:
-                  process.env.NEXT_PUBLIC_BUCKET_URL + uploadResponse.data.url,
-                isLoading: false,
-                isNew: false,
-                cropData,
-              }
-            : image
-        )
-      );
     } catch (error) {
-      console.error('Erro no processo de atualização de imagem:', error);
-      toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
+      console.error(error);
+      toast.error('Erro ao deletar a imagem. Tente novamente mais tarde', {
         position: 'top-right',
       });
       setImages((prev) =>
@@ -171,87 +194,71 @@ export function useUploadImages({
           image.id === oldImageId ? { ...image, isLoading: false } : image
         )
       );
+      return;
     }
+    // Envia o novo arquivo
+    uploadMutation.mutate(newFile, {
+      onSuccess: (response) => {
+        //@ts-ignore
+        if (response.status === 200) {
+          setImages((prev) =>
+            prev.map((image) =>
+              image.id === oldImageId
+                ? {
+                    ...image,
+                    //@ts-ignore
+                    id: response.data.id,
+                    //@ts-ignore
+                    url: process.env.NEXT_PUBLIC_BUCKET_URL + response.data.url,
+                    isLoading: false,
+                    isNew: false,
+                    cropData,
+                  }
+                : image
+            )
+          );
+        } else {
+          toast.error(
+            'Ocorreu um erro ao realizar o upload da nova imagem. Tente novamente mais tarde',
+            { position: 'top-right' }
+          );
+          setImages((prev) =>
+            prev.map((image) =>
+              image.id === oldImageId ? { ...image, isLoading: false } : image
+            )
+          );
+        }
+      },
+      onError: (error) => {
+        console.error('Erro no processo de upload:', error);
+        toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
+          position: 'top-right',
+        });
+        setImages((prev) =>
+          prev.map((image) =>
+            image.id === oldImageId ? { ...image, isLoading: false } : image
+          )
+        );
+      },
+    });
   }
 
+  // Carrega as imagens assim que 'medias' muda
   useEffect(() => {
     if (medias?.length > 0) {
       loadImages();
     }
   }, [medias]);
 
+  // Efeito para disparar upload automático para imagens novas
   useEffect(() => {
-    if (parentId === null) return;
-
+    if (!parentId) return;
     const imagesToUpload = images.filter(
       (img) => img.isNew && img.isLoading && img.file
     );
-
     if (imagesToUpload.length === 0) return;
-
-    Promise.all(
-      imagesToUpload.map(async (img) => {
-        try {
-          const response = await fnUploadImages(parentId, {
-            //@ts-ignore
-            file: img.file,
-          });
-          if (response.status !== 200) {
-            toast.error(
-              'Ocorreu um erro ao realizar o upload da imagem. Tente novamente mais tarde',
-              { position: 'top-right' }
-            );
-            // Atualiza para não tentar novamente
-            setImages((prev) =>
-              prev.map((item) =>
-                item.id === img.id ? { ...item, isLoading: false } : item
-              )
-            );
-            return null;
-          }
-          return {
-            oldId: img.id,
-            newId: response.data.id,
-            newUrl: process.env.NEXT_PUBLIC_BUCKET_URL + response.data.url,
-          };
-        } catch (error) {
-          console.error('Erro ao fazer upload da imagem:', img.url, error);
-          toast.error(
-            'Erro ao fazer upload da imagem. Tente novamente mais tarde',
-            { position: 'top-right' }
-          );
-          setImages((prev) =>
-            prev.map((item) =>
-              item.id === img.id ? { ...item, isLoading: false } : item
-            )
-          );
-          return null;
-        }
-      })
-    ).then((results) => {
-      // Remove as imagens que falharam no upload e atualiza as que tiveram sucesso.
-      setImages((prev) =>
-        prev.reduce<FileUploaded[]>((acc, item) => {
-          if (item.isNew) {
-            const uploaded = results.find(
-              (res) => res !== null && res.oldId === item.id
-            );
-            if (uploaded) {
-              acc.push({
-                ...item,
-                id: uploaded.newId, // atualiza o id com o valor retornado pela API
-                url: uploaded.newUrl,
-                isLoading: false,
-                isNew: false,
-              });
-            }
-            // Se não houve sucesso no upload, a imagem é removida (não adicionada ao array)
-          } else {
-            acc.push(item);
-          }
-          return acc;
-        }, [])
-      );
+    imagesToUpload.forEach((img) => {
+      uploadMutation.mutate(img.file as File);
     });
   }, [parentId, images]);
 

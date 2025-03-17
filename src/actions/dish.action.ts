@@ -132,9 +132,18 @@ export async function uploadDishImageAPI(
 ) {
   const headers = await getCookiesHeader();
 
-  const response = await uploadDishImage(id, file, {
-    headers,
-  });
+  console.log(file);
+
+  const response = await uploadDishImage(
+    id,
+    //@ts-ignore
+    { file },
+    {
+      headers,
+    }
+  );
+
+  console.log(response);
 
   return response;
 }
