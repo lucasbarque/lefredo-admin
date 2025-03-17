@@ -3,6 +3,7 @@
 import { updateDishAPI } from '@/actions/dish.action';
 import { createDishDetailsSchema } from '@/validations/dish-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -18,6 +19,9 @@ import { Select } from '@/components/inputs/select';
 import { FormEditItemDetailsProps } from './edit-items-details.types';
 
 export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
+  const router = useRouter();
+
+  // Determina se o item está destacado ("highlighted")
   const isFlagged = data.dishSpecs.some(
     (spec) => spec.DishSpecs.key === 'highlighted'
   );
@@ -25,7 +29,7 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isDirty },
   } = useForm<z.infer<typeof createDishDetailsSchema>>({
     resolver: zodResolver(createDishDetailsSchema),
     defaultValues: {
@@ -43,22 +47,40 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
       sectionId: data.section.id,
     },
   });
-  const router = useRouter();
 
-  const onSubmit: SubmitHandler<
-    z.infer<typeof createDishDetailsSchema>
-  > = async (dataToUpdate) => {
-    if (!isDirty) return router.replace(`/add-item-photos/${data.id}`);
-
-    const responseStatus = await updateDishAPI(data.id, dataToUpdate);
-
-    if (responseStatus !== 200) {
-      return toast.error(
+  const updateDishMutation = useMutation({
+    mutationKey: ['updateDish', data.id],
+    mutationFn: async (
+      dataToUpdate: z.infer<typeof createDishDetailsSchema>
+    ) => {
+      return await updateDishAPI(data.id, dataToUpdate);
+    },
+    onSuccess: (response) => {
+      if (response.status !== 200) {
+        toast.error(
+          'Falha ao atualizar item. Por favor, tente novamente mais tarde'
+        );
+      } else {
+        toast.success('Item atualizado com sucesso.', {
+          position: 'top-right',
+        });
+        router.replace(`/add-item-photos/${data.id}`);
+      }
+    },
+    onError: () => {
+      toast.error(
         'Falha ao atualizar item. Por favor, tente novamente mais tarde'
       );
+    },
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof createDishDetailsSchema>> = (
+    dataToUpdate
+  ) => {
+    if (!isDirty) {
+      return router.replace(`/add-item-photos/${data.id}`);
     }
-    toast.success('Item atualizado com sucesso.', { position: 'top-right' });
-    router.replace(`/add-item-photos/${data.id}`);
+    updateDishMutation.mutate(dataToUpdate);
   };
 
   return (
@@ -136,7 +158,6 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
               isOptional
             />
           </div>
-
           <div className='col-span-8'>
             <InputEditor
               id='description'
@@ -158,12 +179,11 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
             Cancelar
           </Button>
         </Link>
-
         <Button
           size='md'
-          disabled={isSubmitting}
+          disabled={updateDishMutation.isPending}
           onClick={handleSubmit(onSubmit)}
-          isLoading={isSubmitting}
+          isLoading={updateDishMutation.isPending}
         >
           Continuar
         </Button>

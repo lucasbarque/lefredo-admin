@@ -1,6 +1,14 @@
 'use client';
 
+import { createDishAPI } from '@/actions/dish.action';
+import { createDishDetailsSchema } from '@/validations/dish-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 import { Button } from '@/components/inputs/button';
 import { Input } from '@/components/inputs/input';
@@ -9,11 +17,52 @@ import { InputEditor } from '@/components/inputs/input-editor';
 import { Select } from '@/components/inputs/select';
 
 import { FormAddItemDetailsProps } from './add-items-details.types';
-import { useAddItemDetails } from './use-add-item-details';
 
 export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
-  const { handleSubmit, onSubmit, control, errors, isSubmitting } =
-    useAddItemDetails(categoryId);
+  const router = useRouter();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof createDishDetailsSchema>>({
+    resolver: zodResolver(createDishDetailsSchema),
+    defaultValues: {
+      title: '',
+      portion: '',
+      price: '0,00',
+      flagged: 'false',
+      prepTime: '',
+      description: '',
+      sectionId: categoryId,
+    },
+  });
+
+  const createDishMutation = useMutation({
+    mutationKey: ['createDish'],
+    mutationFn: async (data: z.infer<typeof createDishDetailsSchema>) => {
+      return await createDishAPI(data);
+    },
+    onSuccess: (response) => {
+      if (response.status !== 201) {
+        toast.error(
+          'Falha ao criar item. Por favor, tente novamente mais tarde'
+        );
+      } else {
+        toast.success('Item criado com sucesso.', { position: 'top-right' });
+        router.replace(`/add-item-photos/${response.data.id}`);
+      }
+    },
+    onError: () => {
+      toast.error('Falha ao criar item. Por favor, tente novamente mais tarde');
+    },
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof createDishDetailsSchema>> = (
+    data
+  ) => {
+    createDishMutation.mutate(data);
+  };
 
   return (
     <>
@@ -79,7 +128,6 @@ export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
               isOptional
             />
           </div>
-
           <div className='col-span-8'>
             <InputEditor
               id='description'
@@ -101,13 +149,12 @@ export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
             Cancelar
           </Button>
         </Link>
-
         <Button
           size='md'
-          disabled={isSubmitting}
+          disabled={createDishMutation.isPending}
           onClick={handleSubmit(onSubmit)}
         >
-          Continuar
+          {createDishMutation.isPending ? 'Carregando' : 'Continuar'}
         </Button>
       </div>
     </>

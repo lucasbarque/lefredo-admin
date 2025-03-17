@@ -19,9 +19,6 @@ import {
   updateDishFlavorsOrder,
   uploadDishImage,
 } from '@/http/api';
-import { revalidatePath, revalidateTag } from 'next/cache';
-
-import { RevalidateTags } from '@/constants/tags-revalidate';
 
 import { getCookiesHeader } from './utils.action';
 
@@ -30,10 +27,6 @@ export async function getDishByIdAPI(id: string) {
 
   const response = await getDishById(id, {
     headers,
-    cache: 'force-cache',
-    next: {
-      tags: [RevalidateTags.dish['upload-image-dish-media']],
-    },
   });
   return response;
 }
@@ -56,9 +49,6 @@ export async function toggleDishAPI(id: string) {
   const response = await toggleDish(id, {
     headers,
   });
-  if (response.status === 200) {
-    revalidateTag(RevalidateTags.dish['toggle-dish']);
-  }
 
   return response.status;
 }
@@ -87,10 +77,6 @@ export async function createDishAPI(data: RequestCreateDishDTO) {
     headers,
   });
 
-  if (response.status === 201) {
-    revalidatePath('/menu-list');
-  }
-
   return response;
 }
 
@@ -100,10 +86,6 @@ export async function deleteDishAPI(id: string) {
   const response = await deleteDish(id, {
     headers,
   });
-
-  if (response.status === 200) {
-    revalidateTag(RevalidateTags.dish['delete-dish']);
-  }
 
   return response.status;
 }
@@ -115,7 +97,7 @@ export async function updateDishAPI(id: string, data: RequestUpdateDishDTO) {
     headers,
   });
 
-  return response.status;
+  return response;
 }
 
 export async function updateDishExtrasOrderAPI(
@@ -153,10 +135,6 @@ export async function uploadDishImageAPI(
   const response = await uploadDishImage(id, file, {
     headers,
   });
-
-  if (response.status === 200) {
-    revalidateTag(RevalidateTags.dish['upload-image-dish-media']);
-  }
 
   return response;
 }

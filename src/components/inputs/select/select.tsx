@@ -1,9 +1,12 @@
 import clsx from 'clsx';
+import dynamic from 'next/dynamic';
 import { Controller } from 'react-hook-form';
-import ReactSelect from 'react-select';
 
 import { InputLabel } from '../input';
 import { SelectProps } from './select.types';
+
+// Carrega o ReactSelect apenas no cliente, evitando problemas de hidratação
+const ReactSelect = dynamic(() => import('react-select'), { ssr: false });
 
 export function Select({
   id,
@@ -40,6 +43,7 @@ export function Select({
               className='w-full'
               placeholder={placeholder}
               value={options.find((item) => item.value === field.value)}
+              //@ts-ignore
               onChange={(item: any) => field.onChange(item.value)}
               options={options}
               classNames={{
