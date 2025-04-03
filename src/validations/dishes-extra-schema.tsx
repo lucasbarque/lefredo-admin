@@ -8,8 +8,10 @@ export const createDishesExtraSchema = z.object({
     .string()
     .min(3, 'Digite no mínimo 3 caracteres')
     .max(500, 'Digite no máximo 500 caracteres'),
+  label: z.string().min(3, 'Digite no mínimo 3 caracteres'),
   price: z
     .string()
     .regex(priceRegex, 'Digite um preço válido')
     .transform((value) => value.replace('.', '').replace(',', '.')),
+  description: z.string().nullable(),
 });

@@ -13,8 +13,7 @@ export interface PageAddItemFlavorsParams {
 }
 
 export interface FormAddItemFlavorsProps {
-  dishFlavors: DishFlavorsDTO[];
-  dish: getDishByIdResponse;
+  dishId: string;
 }
 
 export interface ItemFlavorProps extends DishFlavorsDTO {

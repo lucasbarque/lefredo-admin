@@ -10,6 +10,7 @@ import { updateDishFlavorsOrderAPI } from '@/actions/dish.action';
 import { createFlavorSchema } from '@/validations/dishes-flavors-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconPlus } from '@tabler/icons-react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Reorder } from 'motion/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -28,6 +29,7 @@ export function FormAddItemFlavors({
   dishFlavors,
   dish,
 }: FormAddItemFlavorsProps) {
+  const queryClient = useQueryClient();
   const [createVariation, setCreateVariation] = useState(
     dishFlavors.length > 0
   );
@@ -55,31 +57,90 @@ export function FormAddItemFlavors({
     },
   });
 
+  // Mutação para criar um sabor
+  const createFlavorMutation = useMutation(
+    async (data: z.infer<typeof createFlavorSchema>) => {
+      const responseStatus = await createDishesFlavorsAPI(dish.data.id, data);
+      if (responseStatus !== 201) {
+        throw new Error('Erro ao cadastrar sabor');
+      }
+      return responseStatus;
+    },
+    {
+      onSuccess: () => {
+        toast.success('Sabor cadastrado com sucesso', {
+          position: 'top-right',
+        });
+        queryClient.invalidateQueries(['dishFlavors', dish.data.id]);
+        handleCloseForm();
+      },
+      onError: () => {
+        toast.error('Falha ao cadastrar sabor', { position: 'top-right' });
+      },
+    }
+  );
+
+  // Mutação para atualizar um sabor
+  const updateFlavorMutation = useMutation(
+    async ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: z.infer<typeof createFlavorSchema>;
+    }) => {
+      const responseStatus = await updateDishesFlavorsAPI(id, data);
+      if (responseStatus !== 200) {
+        throw new Error('Erro ao atualizar sabor');
+      }
+      return responseStatus;
+    },
+    {
+      onSuccess: () => {
+        toast.success('Sabor atualizado com sucesso', {
+          position: 'top-right',
+        });
+        queryClient.invalidateQueries(['dishFlavors', dish.data.id]);
+        handleCloseForm();
+        setIsEditingId(null);
+      },
+      onError: () => {
+        toast.error('Falha ao atualizar sabor', { position: 'top-right' });
+      },
+    }
+  );
+
+  // Mutação para atualizar a ordem dos sabores
+  const updateOrderMutation = useMutation(
+    async (orderItems: string[]) => {
+      const responseStatus = await updateDishFlavorsOrderAPI(dish.data.id, {
+        orderUpdated: orderItems,
+      });
+      if (responseStatus !== 200) {
+        throw new Error('Erro ao atualizar ordem');
+      }
+      return responseStatus;
+    },
+    {
+      onSuccess: () => {
+        toast.success('Ordem atualizada com sucesso', {
+          position: 'top-right',
+        });
+        queryClient.invalidateQueries(['dishFlavors', dish.data.id]);
+      },
+      onError: () => {
+        toast.error('Falha ao atualizar ordem', { position: 'top-right' });
+      },
+    }
+  );
+
   const onSubmit: SubmitHandler<z.infer<typeof createFlavorSchema>> = async (
     data
   ) => {
     if (isEditingId) {
-      const responseStatus = await updateDishesFlavorsAPI(isEditingId, data);
-      if (responseStatus === 200) {
-        toast.success('Sabor atualizado com sucesso', {
-          position: 'top-right',
-        });
-        handleCloseForm();
-      } else {
-        toast.error('Falha ao atualizar sabor', { position: 'top-right' });
-      }
-      setIsEditingId(null);
-      handleCloseForm();
+      await updateFlavorMutation.mutateAsync({ id: isEditingId, data });
     } else {
-      const responseStatus = await createDishesFlavorsAPI(dish.data.id, data);
-      if (responseStatus === 201) {
-        toast.success('Sabor cadastrado com sucesso', {
-          position: 'top-right',
-        });
-        handleCloseForm();
-      } else {
-        toast.error('Falha ao cadastrar sabor', { position: 'top-right' });
-      }
+      await createFlavorMutation.mutateAsync(data);
     }
   };
 
@@ -90,17 +151,8 @@ export function FormAddItemFlavors({
 
   async function handleUpdateOrder() {
     if (dishFlavorsList.length < 2) return;
-
     const orderItems = dishFlavorsList.map((item) => item.id);
-    const responseStatus = await updateDishFlavorsOrderAPI(dish.data.id, {
-      orderUpdated: orderItems,
-    });
-
-    if (responseStatus === 200) {
-      toast.success('Ordem atualizada com sucesso', { position: 'top-right' });
-    } else {
-      toast.error('Falha ao atualizar ordem', { position: 'top-right' });
-    }
+    await updateOrderMutation.mutateAsync(orderItems);
   }
 
   function setEditItem(id: string) {
@@ -160,7 +212,7 @@ export function FormAddItemFlavors({
                 onReorder={setDishFlavorsList}
                 axis='y'
               >
-                {dishFlavorsList?.map((item) => (
+                {dishFlavorsList.map((item) => (
                   <Reorder.Item
                     key={item.id}
                     value={item}
