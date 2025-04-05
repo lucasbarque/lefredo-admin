@@ -44,13 +44,14 @@ export async function deleteDishesFlavorsAPI(id: string) {
     headers,
   });
 
-  return response.status;
+  return response;
 }
 
 export async function updateDishesFlavorsAPI(
   id: string,
   data: RequestUpdateDishesFlavorsDTO
 ) {
+  console.log(id, data);
   const headers = await getCookiesHeader();
 
   const response = await updateDishesFlavors(id, data, {

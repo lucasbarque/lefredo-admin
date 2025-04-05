@@ -63,6 +63,7 @@ export function FormAddItemAdditionals({
     mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
       createDishesExtraAPI(dishId, data),
     onSuccess: (response) => {
+      console.log('entrou');
       if (response.status === 201) {
         toast.success('Item adicional cadastrado com sucesso', {
           position: 'top-right',
@@ -277,11 +278,7 @@ export function FormAddItemAdditionals({
               >
                 Cancelar
               </Button>
-              <Button
-                size='sm'
-                disabled={isSubmitting}
-                onClick={handleSubmit(onSubmit)}
-              >
+              <Button size='sm' disabled={isSubmitting} type='submit'>
                 {isEditingId ? 'Atualizar' : 'Adicionar'}
               </Button>
             </div>

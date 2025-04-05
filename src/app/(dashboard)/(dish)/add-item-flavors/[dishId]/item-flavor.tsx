@@ -1,4 +1,5 @@
-import { deleteDishesFlavorsAPI } from '@/actions/dish-flavor.action';
+'use client';
+
 import { formatCurrency } from '@/lib/utils';
 import {
   IconCameraUp,
@@ -8,7 +9,6 @@ import {
   IconTrash,
 } from '@tabler/icons-react';
 import Image from 'next/image';
-import { toast } from 'sonner';
 
 import { EmptyImage } from '@/components/data-display/empty-image';
 import Tooltip from '@/components/data-display/tooltip/tooltip';
@@ -23,28 +23,19 @@ export function ItemFlavor({
   description,
   dish,
   dishFlavorsMedias,
-  handleCloseForm,
   setEditItem,
   handleOpenModalImage,
+  handleDeleteItem,
 }: ItemFlavorProps) {
-  const descriptionText =
-    description || dish.data.description || '(sem descrição cadastrada)';
+  const cleanDescription = (html?: string) => {
+    if (!html) return '(sem descrição cadastrada)';
+    return html.replace(/<[^>]*>/g, '');
+  };
 
+  const descriptionText = cleanDescription(
+    description || dish.data.description
+  );
   const priceValue = price || dish.data.price;
-
-  async function handleDeleteItem() {
-    const responseStatus = await deleteDishesFlavorsAPI(id);
-    if (responseStatus === 200) {
-      toast.success('Sabor deletado com sucesso', {
-        position: 'top-right',
-      });
-    } else {
-      toast.error('Falha ao deletar sabor', {
-        position: 'top-right',
-      });
-    }
-    handleCloseForm();
-  }
 
   return (
     <div className='mb-2 flex w-full cursor-grab items-center gap-2'>
@@ -68,10 +59,7 @@ export function ItemFlavor({
             {title}
           </span>
           <p className='text-text-default line-clamp-1 flex items-center gap-1 text-sm'>
-            <span
-              className='line-clamp-1'
-              dangerouslySetInnerHTML={{ __html: descriptionText }}
-            />
+            {descriptionText}
             <Tooltip>
               <Tooltip.Trigger asChild>
                 <button
@@ -200,7 +188,7 @@ export function ItemFlavor({
               <IconTrash
                 size={24}
                 className='text-title-secondary cursor-pointer'
-                onClick={handleDeleteItem}
+                onClick={() => handleDeleteItem(id)}
               />
             </Tooltip.Trigger>
             <Tooltip.Content sideOffset={5}>

@@ -32,7 +32,7 @@ export default async function PageAddItemFlavors({
           Sabores
         </div>
         <p className='text-text-default font-semibold'>
-          Cadastre todas as suas variações de de sabores.
+          Cadastre todas as suas variações de sabores.
         </p>
       </div>
 
