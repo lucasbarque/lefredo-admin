@@ -5,7 +5,6 @@ import { Controller } from 'react-hook-form';
 import { InputLabel } from '../input';
 import { SelectProps } from './select.types';
 
-// Carrega o ReactSelect apenas no cliente, evitando problemas de hidratação
 const ReactSelect = dynamic(() => import('react-select'), { ssr: false });
 
 export function Select({

@@ -12,7 +12,7 @@ export function UploadImages({
   label,
   additionalInfo,
   onSubmit,
-  onRemove, // Recebe o id da imagem a ser deletada
+  onRemove,
   onImageUpdate,
   currentImages = [],
   previewConfig,
@@ -37,7 +37,6 @@ export function UploadImages({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Atualiza o estado local quando currentImages mudar
   useEffect(() => {
     setImages(currentImages);
   }, [currentImages]);
@@ -74,7 +73,6 @@ export function UploadImages({
       setErrorMessage(errorMessages.join('\n'));
       return false;
     }
-    // Marcar as novas imagens com isNew: true, gerar um id temporário e definir isLoading: true para disparar o efeito de upload.
     const newImages: FileUploaded[] = validFiles.map((file) => ({
       id: String(Date.now() + Math.random()),
       file,
@@ -101,7 +99,6 @@ export function UploadImages({
     }
   };
 
-  // Se onRemove for fornecida pelo pai, usa-a; senão, remove localmente.
   const handleRemove = (id: string) => {
     if (onRemove) {
       onRemove(id);
@@ -112,7 +109,6 @@ export function UploadImages({
     }
   };
 
-  // Para editar, encontra o índice a partir do id
   const handleEdit = (id: string) => {
     const index = images.findIndex((item) => item.id === id);
     if (index !== -1) {
@@ -178,7 +174,6 @@ export function UploadImages({
           const newFile = new File([blob], imageObj.file!.name, {
             type: blob.type,
           });
-          // Notifica o componente pai com os dados necessários para a deleção e o upload
           if (onImageUpdate) {
             onImageUpdate(imageObj.id, newFile, { crop, zoom, croppedArea });
           }

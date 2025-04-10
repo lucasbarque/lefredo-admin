@@ -41,21 +41,16 @@ export const extname = (filePath: string) => {
     throw new TypeError('O argumento deve ser uma string');
   }
 
-  // Encontrar a posição do último separador de diretório ('/' ou '\')
   const lastSlash = Math.max(
     filePath.lastIndexOf('/'),
     filePath.lastIndexOf('\\')
   );
 
-  // Obter a última parte do caminho (nome do arquivo)
   const base = lastSlash !== -1 ? filePath.slice(lastSlash + 1) : filePath;
 
-  // Encontrar a última ocorrência do ponto
   const lastDot = base.lastIndexOf('.');
 
-  // Se não houver ponto ou se o ponto estiver na primeira posição, não há extensão
   if (lastDot <= 0) return '';
 
-  // Retornar a extensão (incluindo o ponto)
   return base.slice(lastDot);
 };

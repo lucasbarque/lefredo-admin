@@ -46,12 +46,10 @@ export function DishesList({
     deleteMutation.mutate(dishId);
   }
 
-  // Verifica se há pelo menos um prato ativo após a query atualizar
   useEffect(() => {
     if (!isLoading && dishes && isCategoryActive) {
       const activeCount = dishes.filter((dish: any) => dish.isActive).length;
       if (activeCount === 0) {
-        // Se nenhum prato ativo, desativa a categoria
         toggleSectionAPI(sectionId)
           .then(() => {
             toast.warning('Categoria desativada por não possuir itens ativos', {

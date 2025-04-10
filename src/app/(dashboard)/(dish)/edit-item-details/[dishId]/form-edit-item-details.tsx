@@ -21,7 +21,6 @@ import { FormEditItemDetailsProps } from './edit-items-details.types';
 export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
   const router = useRouter();
 
-  // Determina se o item está destacado ("highlighted")
   const isFlagged = data.dishSpecs.some(
     (spec) => spec.DishSpecs.key === 'highlighted'
   );

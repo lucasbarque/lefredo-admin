@@ -47,7 +47,6 @@ export function FormAddItemAdditionals({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
 
-  // Query para buscar os extras do prato
   const { data: dishExtras = [], refetch } = useQuery({
     queryKey: ['dishExtras', dishId],
     queryFn: async () => {
@@ -57,7 +56,6 @@ export function FormAddItemAdditionals({
     },
   });
 
-  // Mutation para criar um novo item adicional
   const createExtraMutation = useMutation({
     mutationKey: ['createDishesExtra', dishId],
     mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
@@ -83,7 +81,6 @@ export function FormAddItemAdditionals({
     },
   });
 
-  // Mutation para atualizar um item adicional existente
   const updateExtraMutation = useMutation({
     mutationKey: ['updateDishesExtra', dishId, isEditingId],
     mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
@@ -111,7 +108,6 @@ export function FormAddItemAdditionals({
     },
   });
 
-  // Mutation para deletar um item adicional
   const deleteExtraMutation = useMutation({
     mutationKey: ['deleteDishesExtra', dishId],
     mutationFn: (id: string) => deleteDishesExtraAPI(id),
@@ -136,7 +132,6 @@ export function FormAddItemAdditionals({
     },
   });
 
-  // Mutation para atualizar a ordem dos itens adicionais
   const updateOrderMutation = useMutation({
     mutationKey: ['updateDishExtrasOrder', dishId],
     mutationFn: (orderItems: string[]) =>
@@ -155,7 +150,6 @@ export function FormAddItemAdditionals({
     },
   });
 
-  // Função para atualizar a ordem dos itens, usando a mutation
   async function handleUpdateOrder(newOrder: typeof dishExtras) {
     if (newOrder.length < 2) return;
     const orderItems = newOrder.map((item) => item.id);
@@ -212,7 +206,6 @@ export function FormAddItemAdditionals({
             <Reorder.Group
               values={dishExtras}
               onReorder={(newOrder) => {
-                // Chama a função handleUpdateOrder com a nova ordem
                 handleUpdateOrder(newOrder);
               }}
               axis='y'

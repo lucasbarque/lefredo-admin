@@ -23,9 +23,8 @@ export function UploadImagesComponent({
   const [images, setImages] = useState<FileUploaded[]>([]);
 
   async function loadImages() {
-    // Cria placeholders para as imagens já persistidas
     const placeholders: FileUploaded[] = imagesFlavor.map((image) => ({
-      id: image.id, // id vindo da API
+      id: image.id,
       file: null,
       url: '',
       isLoading: true,
@@ -33,7 +32,6 @@ export function UploadImagesComponent({
     }));
     setImages(placeholders);
 
-    // Carrega as imagens em paralelo
     const loadPromises = imagesFlavor.map(async (image, index) => {
       const imageUrl = process.env.NEXT_PUBLIC_BUCKET_URL + image.url;
       try {
@@ -79,7 +77,6 @@ export function UploadImagesComponent({
     });
   }
 
-  // Função de delete atualizada: ativa o loading e desabilita o botão até o processo terminar.
   async function handleDeleteImage(idImage: string) {
     setImages((prev) =>
       prev.map((item) =>
@@ -119,7 +116,6 @@ export function UploadImagesComponent({
     cropData: CropData
   ) {
     if (!id) return null;
-    // Atualiza o estado para exibir loading na imagem que está sendo atualizada
     setImages((prev) =>
       prev.map((image) =>
         image.id === oldImageId ? { ...image, isLoading: true } : image
@@ -127,13 +123,11 @@ export function UploadImagesComponent({
     );
 
     try {
-      // Primeiro, dispara a request para deletar a imagem antiga
       const deleteResponse = await deleteDishesFlavorsImageAPI(oldImageId);
       if (deleteResponse.status !== 200) {
         toast.error('Erro ao deletar a imagem. Tente novamente mais tarde', {
           position: 'top-right',
         });
-        // Remove o loading em caso de erro
         setImages((prev) =>
           prev.map((image) =>
             image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -142,7 +136,6 @@ export function UploadImagesComponent({
         return;
       }
 
-      // Em seguida, dispara a request para realizar o upload da nova imagem
       const uploadResponse = await uploadDishesFlavorsImageAPI(id, {
         // @ts-ignore
         file: newFile,
@@ -152,7 +145,6 @@ export function UploadImagesComponent({
           'Ocorreu um erro ao realizar o upload da nova imagem. Tente novamente mais tarde',
           { position: 'top-right' }
         );
-        // Remove o loading em caso de erro
         setImages((prev) =>
           prev.map((image) =>
             image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -161,13 +153,12 @@ export function UploadImagesComponent({
         return;
       }
 
-      // Atualiza o estado com os dados retornados da API e remove o loading
       setImages((prev) =>
         prev.map((image) =>
           image.id === oldImageId
             ? {
                 ...image,
-                id: uploadResponse.data.id, // novo id retornado pela API
+                id: uploadResponse.data.id,
                 url:
                   process.env.NEXT_PUBLIC_BUCKET_URL + uploadResponse.data.url,
                 isLoading: false,
@@ -182,7 +173,6 @@ export function UploadImagesComponent({
       toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
         position: 'top-right',
       });
-      // Remove o loading em caso de erro
       setImages((prev) =>
         prev.map((image) =>
           image.id === oldImageId ? { ...image, isLoading: false } : image
@@ -197,7 +187,6 @@ export function UploadImagesComponent({
     }
   }, [imagesFlavor]);
 
-  // Efeito para disparar o upload das imagens novas em lote.
   useEffect(() => {
     if (id === null) return;
     const imagesToUpload = images.filter(
@@ -217,7 +206,6 @@ export function UploadImagesComponent({
               'Ocorreu um erro ao realizar o upload da imagem. Tente novamente mais tarde',
               { position: 'top-right' }
             );
-            // Atualiza para não tentar novamente
             setImages((prev) =>
               prev.map((item) =>
                 item.id === img.id ? { ...item, isLoading: false } : item
@@ -245,7 +233,6 @@ export function UploadImagesComponent({
         }
       })
     ).then((results) => {
-      // Remove as imagens que falharam no upload e atualiza as que tiveram sucesso.
       setImages((prev) =>
         prev.reduce<FileUploaded[]>((acc, item) => {
           if (item.isNew) {
@@ -255,13 +242,12 @@ export function UploadImagesComponent({
             if (uploaded) {
               acc.push({
                 ...item,
-                id: uploaded.newId, // atualiza o id com o valor retornado pela API
+                id: uploaded.newId,
                 url: uploaded.newUrl,
                 isLoading: false,
                 isNew: false,
               });
             }
-            // Se não houve sucesso no upload, a imagem é removida (não adicionada ao array)
           } else {
             acc.push(item);
           }

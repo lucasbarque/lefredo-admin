@@ -58,7 +58,6 @@ export function UploadSingleImage({
     setZoom(1);
   };
 
-  // Função para abrir o modal de crop utilizando a imagem atual
   const handleEditImage = () => {
     if (currentImage) {
       setFileUrl(currentImage.url);

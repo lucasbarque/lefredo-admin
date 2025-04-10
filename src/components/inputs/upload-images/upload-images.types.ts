@@ -7,12 +7,12 @@ export interface CropData {
 }
 
 export interface FileUploaded {
-  id: string; // Identificador único da imagem, sempre vindo da API após upload
-  file: File | null; // Permite null enquanto a imagem estiver carregando
+  id: string;
+  file: File | null;
   url: string;
   cropData?: CropData;
-  isLoading?: boolean; // true enquanto o upload está em andamento
-  isNew?: boolean; // true para imagens recém-adicionadas via input
+  isLoading?: boolean;
+  isNew?: boolean;
 }
 
 export interface UploadImageProps {
@@ -21,7 +21,6 @@ export interface UploadImageProps {
   additionalInfo?: string;
   onSubmit?: (files: FileUploaded[]) => void;
   onRemove?: (id: string) => void;
-  // Nova prop para notificar o pai sobre a atualização de uma imagem
   onImageUpdate?: (
     oldImageId: string,
     newFile: File,

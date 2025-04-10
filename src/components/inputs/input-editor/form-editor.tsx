@@ -49,17 +49,14 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
           protocols: ['http', 'https'],
           isAllowedUri: (url, ctx) => {
             try {
-              // construct URL
               const parsedUrl = url.includes(':')
                 ? new URL(url)
                 : new URL(`${ctx.defaultProtocol}://${url}`);
 
-              // use default validation
               if (!ctx.defaultValidate(parsedUrl.href)) {
                 return false;
               }
 
-              // disallowed protocols
               const disallowedProtocols = ['ftp', 'file', 'mailto'];
               const protocol = parsedUrl.protocol.replace(':', '');
 
@@ -67,7 +64,6 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
                 return false;
               }
 
-              // only allow protocols specified in ctx.protocols
               const allowedProtocols = ctx.protocols.map((p) =>
                 typeof p === 'string' ? p : p.scheme
               );
@@ -76,7 +72,6 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
                 return false;
               }
 
-              // disallowed domains
               const disallowedDomains = [
                 'example-phishing.com',
                 'malicious-site.net',
@@ -87,7 +82,6 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
                 return false;
               }
 
-              // all checks have passed
               return true;
             } catch {
               return false;
@@ -95,12 +89,10 @@ export const FormEditor = forwardRef<FormEditorRefProps, FormEditorProps>(
           },
           shouldAutoLink: (url) => {
             try {
-              // construct URL
               const parsedUrl = url.includes(':')
                 ? new URL(url)
                 : new URL(`https://${url}`);
 
-              // only auto-link if the domain is not in the disallowed list
               const disallowedDomains = [
                 'example-no-autolink.com',
                 'another-no-autolink.com',

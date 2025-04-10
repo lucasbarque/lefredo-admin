@@ -56,7 +56,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     string | null
   >(null);
 
-  // Busca os sabores do prato
   const { data: dishFlavors = [], refetch } = useQuery({
     queryKey: ['dishFlavors', dishId],
     queryFn: async () => {
@@ -66,13 +65,11 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     },
   });
 
-  // Busca as informações do prato
   const { data: dish } = useQuery({
     queryKey: ['dish', dishId],
     queryFn: async () => await getDishById(dishId),
   });
 
-  // Mutation para criação de sabor
   const createFlavorMutation = useMutation({
     mutationKey: ['createDishFlavor', dishId],
     mutationFn: async (data: z.infer<typeof createFlavorSchema>) =>
@@ -93,7 +90,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     },
   });
 
-  // Mutation para atualização de sabor
   const updateFlavorMutation = useMutation({
     mutationKey: ['updateDishFlavor', dishId, isEditingId],
     mutationFn: async (data: z.infer<typeof createFlavorSchema>) =>
@@ -119,7 +115,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     },
   });
 
-  // Mutation para deletar um flavor
   const deleteFlavorMutation = useMutation({
     mutationKey: ['deleteDishFlavor', dishId],
     mutationFn: (id: string) => deleteDishesFlavorsAPI(id),
@@ -144,7 +139,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     },
   });
 
-  // Mutation para atualização da ordem
   const updateOrderMutation = useMutation({
     mutationKey: ['updateDishFlavorOrder', dishId],
     mutationFn: async (orderItems: string[]) =>

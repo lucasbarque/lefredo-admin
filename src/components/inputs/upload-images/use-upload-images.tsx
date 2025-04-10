@@ -13,12 +13,11 @@ export function useUploadImages({
   medias,
   fnDeleteImages,
   fnUploadImages,
-  keyPrefix, // chave dinâmica, por exemplo "dishImages"
+  keyPrefix,
 }: UseUploadImagesProps) {
   const queryClient = useQueryClient();
   const [images, setImages] = useState<FileUploaded[]>([]);
 
-  // Carrega as imagens já existentes a partir de 'medias'
   async function loadImages() {
     const placeholders: FileUploaded[] = medias.map((image) => ({
       id: image.id,
@@ -74,7 +73,6 @@ export function useUploadImages({
     });
   }
 
-  // Mutation para deleção de imagem
   const deleteMutation = useMutation({
     mutationKey: [keyPrefix, 'deleteImage', parentId],
     mutationFn: (idImage: string) => fnDeleteImages(idImage),
@@ -93,7 +91,6 @@ export function useUploadImages({
     },
   });
 
-  // Mutation para upload de imagem
   const uploadMutation = useMutation({
     mutationKey: [keyPrefix, 'uploadImage', parentId],
     mutationFn: (file: File) => fnUploadImages(parentId, file),
@@ -104,7 +101,6 @@ export function useUploadImages({
           'Ocorreu um erro ao realizar o upload da imagem. Tente novamente mais tarde',
           { position: 'top-right' }
         );
-        // Marca a imagem como não nova para evitar reenvio
         setImages((prev) =>
           prev.map((item) =>
             item.isNew && item.file === file
@@ -139,7 +135,6 @@ export function useUploadImages({
         'Erro ao fazer upload da imagem. Tente novamente mais tarde',
         { position: 'top-right' }
       );
-      // Marca a imagem como não nova para evitar reenvio contínuo
       setImages((prev) =>
         prev.map((item) =>
           item.isNew && item.file === file
@@ -150,7 +145,6 @@ export function useUploadImages({
     },
   });
 
-  // Função para deletar uma imagem utilizando a mutation
   function handleDeleteImage(idImage: string) {
     setImages((prev) =>
       prev.map((item) =>
@@ -160,7 +154,6 @@ export function useUploadImages({
     deleteMutation.mutate(idImage);
   }
 
-  // Função para atualizar uma imagem (exclui a antiga e envia a nova)
   async function handleImageUpdate(
     oldImageId: string,
     newFile: File,
@@ -196,7 +189,6 @@ export function useUploadImages({
       );
       return;
     }
-    // Envia o novo arquivo
     uploadMutation.mutate(newFile, {
       onSuccess: (response) => {
         //@ts-ignore
@@ -243,14 +235,12 @@ export function useUploadImages({
     });
   }
 
-  // Carrega as imagens assim que 'medias' muda
   useEffect(() => {
     if (medias?.length > 0) {
       loadImages();
     }
   }, [medias]);
 
-  // Efeito para disparar upload automático para imagens novas
   useEffect(() => {
     if (!parentId) return;
     const imagesToUpload = images.filter(

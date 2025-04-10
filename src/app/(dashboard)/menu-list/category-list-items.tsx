@@ -42,7 +42,6 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
         `Categoria foi ${isCategoryActive ? 'desativada' : 'ativada'} com sucesso`,
         { position: 'top-right' }
       );
-      // Atualiza o estado invertendo o valor atual
       setIsCategoryActive((prev) => !prev);
       queryClient.invalidateQueries({ queryKey: ['sections'] });
     },
@@ -85,7 +84,6 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
     deleteMutation.mutate();
   };
 
-  // Callback para atualizar o switch (passado para o DishesList)
   const handleCategoryDeactivated = () => {
     setIsCategoryActive(false);
   };

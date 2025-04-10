@@ -25,7 +25,6 @@ export function ClassificationItem({
     mutationFn: () => toggleDishesSpecsAPI(dishId, { key: hashKey }),
     onSuccess: (response) => {
       if (response.status === 200) {
-        // Supondo que a API retorne em response.data.newStateIsActive o novo estado
         if (response.data.newStateIsActive !== isItemActive) {
           setIsItemActive(response.data.newStateIsActive);
           toast.success('Classificação do item atualizada com sucesso', {

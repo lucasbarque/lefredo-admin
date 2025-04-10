@@ -41,11 +41,9 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     },
   });
 
-  // Status for the image and to identify if it is new (triggered by UploadImage)
   const [imageData, setImageData] = useState<FileUploaded>();
   const [isNewImage, setIsNewImage] = useState(false);
 
-  // Mutation to update restaurant data
   const updateMutation = useMutation({
     mutationFn: (data: z.infer<typeof updateStoreSchema>) =>
       updateRestaurantData({
@@ -70,7 +68,6 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     updateMutation.mutate(data);
   };
 
-  // Function to load the current image (if it exists)
   const loadImage = useCallback(async () => {
     if (!restaurantData.logo) return;
     try {
@@ -84,7 +81,6 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     }
   }, [restaurantData.logo]);
 
-  // Mutation to upload logo
   const uploadMutation = useMutation({
     mutationFn: (file: File) =>
       //@ts-ignore
@@ -92,7 +88,6 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     onSuccess: () => {
       toast.success('Logo atualizada com sucesso', { position: 'top-right' });
       queryClient.invalidateQueries({ queryKey: ['restaurantData'] });
-      // After successful upload, we consider the image updated
       setIsNewImage(false);
     },
     onError: async () => {
@@ -104,7 +99,6 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     },
   });
 
-  // Mutation to delete the logo
   const deleteMutation = useMutation({
     mutationFn: () => deleteRestaurantLogo(restaurantData.id),
     onSuccess: () => {
@@ -118,30 +112,24 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     },
   });
 
-  // Function to start uploading – called when we identify that the image is new
   const uploadImage = useCallback(() => {
     if (!imageData?.file) return;
     uploadMutation.mutate(imageData.file);
   }, [imageData, uploadMutation]);
 
-  // Function to delete the image (triggered by UploadImage via onDelete)
   const deleteImageData = useCallback(() => {
     deleteMutation.mutate();
   }, [deleteMutation]);
-
-  // Load the image when mounting the component
   useEffect(() => {
     loadImage();
   }, [loadImage]);
 
-  // When the image changes and is marked as new, it triggers the upload only once
   useEffect(() => {
     if (isNewImage && imageData) {
       uploadImage();
     }
   }, [isNewImage, imageData]);
 
-  // Handler for UploadImage: updates the image and marks it as new
   const handleImageChange = useCallback((newImageData: FileUploaded) => {
     setImageData(newImageData);
     setIsNewImage(true);
