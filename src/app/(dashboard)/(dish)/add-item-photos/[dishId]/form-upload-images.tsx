@@ -17,7 +17,7 @@ export function FormUploadImages({
       medias: dishMedias,
       fnDeleteImages: deleteDishImageAPI,
       fnUploadImages: uploadDishImageAPI,
-      keyPrefix: 'edit-dishes',
+      updateQueryFn: () => {},
     });
 
   return (

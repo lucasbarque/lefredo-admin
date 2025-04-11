@@ -19,7 +19,6 @@ export interface FormAddItemFlavorsProps {
 export interface ItemFlavorProps extends DishFlavorsDTO {
   dish: getDishByIdResponse;
   setEditItem: (id: string) => void;
-  handleOpenModalImage: (id: string) => void;
   handleDeleteItem: (id: string) => void;
 }
 
@@ -32,4 +31,10 @@ export interface RadioSelectCreateFlavorProps {
 export interface UploadImagesComponentProps {
   id: string | null;
   imagesFlavor: DishFlavorsMediaDTO[] | [];
+}
+
+export interface FlavorUploadImagesProps {
+  id: string;
+  dishId: string;
+  flavorImages: DishFlavorsMediaDTO[];
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
 import { CropData, FileUploaded } from './upload-images.types';
@@ -13,9 +13,9 @@ export function useUploadImages({
   medias,
   fnDeleteImages,
   fnUploadImages,
-  keyPrefix,
+  updateQueryFn,
 }: UseUploadImagesProps) {
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const [images, setImages] = useState<FileUploaded[]>([]);
 
   async function loadImages() {
@@ -74,12 +74,13 @@ export function useUploadImages({
   }
 
   const deleteMutation = useMutation({
-    mutationKey: [keyPrefix, 'deleteImage', parentId],
+    // mutationKey: [keyPrefix, 'deleteImage', parentId],
     mutationFn: (idImage: string) => fnDeleteImages(idImage),
     onSuccess: (_data, idImage) => {
       toast.success('Imagem deletada com sucesso');
       setImages((prev) => prev.filter((item) => item.id !== idImage));
-      queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+      // queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+      updateQueryFn();
     },
     onError: () => {
       toast.error('Falha ao deletar imagem');
@@ -92,7 +93,7 @@ export function useUploadImages({
   });
 
   const uploadMutation = useMutation({
-    mutationKey: [keyPrefix, 'uploadImage', parentId],
+    // mutationKey: [keyPrefix, 'uploadImage', parentId],
     mutationFn: (file: File) => fnUploadImages(parentId, file),
     onSuccess: (response, file) => {
       //@ts-ignore
@@ -126,7 +127,8 @@ export function useUploadImages({
           return item;
         })
       );
-      queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+      // queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
+      updateQueryFn();
       toast.success('Imagem enviada com sucesso');
     },
     onError: (error, file) => {

@@ -132,8 +132,6 @@ export async function uploadDishImageAPI(
 ) {
   const headers = await getCookiesHeader();
 
-  console.log(file);
-
   const response = await uploadDishImage(
     id,
     //@ts-ignore
@@ -142,8 +140,6 @@ export async function uploadDishImageAPI(
       headers,
     }
   );
-
-  console.log(response);
 
   return response;
 }

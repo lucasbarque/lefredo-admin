@@ -9,5 +9,5 @@ export interface UseUploadImagesProps {
   medias: Media[];
   fnDeleteImages: any;
   fnUploadImages: any;
-  keyPrefix: string;
+  updateQueryFn: () => void;
 }

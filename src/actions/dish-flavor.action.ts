@@ -67,9 +67,14 @@ export async function uploadDishesFlavorsImageAPI(
 ) {
   const headers = await getCookiesHeader();
 
-  const response = await uploadDishFlavorImage(id, file, {
-    headers,
-  });
+  const response = await uploadDishFlavorImage(
+    id,
+    //@ts-ignore
+    { file },
+    {
+      headers,
+    }
+  );
 
   return response;
 }

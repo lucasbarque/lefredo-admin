@@ -26,7 +26,6 @@ import { FormAddItemFlavorsProps } from './add-item-flavors.types';
 import { Form } from './form';
 import { ItemFlavor } from './item-flavor';
 import { RadioSelectCreateFlavor } from './radio-select-create-flavor';
-import { UploadImagesComponent } from './upload-images-component';
 
 export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
   const queryClient = useQueryClient();
@@ -51,16 +50,17 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
   const [isEditingId, setIsEditingId] = useState<string | null>(null);
 
   const [createVariation, setCreateVariation] = useState(false);
-  const [isModalUploadImageOpen, setIsModalUploadImageOpen] = useState(false);
-  const [currentFlavorImageId, setCurrentFlavorImageId] = useState<
-    string | null
-  >(null);
 
   const { data: dishFlavors = [], refetch } = useQuery({
     queryKey: ['dishFlavors', dishId],
     queryFn: async () => {
       const response = await getDishFlavorsAPI(dishId);
-      if (response.status === 200) return response.data;
+      if (response.status === 200) {
+        if (response.data.length > 0) {
+          setCreateVariation(true);
+        }
+        return response.data;
+      }
       throw new Error('Erro ao buscar sabores');
     },
   });
@@ -213,11 +213,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
     }
   }
 
-  function handleOpenModalImage(flavorId: string) {
-    setIsModalUploadImageOpen(true);
-    setCurrentFlavorImageId(flavorId);
-  }
-
   function handleDeleteItem(id: string) {
     deleteFlavorMutation.mutate(id);
   }
@@ -253,7 +248,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
                       handleDeleteItem={handleDeleteItem}
                       dishFlavorsMedias={item.dishFlavorsMedias}
                       setEditItem={setEditItem}
-                      handleOpenModalImage={handleOpenModalImage}
                     />
                   </Reorder.Item>
                 ))}
@@ -292,32 +286,6 @@ export function FormAddItemFlavors({ dishId }: FormAddItemFlavorsProps) {
               </Modal.Wrapper>
             </form>
           </Modal>
-
-          {dishFlavors && dishFlavors.length > 0 && (
-            <Modal
-              open={isModalUploadImageOpen}
-              onOpenChange={setIsModalUploadImageOpen}
-            >
-              <Modal.Wrapper
-                title='Atualizar imagens'
-                size='lg'
-                hideActionButton
-              >
-                <UploadImagesComponent
-                  id={
-                    dishFlavors.find(
-                      (flavor: any) => flavor.id === currentFlavorImageId
-                    )?.id || null
-                  }
-                  imagesFlavor={
-                    dishFlavors.find(
-                      (flavor: any) => flavor.id === currentFlavorImageId
-                    )?.dishFlavorsMedias || []
-                  }
-                />
-              </Modal.Wrapper>
-            </Modal>
-          )}
         </>
       )}
     </div>
