@@ -3,7 +3,12 @@
 import { getRestaurantIsFirstCategoryAPI } from '@/actions/restaurant.action';
 import { getUsersByRestaurantIdAPI } from '@/actions/user.action';
 import { useClerk } from '@clerk/nextjs';
-import { IconBook, IconBuildingStore, IconLogout2 } from '@tabler/icons-react';
+import {
+  IconBook,
+  IconBuildingStore,
+  IconHome,
+  IconLogout2,
+} from '@tabler/icons-react';
 import { usePathname, useRouter } from 'next/navigation';
 
 import { SidebarItem } from './sidebar-item';
@@ -33,7 +38,14 @@ export function Sidebar({ children }: SidebarProps) {
     <div className='flex'>
       <div className='h-[calc(100vh-80px)] w-full max-w-[300px] border-r border-gray-200 px-6 py-8'>
         <SidebarItem
-          isActive={pathname !== '/my-store'}
+          isActive={pathname === '/welcome'}
+          title='Dashboard'
+          icon={<IconHome size={24} />}
+          onClick={() => router.push('/welcome')}
+        />
+
+        <SidebarItem
+          isActive={!['/my-store', '/welcome'].includes(pathname)}
           title='Cardápio'
           icon={<IconBook size={24} />}
           onClick={handleClickMenu}
