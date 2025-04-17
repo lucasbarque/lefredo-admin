@@ -6,8 +6,9 @@
  * OpenAPI spec version: 1.0
  */
 import { customFetch } from '../../custom-fetch';
-export type GetUserByRestaurantIdRole = typeof GetUserByRestaurantIdRole[keyof typeof GetUserByRestaurantIdRole];
 
+export type GetUserByRestaurantIdRole =
+  (typeof GetUserByRestaurantIdRole)[keyof typeof GetUserByRestaurantIdRole];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetUserByRestaurantIdRole = {
@@ -29,9 +30,13 @@ export interface CreateUserDTO {
   name: string;
 }
 
-export interface CreateMenuDTO { [key: string]: unknown }
+export interface CreateMenuDTO {
+  [key: string]: unknown;
+}
 
-export interface UpdateMenuDTO { [key: string]: unknown }
+export interface UpdateMenuDTO {
+  [key: string]: unknown;
+}
 
 export interface SectionDTO {
   id: string;
@@ -68,8 +73,7 @@ export interface DishMediasDTO {
   url: string;
 }
 
-export type DishSpecKey = typeof DishSpecKey[keyof typeof DishSpecKey];
-
+export type DishSpecKey = (typeof DishSpecKey)[keyof typeof DishSpecKey];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const DishSpecKey = {
@@ -183,8 +187,8 @@ export interface RequestUpdateDishExtraDTO {
   price: string;
 }
 
-export type RequestDishSpecsToggleDTOKey = typeof RequestDishSpecsToggleDTOKey[keyof typeof RequestDishSpecsToggleDTOKey];
-
+export type RequestDishSpecsToggleDTOKey =
+  (typeof RequestDishSpecsToggleDTOKey)[keyof typeof RequestDishSpecsToggleDTOKey];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RequestDishSpecsToggleDTOKey = {
@@ -203,8 +207,8 @@ export interface RequestDishSpecsToggleDTO {
   key: RequestDishSpecsToggleDTOKey;
 }
 
-export type ResponseDishSpecsToggleDTOKey = typeof ResponseDishSpecsToggleDTOKey[keyof typeof ResponseDishSpecsToggleDTOKey];
-
+export type ResponseDishSpecsToggleDTOKey =
+  (typeof ResponseDishSpecsToggleDTOKey)[keyof typeof ResponseDishSpecsToggleDTOKey];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ResponseDishSpecsToggleDTOKey = {
@@ -293,7 +297,9 @@ export interface GetRestaurantIsFirstCategoryDTO {
   isFirstCategory: boolean;
 }
 
-export interface CreateResturantDTO { [key: string]: unknown }
+export interface CreateResturantDTO {
+  [key: string]: unknown;
+}
 
 export interface ResponseGetSectionByIdDTO {
   id: string;
@@ -318,27 +324,25 @@ export interface RequestUpdateSectionDTO {
 }
 
 export type MenusControllerGetByRestaurantParams = {
-restaurantId: string;
+  restaurantId: string;
 };
 
 export type GetDishesBySectionIdParams = {
-sectionId: string;
+  sectionId: string;
 };
 
 export type RestaurantsControllerListParams = {
-menuId: string;
-restaurantId: string;
+  menuId: string;
+  restaurantId: string;
 };
 
 export type GetSectionsParams = {
-menuId: string;
+  menuId: string;
 };
 
 export type GetAllSectionsParams = {
-menuId: string;
+  menuId: string;
 };
-
-
 
 /**
  * @summary Get user by restaurantId
@@ -347,26 +351,24 @@ export type getUserByRestaurantIdResponse = {
   data: GetUserByRestaurantId;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetUserByRestaurantIdUrl = (restaurantId: string,) => {
+export const getGetUserByRestaurantIdUrl = (restaurantId: string) => {
+  return `/users/restaurant/${restaurantId}`;
+};
 
-
-  return `/users/restaurant/${restaurantId}`
-}
-
-export const getUserByRestaurantId = async (restaurantId: string, options?: RequestInit): Promise<getUserByRestaurantIdResponse> => {
-  
-  return customFetch<getUserByRestaurantIdResponse>(getGetUserByRestaurantIdUrl(restaurantId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getUserByRestaurantId = async (
+  restaurantId: string,
+  options?: RequestInit
+): Promise<getUserByRestaurantIdResponse> => {
+  return customFetch<getUserByRestaurantIdResponse>(
+    getGetUserByRestaurantIdUrl(restaurantId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Change onboarding status
@@ -375,26 +377,24 @@ export type changeOnboardingStatusResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getChangeOnboardingStatusUrl = (id: string,) => {
+export const getChangeOnboardingStatusUrl = (id: string) => {
+  return `/users/change-onboarding-status/${id}`;
+};
 
-
-  return `/users/change-onboarding-status/${id}`
-}
-
-export const changeOnboardingStatus = async (id: string, options?: RequestInit): Promise<changeOnboardingStatusResponse> => {
-  
-  return customFetch<changeOnboardingStatusResponse>(getChangeOnboardingStatusUrl(id),
-  {      
-    ...options,
-    method: 'PATCH'
-    
-    
-  }
-);}
-
-
+export const changeOnboardingStatus = async (
+  id: string,
+  options?: RequestInit
+): Promise<changeOnboardingStatusResponse> => {
+  return customFetch<changeOnboardingStatusResponse>(
+    getChangeOnboardingStatusUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+    }
+  );
+};
 
 /**
  * @summary Get all users
@@ -403,26 +403,20 @@ export type getAllUsersResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
 export const getGetAllUsersUrl = () => {
+  return `/users`;
+};
 
-
-  return `/users`
-}
-
-export const getAllUsers = async ( options?: RequestInit): Promise<getAllUsersResponse> => {
-  
-  return customFetch<getAllUsersResponse>(getGetAllUsersUrl(),
-  {      
+export const getAllUsers = async (
+  options?: RequestInit
+): Promise<getAllUsersResponse> => {
+  return customFetch<getAllUsersResponse>(getGetAllUsersUrl(), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Create user
@@ -431,137 +425,132 @@ export type createUserResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
 export const getCreateUserUrl = () => {
+  return `/users`;
+};
 
-
-  return `/users`
-}
-
-export const createUser = async (createUserDTO: CreateUserDTO, options?: RequestInit): Promise<createUserResponse> => {
-  
-  return customFetch<createUserResponse>(getCreateUserUrl(),
-  {      
+export const createUser = async (
+  createUserDTO: CreateUserDTO,
+  options?: RequestInit
+): Promise<createUserResponse> => {
+  return customFetch<createUserResponse>(getCreateUserUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createUserDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(createUserDTO),
+  });
+};
 
 export type menusControllerGetByRestaurantResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getMenusControllerGetByRestaurantUrl = (params: MenusControllerGetByRestaurantParams,) => {
+export const getMenusControllerGetByRestaurantUrl = (
+  params: MenusControllerGetByRestaurantParams
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
-  return normalizedParams.size ? `/menus?${normalizedParams.toString()}` : `/menus`
-}
+  return normalizedParams.size
+    ? `/menus?${normalizedParams.toString()}`
+    : `/menus`;
+};
 
-export const menusControllerGetByRestaurant = async (params: MenusControllerGetByRestaurantParams, options?: RequestInit): Promise<menusControllerGetByRestaurantResponse> => {
-  
-  return customFetch<menusControllerGetByRestaurantResponse>(getMenusControllerGetByRestaurantUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const menusControllerGetByRestaurant = async (
+  params: MenusControllerGetByRestaurantParams,
+  options?: RequestInit
+): Promise<menusControllerGetByRestaurantResponse> => {
+  return customFetch<menusControllerGetByRestaurantResponse>(
+    getMenusControllerGetByRestaurantUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 export type menusControllerCreateResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
 export const getMenusControllerCreateUrl = () => {
+  return `/menus`;
+};
 
-
-  return `/menus`
-}
-
-export const menusControllerCreate = async (createMenuDTO: CreateMenuDTO, options?: RequestInit): Promise<menusControllerCreateResponse> => {
-  
-  return customFetch<menusControllerCreateResponse>(getMenusControllerCreateUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createMenuDTO,)
-  }
-);}
-
-
+export const menusControllerCreate = async (
+  createMenuDTO: CreateMenuDTO,
+  options?: RequestInit
+): Promise<menusControllerCreateResponse> => {
+  return customFetch<menusControllerCreateResponse>(
+    getMenusControllerCreateUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(createMenuDTO),
+    }
+  );
+};
 
 export type menusControllerGetByIdResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getMenusControllerGetByIdUrl = (id: string,) => {
+export const getMenusControllerGetByIdUrl = (id: string) => {
+  return `/menus/${id}`;
+};
 
-
-  return `/menus/${id}`
-}
-
-export const menusControllerGetById = async (id: string, options?: RequestInit): Promise<menusControllerGetByIdResponse> => {
-  
-  return customFetch<menusControllerGetByIdResponse>(getMenusControllerGetByIdUrl(id),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const menusControllerGetById = async (
+  id: string,
+  options?: RequestInit
+): Promise<menusControllerGetByIdResponse> => {
+  return customFetch<menusControllerGetByIdResponse>(
+    getMenusControllerGetByIdUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 export type menusControllerUpdateResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getMenusControllerUpdateUrl = (id: string,) => {
+export const getMenusControllerUpdateUrl = (id: string) => {
+  return `/menus/${id}`;
+};
 
-
-  return `/menus/${id}`
-}
-
-export const menusControllerUpdate = async (id: string,
-    updateMenuDTO: UpdateMenuDTO, options?: RequestInit): Promise<menusControllerUpdateResponse> => {
-  
-  return customFetch<menusControllerUpdateResponse>(getMenusControllerUpdateUrl(id),
-  {      
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      updateMenuDTO,)
-  }
-);}
-
-
+export const menusControllerUpdate = async (
+  id: string,
+  updateMenuDTO: UpdateMenuDTO,
+  options?: RequestInit
+): Promise<menusControllerUpdateResponse> => {
+  return customFetch<menusControllerUpdateResponse>(
+    getMenusControllerUpdateUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(updateMenuDTO),
+    }
+  );
+};
 
 /**
  * @summary Get Dish By Id
@@ -570,26 +559,21 @@ export type getDishByIdResponse = {
   data: DishDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishByIdUrl = (id: string,) => {
+export const getGetDishByIdUrl = (id: string) => {
+  return `/dishes/${id}`;
+};
 
-
-  return `/dishes/${id}`
-}
-
-export const getDishById = async (id: string, options?: RequestInit): Promise<getDishByIdResponse> => {
-  
-  return customFetch<getDishByIdResponse>(getGetDishByIdUrl(id),
-  {      
+export const getDishById = async (
+  id: string,
+  options?: RequestInit
+): Promise<getDishByIdResponse> => {
+  return customFetch<getDishByIdResponse>(getGetDishByIdUrl(id), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Update Dish
@@ -598,28 +582,24 @@ export type updateDishResponse = {
   data: ResponseCreateDishDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateDishUrl = (id: string,) => {
+export const getUpdateDishUrl = (id: string) => {
+  return `/dishes/${id}`;
+};
 
-
-  return `/dishes/${id}`
-}
-
-export const updateDish = async (id: string,
-    requestUpdateDishDTO: RequestUpdateDishDTO, options?: RequestInit): Promise<updateDishResponse> => {
-  
-  return customFetch<updateDishResponse>(getUpdateDishUrl(id),
-  {      
+export const updateDish = async (
+  id: string,
+  requestUpdateDishDTO: RequestUpdateDishDTO,
+  options?: RequestInit
+): Promise<updateDishResponse> => {
+  return customFetch<updateDishResponse>(getUpdateDishUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateDishDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestUpdateDishDTO),
+  });
+};
 
 /**
  * @summary Delete dish
@@ -628,26 +608,21 @@ export type deleteDishResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteDishUrl = (id: string,) => {
+export const getDeleteDishUrl = (id: string) => {
+  return `/dishes/${id}`;
+};
 
-
-  return `/dishes/${id}`
-}
-
-export const deleteDish = async (id: string, options?: RequestInit): Promise<deleteDishResponse> => {
-  
-  return customFetch<deleteDishResponse>(getDeleteDishUrl(id),
-  {      
+export const deleteDish = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteDishResponse> => {
+  return customFetch<deleteDishResponse>(getDeleteDishUrl(id), {
     ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+    method: 'DELETE',
+  });
+};
 
 /**
  * @summary Get Dishes
@@ -656,26 +631,21 @@ export type getDishesBySlugResponse = {
   data: ResponseGetDishesDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishesBySlugUrl = (slug: string,) => {
+export const getGetDishesBySlugUrl = (slug: string) => {
+  return `/dishes/slug/${slug}`;
+};
 
-
-  return `/dishes/slug/${slug}`
-}
-
-export const getDishesBySlug = async (slug: string, options?: RequestInit): Promise<getDishesBySlugResponse> => {
-  
-  return customFetch<getDishesBySlugResponse>(getGetDishesBySlugUrl(slug),
-  {      
+export const getDishesBySlug = async (
+  slug: string,
+  options?: RequestInit
+): Promise<getDishesBySlugResponse> => {
+  return customFetch<getDishesBySlugResponse>(getGetDishesBySlugUrl(slug), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Get Dishes
@@ -684,33 +654,36 @@ export type getDishesBySectionIdResponse = {
   data: ResponseGetDishesDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishesBySectionIdUrl = (params: GetDishesBySectionIdParams,) => {
+export const getGetDishesBySectionIdUrl = (
+  params: GetDishesBySectionIdParams
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
-  return normalizedParams.size ? `/dishes?${normalizedParams.toString()}` : `/dishes`
-}
+  return normalizedParams.size
+    ? `/dishes?${normalizedParams.toString()}`
+    : `/dishes`;
+};
 
-export const getDishesBySectionId = async (params: GetDishesBySectionIdParams, options?: RequestInit): Promise<getDishesBySectionIdResponse> => {
-  
-  return customFetch<getDishesBySectionIdResponse>(getGetDishesBySectionIdUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getDishesBySectionId = async (
+  params: GetDishesBySectionIdParams,
+  options?: RequestInit
+): Promise<getDishesBySectionIdResponse> => {
+  return customFetch<getDishesBySectionIdResponse>(
+    getGetDishesBySectionIdUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Create Dish
@@ -719,27 +692,23 @@ export type createDishResponse = {
   data: ResponseCreateDishDTO;
   status: number;
   headers: Headers;
-}
+};
 
 export const getCreateDishUrl = () => {
+  return `/dishes`;
+};
 
-
-  return `/dishes`
-}
-
-export const createDish = async (requestCreateDishDTO: RequestCreateDishDTO, options?: RequestInit): Promise<createDishResponse> => {
-  
-  return customFetch<createDishResponse>(getCreateDishUrl(),
-  {      
+export const createDish = async (
+  requestCreateDishDTO: RequestCreateDishDTO,
+  options?: RequestInit
+): Promise<createDishResponse> => {
+  return customFetch<createDishResponse>(getCreateDishUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestCreateDishDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestCreateDishDTO),
+  });
+};
 
 /**
  * @summary Toggle Section
@@ -748,26 +717,21 @@ export type toggleDishResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getToggleDishUrl = (id: string,) => {
+export const getToggleDishUrl = (id: string) => {
+  return `/dishes/toggle/${id}`;
+};
 
-
-  return `/dishes/toggle/${id}`
-}
-
-export const toggleDish = async (id: string, options?: RequestInit): Promise<toggleDishResponse> => {
-  
-  return customFetch<toggleDishResponse>(getToggleDishUrl(id),
-  {      
+export const toggleDish = async (
+  id: string,
+  options?: RequestInit
+): Promise<toggleDishResponse> => {
+  return customFetch<toggleDishResponse>(getToggleDishUrl(id), {
     ...options,
-    method: 'PATCH'
-    
-    
-  }
-);}
-
-
+    method: 'PATCH',
+  });
+};
 
 /**
  * @summary Change Price
@@ -776,28 +740,24 @@ export type changePriceResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getChangePriceUrl = (id: string,) => {
+export const getChangePriceUrl = (id: string) => {
+  return `/dishes/change-price/${id}`;
+};
 
-
-  return `/dishes/change-price/${id}`
-}
-
-export const changePrice = async (id: string,
-    requestChangePriceDTO: RequestChangePriceDTO, options?: RequestInit): Promise<changePriceResponse> => {
-  
-  return customFetch<changePriceResponse>(getChangePriceUrl(id),
-  {      
+export const changePrice = async (
+  id: string,
+  requestChangePriceDTO: RequestChangePriceDTO,
+  options?: RequestInit
+): Promise<changePriceResponse> => {
+  return customFetch<changePriceResponse>(getChangePriceUrl(id), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestChangePriceDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestChangePriceDTO),
+  });
+};
 
 /**
  * @summary Update Dish Extras Order
@@ -806,28 +766,27 @@ export type updateDishExtrasOrderResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateDishExtrasOrderUrl = (id: string,) => {
+export const getUpdateDishExtrasOrderUrl = (id: string) => {
+  return `/dishes/update-dish-extras-order/${id}`;
+};
 
-
-  return `/dishes/update-dish-extras-order/${id}`
-}
-
-export const updateDishExtrasOrder = async (id: string,
-    requestUpdateDishExtrasOrderDTO: RequestUpdateDishExtrasOrderDTO, options?: RequestInit): Promise<updateDishExtrasOrderResponse> => {
-  
-  return customFetch<updateDishExtrasOrderResponse>(getUpdateDishExtrasOrderUrl(id),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateDishExtrasOrderDTO,)
-  }
-);}
-
-
+export const updateDishExtrasOrder = async (
+  id: string,
+  requestUpdateDishExtrasOrderDTO: RequestUpdateDishExtrasOrderDTO,
+  options?: RequestInit
+): Promise<updateDishExtrasOrderResponse> => {
+  return customFetch<updateDishExtrasOrderResponse>(
+    getUpdateDishExtrasOrderUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(requestUpdateDishExtrasOrderDTO),
+    }
+  );
+};
 
 /**
  * @summary Update Dish Flavors Order
@@ -836,28 +795,27 @@ export type updateDishFlavorsOrderResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateDishFlavorsOrderUrl = (id: string,) => {
+export const getUpdateDishFlavorsOrderUrl = (id: string) => {
+  return `/dishes/update-dish-flavors-order/${id}`;
+};
 
-
-  return `/dishes/update-dish-flavors-order/${id}`
-}
-
-export const updateDishFlavorsOrder = async (id: string,
-    requestUpdateDishFlavorsOrderDTO: RequestUpdateDishFlavorsOrderDTO, options?: RequestInit): Promise<updateDishFlavorsOrderResponse> => {
-  
-  return customFetch<updateDishFlavorsOrderResponse>(getUpdateDishFlavorsOrderUrl(id),
-  {      
-    ...options,
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateDishFlavorsOrderDTO,)
-  }
-);}
-
-
+export const updateDishFlavorsOrder = async (
+  id: string,
+  requestUpdateDishFlavorsOrderDTO: RequestUpdateDishFlavorsOrderDTO,
+  options?: RequestInit
+): Promise<updateDishFlavorsOrderResponse> => {
+  return customFetch<updateDishFlavorsOrderResponse>(
+    getUpdateDishFlavorsOrderUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(requestUpdateDishFlavorsOrderDTO),
+    }
+  );
+};
 
 /**
  * @summary Upload dish image
@@ -866,30 +824,26 @@ export type uploadDishImageResponse = {
   data: ResponseUploadDishImageDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUploadDishImageUrl = (id: string,) => {
+export const getUploadDishImageUrl = (id: string) => {
+  return `/dishes/${id}/upload-image`;
+};
 
+export const uploadDishImage = async (
+  id: string,
+  requestUploadDishImageDTO: RequestUploadDishImageDTO,
+  options?: RequestInit
+): Promise<uploadDishImageResponse> => {
+  const formData = new FormData();
+  formData.append('file', requestUploadDishImageDTO.file);
 
-  return `/dishes/${id}/upload-image`
-}
-
-export const uploadDishImage = async (id: string,
-    requestUploadDishImageDTO: RequestUploadDishImageDTO, options?: RequestInit): Promise<uploadDishImageResponse> => {
-    const formData = new FormData();
-formData.append('file', requestUploadDishImageDTO.file)
-
-  return customFetch<uploadDishImageResponse>(getUploadDishImageUrl(id),
-  {      
+  return customFetch<uploadDishImageResponse>(getUploadDishImageUrl(id), {
     ...options,
-    method: 'PATCH'
-    ,
-    body: 
-      formData,
-  }
-);}
-
-
+    method: 'PATCH',
+    body: formData,
+  });
+};
 
 /**
  * @summary Delete Dish image
@@ -898,26 +852,21 @@ export type deleteDishImageResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteDishImageUrl = (id: string,) => {
+export const getDeleteDishImageUrl = (id: string) => {
+  return `/dishes/delete-image/${id}`;
+};
 
-
-  return `/dishes/delete-image/${id}`
-}
-
-export const deleteDishImage = async (id: string, options?: RequestInit): Promise<deleteDishImageResponse> => {
-  
-  return customFetch<deleteDishImageResponse>(getDeleteDishImageUrl(id),
-  {      
+export const deleteDishImage = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteDishImageResponse> => {
+  return customFetch<deleteDishImageResponse>(getDeleteDishImageUrl(id), {
     ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+    method: 'DELETE',
+  });
+};
 
 /**
  * @summary Get Dishes Extras
@@ -926,26 +875,21 @@ export type getDishesExtrasResponse = {
   data: DishExtraDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishesExtrasUrl = (dishId: string,) => {
+export const getGetDishesExtrasUrl = (dishId: string) => {
+  return `/dishes-extras/${dishId}`;
+};
 
-
-  return `/dishes-extras/${dishId}`
-}
-
-export const getDishesExtras = async (dishId: string, options?: RequestInit): Promise<getDishesExtrasResponse> => {
-  
-  return customFetch<getDishesExtrasResponse>(getGetDishesExtrasUrl(dishId),
-  {      
+export const getDishesExtras = async (
+  dishId: string,
+  options?: RequestInit
+): Promise<getDishesExtrasResponse> => {
+  return customFetch<getDishesExtrasResponse>(getGetDishesExtrasUrl(dishId), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Create Dish Extra
@@ -954,28 +898,27 @@ export type createDishesExtraResponse = {
   data: DishExtraDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getCreateDishesExtraUrl = (dishId: string,) => {
+export const getCreateDishesExtraUrl = (dishId: string) => {
+  return `/dishes-extras/${dishId}`;
+};
 
-
-  return `/dishes-extras/${dishId}`
-}
-
-export const createDishesExtra = async (dishId: string,
-    requestCreateDishExtraDTO: RequestCreateDishExtraDTO, options?: RequestInit): Promise<createDishesExtraResponse> => {
-  
-  return customFetch<createDishesExtraResponse>(getCreateDishesExtraUrl(dishId),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestCreateDishExtraDTO,)
-  }
-);}
-
-
+export const createDishesExtra = async (
+  dishId: string,
+  requestCreateDishExtraDTO: RequestCreateDishExtraDTO,
+  options?: RequestInit
+): Promise<createDishesExtraResponse> => {
+  return customFetch<createDishesExtraResponse>(
+    getCreateDishesExtraUrl(dishId),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(requestCreateDishExtraDTO),
+    }
+  );
+};
 
 /**
  * @summary Update Dish Extra
@@ -984,28 +927,24 @@ export type updateDishesExtraResponse = {
   data: DishExtraDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateDishesExtraUrl = (id: string,) => {
+export const getUpdateDishesExtraUrl = (id: string) => {
+  return `/dishes-extras/${id}`;
+};
 
-
-  return `/dishes-extras/${id}`
-}
-
-export const updateDishesExtra = async (id: string,
-    requestUpdateDishExtraDTO: RequestUpdateDishExtraDTO, options?: RequestInit): Promise<updateDishesExtraResponse> => {
-  
-  return customFetch<updateDishesExtraResponse>(getUpdateDishesExtraUrl(id),
-  {      
+export const updateDishesExtra = async (
+  id: string,
+  requestUpdateDishExtraDTO: RequestUpdateDishExtraDTO,
+  options?: RequestInit
+): Promise<updateDishesExtraResponse> => {
+  return customFetch<updateDishesExtraResponse>(getUpdateDishesExtraUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateDishExtraDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestUpdateDishExtraDTO),
+  });
+};
 
 /**
  * @summary Delete Dish Extra
@@ -1014,26 +953,21 @@ export type deleteDishesExtraResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteDishesExtraUrl = (id: string,) => {
+export const getDeleteDishesExtraUrl = (id: string) => {
+  return `/dishes-extras/${id}`;
+};
 
-
-  return `/dishes-extras/${id}`
-}
-
-export const deleteDishesExtra = async (id: string, options?: RequestInit): Promise<deleteDishesExtraResponse> => {
-  
-  return customFetch<deleteDishesExtraResponse>(getDeleteDishesExtraUrl(id),
-  {      
+export const deleteDishesExtra = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteDishesExtraResponse> => {
+  return customFetch<deleteDishesExtraResponse>(getDeleteDishesExtraUrl(id), {
     ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+    method: 'DELETE',
+  });
+};
 
 /**
  * @summary Get Dishes Specs
@@ -1042,26 +976,21 @@ export type getDishesSpecsResponse = {
   data: DishSpecsDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishesSpecsUrl = (dishId: string,) => {
+export const getGetDishesSpecsUrl = (dishId: string) => {
+  return `/dishes-specs/${dishId}`;
+};
 
-
-  return `/dishes-specs/${dishId}`
-}
-
-export const getDishesSpecs = async (dishId: string, options?: RequestInit): Promise<getDishesSpecsResponse> => {
-  
-  return customFetch<getDishesSpecsResponse>(getGetDishesSpecsUrl(dishId),
-  {      
+export const getDishesSpecs = async (
+  dishId: string,
+  options?: RequestInit
+): Promise<getDishesSpecsResponse> => {
+  return customFetch<getDishesSpecsResponse>(getGetDishesSpecsUrl(dishId), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Toggle Dish Spec
@@ -1070,28 +999,24 @@ export type toggleDishesSpecResponse = {
   data: ResponseDishSpecsToggleDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getToggleDishesSpecUrl = (dishId: string,) => {
+export const getToggleDishesSpecUrl = (dishId: string) => {
+  return `/dishes-specs/${dishId}`;
+};
 
-
-  return `/dishes-specs/${dishId}`
-}
-
-export const toggleDishesSpec = async (dishId: string,
-    requestDishSpecsToggleDTO: RequestDishSpecsToggleDTO, options?: RequestInit): Promise<toggleDishesSpecResponse> => {
-  
-  return customFetch<toggleDishesSpecResponse>(getToggleDishesSpecUrl(dishId),
-  {      
+export const toggleDishesSpec = async (
+  dishId: string,
+  requestDishSpecsToggleDTO: RequestDishSpecsToggleDTO,
+  options?: RequestInit
+): Promise<toggleDishesSpecResponse> => {
+  return customFetch<toggleDishesSpecResponse>(getToggleDishesSpecUrl(dishId), {
     ...options,
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestDishSpecsToggleDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestDishSpecsToggleDTO),
+  });
+};
 
 /**
  * @summary Get Dishes Flavors
@@ -1100,26 +1025,21 @@ export type getDishesFlavorsResponse = {
   data: DishFlavorsDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetDishesFlavorsUrl = (dishId: string,) => {
+export const getGetDishesFlavorsUrl = (dishId: string) => {
+  return `/dishes-flavors/${dishId}`;
+};
 
-
-  return `/dishes-flavors/${dishId}`
-}
-
-export const getDishesFlavors = async (dishId: string, options?: RequestInit): Promise<getDishesFlavorsResponse> => {
-  
-  return customFetch<getDishesFlavorsResponse>(getGetDishesFlavorsUrl(dishId),
-  {      
+export const getDishesFlavors = async (
+  dishId: string,
+  options?: RequestInit
+): Promise<getDishesFlavorsResponse> => {
+  return customFetch<getDishesFlavorsResponse>(getGetDishesFlavorsUrl(dishId), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Create Dish Flavors
@@ -1128,28 +1048,27 @@ export type createDishesFlavorsResponse = {
   data: ResponseCreateDishesFlavorsDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getCreateDishesFlavorsUrl = (dishId: string,) => {
+export const getCreateDishesFlavorsUrl = (dishId: string) => {
+  return `/dishes-flavors/${dishId}`;
+};
 
-
-  return `/dishes-flavors/${dishId}`
-}
-
-export const createDishesFlavors = async (dishId: string,
-    requestCreateDishesFlavorsDTO: RequestCreateDishesFlavorsDTO, options?: RequestInit): Promise<createDishesFlavorsResponse> => {
-  
-  return customFetch<createDishesFlavorsResponse>(getCreateDishesFlavorsUrl(dishId),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestCreateDishesFlavorsDTO,)
-  }
-);}
-
-
+export const createDishesFlavors = async (
+  dishId: string,
+  requestCreateDishesFlavorsDTO: RequestCreateDishesFlavorsDTO,
+  options?: RequestInit
+): Promise<createDishesFlavorsResponse> => {
+  return customFetch<createDishesFlavorsResponse>(
+    getCreateDishesFlavorsUrl(dishId),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(requestCreateDishesFlavorsDTO),
+    }
+  );
+};
 
 /**
  * @summary Update Dish Flavors
@@ -1158,28 +1077,27 @@ export type updateDishesFlavorsResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateDishesFlavorsUrl = (id: string,) => {
+export const getUpdateDishesFlavorsUrl = (id: string) => {
+  return `/dishes-flavors/${id}`;
+};
 
-
-  return `/dishes-flavors/${id}`
-}
-
-export const updateDishesFlavors = async (id: string,
-    requestUpdateDishesFlavorsDTO: RequestUpdateDishesFlavorsDTO, options?: RequestInit): Promise<updateDishesFlavorsResponse> => {
-  
-  return customFetch<updateDishesFlavorsResponse>(getUpdateDishesFlavorsUrl(id),
-  {      
-    ...options,
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateDishesFlavorsDTO,)
-  }
-);}
-
-
+export const updateDishesFlavors = async (
+  id: string,
+  requestUpdateDishesFlavorsDTO: RequestUpdateDishesFlavorsDTO,
+  options?: RequestInit
+): Promise<updateDishesFlavorsResponse> => {
+  return customFetch<updateDishesFlavorsResponse>(
+    getUpdateDishesFlavorsUrl(id),
+    {
+      ...options,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(requestUpdateDishesFlavorsDTO),
+    }
+  );
+};
 
 /**
  * @summary Delete Dish Flavors
@@ -1188,26 +1106,24 @@ export type deleteDishesFlavorsResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteDishesFlavorsUrl = (id: string,) => {
+export const getDeleteDishesFlavorsUrl = (id: string) => {
+  return `/dishes-flavors/${id}`;
+};
 
-
-  return `/dishes-flavors/${id}`
-}
-
-export const deleteDishesFlavors = async (id: string, options?: RequestInit): Promise<deleteDishesFlavorsResponse> => {
-  
-  return customFetch<deleteDishesFlavorsResponse>(getDeleteDishesFlavorsUrl(id),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+export const deleteDishesFlavors = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteDishesFlavorsResponse> => {
+  return customFetch<deleteDishesFlavorsResponse>(
+    getDeleteDishesFlavorsUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
 /**
  * @summary Upload dish flavor image
@@ -1216,30 +1132,29 @@ export type uploadDishFlavorImageResponse = {
   data: ResponseUploadDishFlavorImageDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUploadDishFlavorImageUrl = (id: string,) => {
+export const getUploadDishFlavorImageUrl = (id: string) => {
+  return `/dishes-flavors/${id}/upload-image`;
+};
 
+export const uploadDishFlavorImage = async (
+  id: string,
+  requestUploadDishFlavorImageDTO: RequestUploadDishFlavorImageDTO,
+  options?: RequestInit
+): Promise<uploadDishFlavorImageResponse> => {
+  const formData = new FormData();
+  formData.append('file', requestUploadDishFlavorImageDTO.file);
 
-  return `/dishes-flavors/${id}/upload-image`
-}
-
-export const uploadDishFlavorImage = async (id: string,
-    requestUploadDishFlavorImageDTO: RequestUploadDishFlavorImageDTO, options?: RequestInit): Promise<uploadDishFlavorImageResponse> => {
-    const formData = new FormData();
-formData.append('file', requestUploadDishFlavorImageDTO.file)
-
-  return customFetch<uploadDishFlavorImageResponse>(getUploadDishFlavorImageUrl(id),
-  {      
-    ...options,
-    method: 'PATCH'
-    ,
-    body: 
-      formData,
-  }
-);}
-
-
+  return customFetch<uploadDishFlavorImageResponse>(
+    getUploadDishFlavorImageUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      body: formData,
+    }
+  );
+};
 
 /**
  * @summary Delete Dish Flavor Media image
@@ -1248,84 +1163,84 @@ export type deleteDishFlavorMediaImageResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteDishFlavorMediaImageUrl = (id: string,) => {
+export const getDeleteDishFlavorMediaImageUrl = (id: string) => {
+  return `/dishes-flavors/delete-image/${id}`;
+};
 
-
-  return `/dishes-flavors/delete-image/${id}`
-}
-
-export const deleteDishFlavorMediaImage = async (id: string, options?: RequestInit): Promise<deleteDishFlavorMediaImageResponse> => {
-  
-  return customFetch<deleteDishFlavorMediaImageResponse>(getDeleteDishFlavorMediaImageUrl(id),
-  {      
-    ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+export const deleteDishFlavorMediaImage = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteDishFlavorMediaImageResponse> => {
+  return customFetch<deleteDishFlavorMediaImageResponse>(
+    getDeleteDishFlavorMediaImageUrl(id),
+    {
+      ...options,
+      method: 'DELETE',
+    }
+  );
+};
 
 export type restaurantsControllerListResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getRestaurantsControllerListUrl = (params: RestaurantsControllerListParams,) => {
+export const getRestaurantsControllerListUrl = (
+  params: RestaurantsControllerListParams
+) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
-  return normalizedParams.size ? `/restaurants?${normalizedParams.toString()}` : `/restaurants`
-}
+  return normalizedParams.size
+    ? `/restaurants?${normalizedParams.toString()}`
+    : `/restaurants`;
+};
 
-export const restaurantsControllerList = async (params: RestaurantsControllerListParams, options?: RequestInit): Promise<restaurantsControllerListResponse> => {
-  
-  return customFetch<restaurantsControllerListResponse>(getRestaurantsControllerListUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const restaurantsControllerList = async (
+  params: RestaurantsControllerListParams,
+  options?: RequestInit
+): Promise<restaurantsControllerListResponse> => {
+  return customFetch<restaurantsControllerListResponse>(
+    getRestaurantsControllerListUrl(params),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 export type restaurantsControllerCreateResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
 export const getRestaurantsControllerCreateUrl = () => {
+  return `/restaurants`;
+};
 
-
-  return `/restaurants`
-}
-
-export const restaurantsControllerCreate = async (createResturantDTO: CreateResturantDTO, options?: RequestInit): Promise<restaurantsControllerCreateResponse> => {
-  
-  return customFetch<restaurantsControllerCreateResponse>(getRestaurantsControllerCreateUrl(),
-  {      
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      createResturantDTO,)
-  }
-);}
-
-
+export const restaurantsControllerCreate = async (
+  createResturantDTO: CreateResturantDTO,
+  options?: RequestInit
+): Promise<restaurantsControllerCreateResponse> => {
+  return customFetch<restaurantsControllerCreateResponse>(
+    getRestaurantsControllerCreateUrl(),
+    {
+      ...options,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...options?.headers },
+      body: JSON.stringify(createResturantDTO),
+    }
+  );
+};
 
 /**
  * @summary Get Restaurant By Slug
@@ -1334,26 +1249,24 @@ export type getRestaurantBySlugResponse = {
   data: GetRestaurantBySlugDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetRestaurantBySlugUrl = (slug: string,) => {
+export const getGetRestaurantBySlugUrl = (slug: string) => {
+  return `/restaurants/slug/${slug}`;
+};
 
-
-  return `/restaurants/slug/${slug}`
-}
-
-export const getRestaurantBySlug = async (slug: string, options?: RequestInit): Promise<getRestaurantBySlugResponse> => {
-  
-  return customFetch<getRestaurantBySlugResponse>(getGetRestaurantBySlugUrl(slug),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getRestaurantBySlug = async (
+  slug: string,
+  options?: RequestInit
+): Promise<getRestaurantBySlugResponse> => {
+  return customFetch<getRestaurantBySlugResponse>(
+    getGetRestaurantBySlugUrl(slug),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Get Restaurant By Id
@@ -1362,26 +1275,21 @@ export type getRestaurantByIdResponse = {
   data: GetRestaurantByIdDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetRestaurantByIdUrl = (id: string,) => {
+export const getGetRestaurantByIdUrl = (id: string) => {
+  return `/restaurants/${id}`;
+};
 
-
-  return `/restaurants/${id}`
-}
-
-export const getRestaurantById = async (id: string, options?: RequestInit): Promise<getRestaurantByIdResponse> => {
-  
-  return customFetch<getRestaurantByIdResponse>(getGetRestaurantByIdUrl(id),
-  {      
+export const getRestaurantById = async (
+  id: string,
+  options?: RequestInit
+): Promise<getRestaurantByIdResponse> => {
+  return customFetch<getRestaurantByIdResponse>(getGetRestaurantByIdUrl(id), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Update Restaurant
@@ -1390,28 +1298,24 @@ export type updateRestaurantResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateRestaurantUrl = (id: string,) => {
+export const getUpdateRestaurantUrl = (id: string) => {
+  return `/restaurants/${id}`;
+};
 
-
-  return `/restaurants/${id}`
-}
-
-export const updateRestaurant = async (id: string,
-    updateResturantDTO: UpdateResturantDTO, options?: RequestInit): Promise<updateRestaurantResponse> => {
-  
-  return customFetch<updateRestaurantResponse>(getUpdateRestaurantUrl(id),
-  {      
+export const updateRestaurant = async (
+  id: string,
+  updateResturantDTO: UpdateResturantDTO,
+  options?: RequestInit
+): Promise<updateRestaurantResponse> => {
+  return customFetch<updateRestaurantResponse>(getUpdateRestaurantUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      updateResturantDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(updateResturantDTO),
+  });
+};
 
 /**
  * @summary Change Logo
@@ -1420,30 +1324,29 @@ export type changeLogoRestaurantResponse = {
   data: ChangeLogoResponseDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getChangeLogoRestaurantUrl = (id: string,) => {
+export const getChangeLogoRestaurantUrl = (id: string) => {
+  return `/restaurants/${id}/change-logo`;
+};
 
+export const changeLogoRestaurant = async (
+  id: string,
+  changeLogoDTO: ChangeLogoDTO,
+  options?: RequestInit
+): Promise<changeLogoRestaurantResponse> => {
+  const formData = new FormData();
+  formData.append('file', changeLogoDTO.file);
 
-  return `/restaurants/${id}/change-logo`
-}
-
-export const changeLogoRestaurant = async (id: string,
-    changeLogoDTO: ChangeLogoDTO, options?: RequestInit): Promise<changeLogoRestaurantResponse> => {
-    const formData = new FormData();
-formData.append('file', changeLogoDTO.file)
-
-  return customFetch<changeLogoRestaurantResponse>(getChangeLogoRestaurantUrl(id),
-  {      
-    ...options,
-    method: 'PATCH'
-    ,
-    body: 
-      formData,
-  }
-);}
-
-
+  return customFetch<changeLogoRestaurantResponse>(
+    getChangeLogoRestaurantUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+      body: formData,
+    }
+  );
+};
 
 /**
  * @summary Delete Logo
@@ -1452,26 +1355,24 @@ export type deleteLogoRestaurantResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteLogoRestaurantUrl = (id: string,) => {
+export const getDeleteLogoRestaurantUrl = (id: string) => {
+  return `/restaurants/${id}/delete-logo`;
+};
 
-
-  return `/restaurants/${id}/delete-logo`
-}
-
-export const deleteLogoRestaurant = async (id: string, options?: RequestInit): Promise<deleteLogoRestaurantResponse> => {
-  
-  return customFetch<deleteLogoRestaurantResponse>(getDeleteLogoRestaurantUrl(id),
-  {      
-    ...options,
-    method: 'PATCH'
-    
-    
-  }
-);}
-
-
+export const deleteLogoRestaurant = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteLogoRestaurantResponse> => {
+  return customFetch<deleteLogoRestaurantResponse>(
+    getDeleteLogoRestaurantUrl(id),
+    {
+      ...options,
+      method: 'PATCH',
+    }
+  );
+};
 
 /**
  * @summary Get restaurant is first category information
@@ -1480,26 +1381,24 @@ export type getRestaurantIsFirstCategoryResponse = {
   data: GetRestaurantIsFirstCategoryDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetRestaurantIsFirstCategoryUrl = (id: string,) => {
+export const getGetRestaurantIsFirstCategoryUrl = (id: string) => {
+  return `/restaurants/is-first-category/${id}`;
+};
 
-
-  return `/restaurants/is-first-category/${id}`
-}
-
-export const getRestaurantIsFirstCategory = async (id: string, options?: RequestInit): Promise<getRestaurantIsFirstCategoryResponse> => {
-  
-  return customFetch<getRestaurantIsFirstCategoryResponse>(getGetRestaurantIsFirstCategoryUrl(id),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getRestaurantIsFirstCategory = async (
+  id: string,
+  options?: RequestInit
+): Promise<getRestaurantIsFirstCategoryResponse> => {
+  return customFetch<getRestaurantIsFirstCategoryResponse>(
+    getGetRestaurantIsFirstCategoryUrl(id),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Get Sections
@@ -1508,33 +1407,31 @@ export type getSectionsResponse = {
   data: SectionDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetSectionsUrl = (params: GetSectionsParams,) => {
+export const getGetSectionsUrl = (params: GetSectionsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
-  return normalizedParams.size ? `/sections?${normalizedParams.toString()}` : `/sections`
-}
+  return normalizedParams.size
+    ? `/sections?${normalizedParams.toString()}`
+    : `/sections`;
+};
 
-export const getSections = async (params: GetSectionsParams, options?: RequestInit): Promise<getSectionsResponse> => {
-  
-  return customFetch<getSectionsResponse>(getGetSectionsUrl(params),
-  {      
+export const getSections = async (
+  params: GetSectionsParams,
+  options?: RequestInit
+): Promise<getSectionsResponse> => {
+  return customFetch<getSectionsResponse>(getGetSectionsUrl(params), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Create Section
@@ -1543,27 +1440,23 @@ export type createSectionResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
 export const getCreateSectionUrl = () => {
+  return `/sections`;
+};
 
-
-  return `/sections`
-}
-
-export const createSection = async (requestCreateSectionDTO: RequestCreateSectionDTO, options?: RequestInit): Promise<createSectionResponse> => {
-  
-  return customFetch<createSectionResponse>(getCreateSectionUrl(),
-  {      
+export const createSection = async (
+  requestCreateSectionDTO: RequestCreateSectionDTO,
+  options?: RequestInit
+): Promise<createSectionResponse> => {
+  return customFetch<createSectionResponse>(getCreateSectionUrl(), {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestCreateSectionDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestCreateSectionDTO),
+  });
+};
 
 /**
  * @summary Get All Sections
@@ -1572,33 +1465,31 @@ export type getAllSectionsResponse = {
   data: SectionDTO[];
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetAllSectionsUrl = (params: GetAllSectionsParams,) => {
+export const getGetAllSectionsUrl = (params: GetAllSectionsParams) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
     if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
+      normalizedParams.append(key, value === null ? 'null' : value.toString());
     }
   });
 
-  return normalizedParams.size ? `/sections/get-all?${normalizedParams.toString()}` : `/sections/get-all`
-}
+  return normalizedParams.size
+    ? `/sections/get-all?${normalizedParams.toString()}`
+    : `/sections/get-all`;
+};
 
-export const getAllSections = async (params: GetAllSectionsParams, options?: RequestInit): Promise<getAllSectionsResponse> => {
-  
-  return customFetch<getAllSectionsResponse>(getGetAllSectionsUrl(params),
-  {      
+export const getAllSections = async (
+  params: GetAllSectionsParams,
+  options?: RequestInit
+): Promise<getAllSectionsResponse> => {
+  return customFetch<getAllSectionsResponse>(getGetAllSectionsUrl(params), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Get Section By Id
@@ -1607,26 +1498,21 @@ export type getSectionByIdResponse = {
   data: ResponseGetSectionByIdDTO;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetSectionByIdUrl = (id: string,) => {
+export const getGetSectionByIdUrl = (id: string) => {
+  return `/sections/${id}`;
+};
 
-
-  return `/sections/${id}`
-}
-
-export const getSectionById = async (id: string, options?: RequestInit): Promise<getSectionByIdResponse> => {
-  
-  return customFetch<getSectionByIdResponse>(getGetSectionByIdUrl(id),
-  {      
+export const getSectionById = async (
+  id: string,
+  options?: RequestInit
+): Promise<getSectionByIdResponse> => {
+  return customFetch<getSectionByIdResponse>(getGetSectionByIdUrl(id), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Delete Section
@@ -1635,26 +1521,21 @@ export type deleteSectionResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getDeleteSectionUrl = (id: string,) => {
+export const getDeleteSectionUrl = (id: string) => {
+  return `/sections/${id}`;
+};
 
-
-  return `/sections/${id}`
-}
-
-export const deleteSection = async (id: string, options?: RequestInit): Promise<deleteSectionResponse> => {
-  
-  return customFetch<deleteSectionResponse>(getDeleteSectionUrl(id),
-  {      
+export const deleteSection = async (
+  id: string,
+  options?: RequestInit
+): Promise<deleteSectionResponse> => {
+  return customFetch<deleteSectionResponse>(getDeleteSectionUrl(id), {
     ...options,
-    method: 'DELETE'
-    
-    
-  }
-);}
-
-
+    method: 'DELETE',
+  });
+};
 
 /**
  * @summary Update Section
@@ -1663,28 +1544,24 @@ export type updateSectionResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getUpdateSectionUrl = (id: string,) => {
+export const getUpdateSectionUrl = (id: string) => {
+  return `/sections/${id}`;
+};
 
-
-  return `/sections/${id}`
-}
-
-export const updateSection = async (id: string,
-    requestUpdateSectionDTO: RequestUpdateSectionDTO, options?: RequestInit): Promise<updateSectionResponse> => {
-  
-  return customFetch<updateSectionResponse>(getUpdateSectionUrl(id),
-  {      
+export const updateSection = async (
+  id: string,
+  requestUpdateSectionDTO: RequestUpdateSectionDTO,
+  options?: RequestInit
+): Promise<updateSectionResponse> => {
+  return customFetch<updateSectionResponse>(getUpdateSectionUrl(id), {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(
-      requestUpdateSectionDTO,)
-  }
-);}
-
-
+    body: JSON.stringify(requestUpdateSectionDTO),
+  });
+};
 
 /**
  * @summary Toggle Section
@@ -1693,26 +1570,21 @@ export type toggleSectionResponse = {
   data: void;
   status: number;
   headers: Headers;
-}
+};
 
-export const getToggleSectionUrl = (id: string,) => {
+export const getToggleSectionUrl = (id: string) => {
+  return `/sections/toggle/${id}`;
+};
 
-
-  return `/sections/toggle/${id}`
-}
-
-export const toggleSection = async (id: string, options?: RequestInit): Promise<toggleSectionResponse> => {
-  
-  return customFetch<toggleSectionResponse>(getToggleSectionUrl(id),
-  {      
+export const toggleSection = async (
+  id: string,
+  options?: RequestInit
+): Promise<toggleSectionResponse> => {
+  return customFetch<toggleSectionResponse>(getToggleSectionUrl(id), {
     ...options,
-    method: 'PATCH'
-    
-    
-  }
-);}
-
-
+    method: 'PATCH',
+  });
+};
 
 /**
  * @summary Get all categories report
@@ -1721,26 +1593,24 @@ export type getAllCategoriesReportResponse = {
   data: number;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetAllCategoriesReportUrl = (menuId: string,) => {
+export const getGetAllCategoriesReportUrl = (menuId: string) => {
+  return `/reports/get-all-categories/${menuId}`;
+};
 
-
-  return `/reports/get-all-categories/${menuId}`
-}
-
-export const getAllCategoriesReport = async (menuId: string, options?: RequestInit): Promise<getAllCategoriesReportResponse> => {
-  
-  return customFetch<getAllCategoriesReportResponse>(getGetAllCategoriesReportUrl(menuId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getAllCategoriesReport = async (
+  menuId: string,
+  options?: RequestInit
+): Promise<getAllCategoriesReportResponse> => {
+  return customFetch<getAllCategoriesReportResponse>(
+    getGetAllCategoriesReportUrl(menuId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Get all dishes report
@@ -1749,26 +1619,24 @@ export type getAllDishesReportResponse = {
   data: number;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetAllDishesReportUrl = (menuId: string,) => {
+export const getGetAllDishesReportUrl = (menuId: string) => {
+  return `/reports/get-all-dishes/${menuId}`;
+};
 
-
-  return `/reports/get-all-dishes/${menuId}`
-}
-
-export const getAllDishesReport = async (menuId: string, options?: RequestInit): Promise<getAllDishesReportResponse> => {
-  
-  return customFetch<getAllDishesReportResponse>(getGetAllDishesReportUrl(menuId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getAllDishesReport = async (
+  menuId: string,
+  options?: RequestInit
+): Promise<getAllDishesReportResponse> => {
+  return customFetch<getAllDishesReportResponse>(
+    getGetAllDishesReportUrl(menuId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Get all dish flavors report
@@ -1777,26 +1645,24 @@ export type getAllDishFlavorsReportResponse = {
   data: number;
   status: number;
   headers: Headers;
-}
+};
 
-export const getGetAllDishFlavorsReportUrl = (menuId: string,) => {
+export const getGetAllDishFlavorsReportUrl = (menuId: string) => {
+  return `/reports/get-all-dish-flavors/${menuId}`;
+};
 
-
-  return `/reports/get-all-dish-flavors/${menuId}`
-}
-
-export const getAllDishFlavorsReport = async (menuId: string, options?: RequestInit): Promise<getAllDishFlavorsReportResponse> => {
-  
-  return customFetch<getAllDishFlavorsReportResponse>(getGetAllDishFlavorsReportUrl(menuId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+export const getAllDishFlavorsReport = async (
+  menuId: string,
+  options?: RequestInit
+): Promise<getAllDishFlavorsReportResponse> => {
+  return customFetch<getAllDishFlavorsReportResponse>(
+    getGetAllDishFlavorsReportUrl(menuId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
 
 /**
  * @summary Has logo report
@@ -1805,26 +1671,21 @@ export type hasLogoReportResponse = {
   data: boolean;
   status: number;
   headers: Headers;
-}
+};
 
-export const getHasLogoReportUrl = (restaurantId: string,) => {
+export const getHasLogoReportUrl = (restaurantId: string) => {
+  return `/reports/has-logo/${restaurantId}`;
+};
 
-
-  return `/reports/has-logo/${restaurantId}`
-}
-
-export const hasLogoReport = async (restaurantId: string, options?: RequestInit): Promise<hasLogoReportResponse> => {
-  
-  return customFetch<hasLogoReportResponse>(getHasLogoReportUrl(restaurantId),
-  {      
+export const hasLogoReport = async (
+  restaurantId: string,
+  options?: RequestInit
+): Promise<hasLogoReportResponse> => {
+  return customFetch<hasLogoReportResponse>(getHasLogoReportUrl(restaurantId), {
     ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
+    method: 'GET',
+  });
+};
 
 /**
  * @summary Has active category report
@@ -1833,24 +1694,21 @@ export type hasActiveCategoryReportResponse = {
   data: boolean;
   status: number;
   headers: Headers;
-}
+};
 
-export const getHasActiveCategoryReportUrl = (menuId: string,) => {
+export const getHasActiveCategoryReportUrl = (menuId: string) => {
+  return `/reports/has-active-category/${menuId}`;
+};
 
-
-  return `/reports/has-active-category/${menuId}`
-}
-
-export const hasActiveCategoryReport = async (menuId: string, options?: RequestInit): Promise<hasActiveCategoryReportResponse> => {
-  
-  return customFetch<hasActiveCategoryReportResponse>(getHasActiveCategoryReportUrl(menuId),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
+export const hasActiveCategoryReport = async (
+  menuId: string,
+  options?: RequestInit
+): Promise<hasActiveCategoryReportResponse> => {
+  return customFetch<hasActiveCategoryReportResponse>(
+    getHasActiveCategoryReportUrl(menuId),
+    {
+      ...options,
+      method: 'GET',
+    }
+  );
+};
