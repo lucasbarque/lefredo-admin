@@ -24,6 +24,12 @@ npm run lint ||
   true;
 ) &&
 
+npm run check-types ||
+(
+    echo "❌🟦 Type check ${RED}Failed${NC}. 🟦❌\n Make the changes required above."
+    false;
+)
+
 modified_files=$(git status --porcelain | awk '$1 == "M" || $1 == "MM" {print $2}')
 
 git add $modified_files ||
@@ -42,8 +48,4 @@ npx tsc ||
   echo "❌ - npx tsc Failed. - ❌\n View the errors above in order to fix them!"
   false;
 )
-
-(
-  echo "✅ - Typescript successfully compiled. I am now committing this! - 🚀🔥"
-  true;
-)
+echo "\n ${BOLD}All passed... I am now committing this.${NC} 🚀🔥"
