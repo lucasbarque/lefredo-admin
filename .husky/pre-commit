@@ -1,6 +1,6 @@
 npm run lint ||
 (
-  echo "❌ - npm run lint Failed. - ❌\n View the errors above in order to fix them!\n"
+  echo "❌ - npm run lint Failed. - ❌\n View the errors above in order to fix them!"
   false;
 )
 
@@ -13,22 +13,22 @@ modified_files=$(git status --porcelain | awk '$1 == "M" || $1 == "MM" {print $2
 
 git add $modified_files ||
 (
-  echo "❌ - git add Failed. - ❌\n View the errors above in order to fix them!\n"
+  echo "❌ - git add Failed. - ❌\n View the errors above in order to fix them!"
   false;
 )
 
 (
-  echo "✅ - Formatted files successfully added to git, now compiling Typescript..\n"
+  echo "✅ - Formatted files successfully added to git, now compiling Typescript.."
   true;
 ) &&
 
 npx tsc ||
 (
-  echo "❌ - npx tsc Failed. - ❌\n View the errors above in order to fix them!\n"
+  echo "❌ - npx tsc Failed. - ❌\n View the errors above in order to fix them!"
   false;
 )
 
 (
-  echo "✅ - Typescript successfully compiled. I am now committing this! - 🚀🔥\n"
+  echo "✅ - Typescript successfully compiled. I am now committing this! - 🚀🔥"
   true;
 )
