@@ -51,7 +51,6 @@ export async function updateDishesFlavorsAPI(
   id: string,
   data: RequestUpdateDishesFlavorsDTO
 ) {
-  console.log(id, data);
   const headers = await getCookiesHeader();
 
   const response = await updateDishesFlavors(id, data, {

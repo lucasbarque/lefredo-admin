@@ -56,7 +56,6 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
   const deleteMutation = useMutation({
     mutationFn: () => deleteSectionAPI(id),
     onSuccess: (statusCode) => {
-      console.log(statusCode);
       if (statusCode === 200) {
         toast.success('Categoria deletada com sucesso', {
           position: 'top-right',

@@ -61,7 +61,6 @@ export function FormAddItemAdditionals({
     mutationFn: (data: z.infer<typeof createDishesExtraSchema>) =>
       createDishesExtraAPI(dishId, data),
     onSuccess: (response) => {
-      console.log('entrou');
       if (response.status === 201) {
         toast.success('Item adicional cadastrado com sucesso', {
           position: 'top-right',
