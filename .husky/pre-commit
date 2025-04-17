@@ -1,6 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
 npm run lint ||
 (
   echo "❌ - npm run lint Failed. - ❌\n View the errors above in order to fix them!\n"
@@ -8,7 +5,7 @@ npm run lint ||
 )
 
 (
-  echo "✅ - Code successfully linted, now applying default formatting to the code.. \n"
+  echo "✅ - Code successfully linted, now applying default formatting to the code.."
   true;
 ) &&
 
