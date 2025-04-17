@@ -21,6 +21,8 @@ import { InputEditor } from '@/components/inputs/input-editor';
 import { UploadImage } from '@/components/inputs/upload-image/upload-image';
 import { FileUploaded } from '@/components/inputs/upload-image/upload-image.types';
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 export interface FormProps {
   restaurantData: GetRestaurantByIdDTO;
 }
@@ -130,7 +132,8 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
     }
   }, [isNewImage, imageData]);
 
-  const handleImageChange = useCallback((newImageData: FileUploaded) => {
+  const handleImageChange = useCallback((newImageData?: FileUploaded) => {
+    if (!newImageData) return;
     setImageData(newImageData);
     setIsNewImage(true);
   }, []);
@@ -163,7 +166,9 @@ export function FormUpdateStore({ restaurantData }: FormProps) {
       <UploadImage
         label='Resolução sugerida 100x50'
         currentImage={imageData}
-        onSubmit={handleImageChange}
+        onSubmit={(file) => {
+          if (file) handleImageChange(file);
+        }}
         onDelete={deleteImageData}
         isLoading={uploadMutation.isPending || deleteMutation.isPending}
       />

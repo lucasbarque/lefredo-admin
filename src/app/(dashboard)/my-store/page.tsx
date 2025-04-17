@@ -14,7 +14,7 @@ export default function PageMyStore() {
     queryFn: getRestaurantData,
   });
 
-  if (isLoading) return <Skeleton />;
+  if (isLoading || !data) return <Skeleton />;
 
   return (
     <section>

@@ -31,11 +31,11 @@ export function FormCreateCategory() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   async function onSubmit(data: z.infer<typeof inputSchema>) {
-    const responseStatus = await createSectionAPI({
+    const response = await createSectionAPI({
       title: data.category,
       description: null,
     });
-    if (responseStatus === 201) {
+    if (response.status === 201) {
       toast.success('Categoria criada com sucesso', {
         position: 'top-right',
       });

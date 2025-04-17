@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { CropData, FileUploaded } from './upload-images.types';
 import { UseUploadImagesProps } from './use-upload-images.types';
 
+/* eslint-disable react-hooks/exhaustive-deps */
+
 export function useUploadImages({
   parentId,
   medias,

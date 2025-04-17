@@ -48,6 +48,8 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@eslint/eslintrc": "^3",
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/node": "^20",
