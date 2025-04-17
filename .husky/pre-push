@@ -5,24 +5,11 @@ BLUE='\033[1;36m'
 BOLD='\033[1;37m'
 NC='\033[0m'
 
-echo "🚧🏗️  ${BOLD}Checking format, lint and types in your project before committing${NC}"
-
-
-# Check tsconfig standards
-npm run check-types ||
-(
-    echo "❌🟦 Type check ${RED}Failed${NC}. 🟦❌\n Make the changes required above."
-    false;
-)
-
-# If everything passes... Now we can build
-echo "🔥🚀 ${BOLD}All passed... Now we can build.${NC} 🚀🔥"
-
 npm run build ||
 (
-    echo "❌🟩 Next build ${RED}Failed${NC}. 🟩❌\n View the errors above to see why."
+    echo "❌ Next build ${RED}Failed${NC}. ❌\n View the errors above to see why."
     false;
 )
 
-# If everything passes... Now we can commit
-echo "✅✅ ${GREEN}Build is completed... I am committing this now.${NC} ✅✅"
+# If everything passes... Now we can push
+echo "✅✅ ${GREEN}Build is completed... I am pushing this now.${NC} ✅✅"
