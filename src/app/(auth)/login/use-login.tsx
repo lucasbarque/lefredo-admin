@@ -35,7 +35,7 @@ export function useLogin() {
 
       if (result.status === 'complete') {
         await setActive({ session: result.createdSessionId });
-        router.push('/welcome');
+        router.push('/');
       }
     } catch (error) {
       if (isClerkAPIResponseError(error)) {

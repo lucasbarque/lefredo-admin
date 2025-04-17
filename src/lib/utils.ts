@@ -54,3 +54,11 @@ export const extname = (filePath: string) => {
 
   return base.slice(lastDot);
 };
+
+export const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw res.status;
+  }
+  return res.json();
+};

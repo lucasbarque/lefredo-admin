@@ -9,14 +9,7 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 
-export type GetStartedTypes = 'category' | 'upload' | 'dish' | 'active';
-
-export interface GetStatedItemProps {
-  isChecked?: boolean;
-  title: string;
-  text: string;
-  type: GetStartedTypes;
-}
+import { GetStartedTypes, GetStatedItemProps } from './welcome.types';
 
 export function GetStartedItem({
   isChecked = false,

@@ -38,14 +38,14 @@ export function Sidebar({ children }: SidebarProps) {
     <div className='flex'>
       <div className='h-[calc(100vh-80px)] w-full max-w-[300px] border-r border-gray-200 px-6 py-8'>
         <SidebarItem
-          isActive={pathname === '/welcome'}
+          isActive={pathname === '/'}
           title='Dashboard'
           icon={<IconHome size={24} />}
-          onClick={() => router.push('/welcome')}
+          onClick={() => router.push('/')}
         />
 
         <SidebarItem
-          isActive={!['/my-store', '/welcome'].includes(pathname)}
+          isActive={!['/my-store', '/'].includes(pathname)}
           title='Cardápio'
           icon={<IconBook size={24} />}
           onClick={handleClickMenu}
