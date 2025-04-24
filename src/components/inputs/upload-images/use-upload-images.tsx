@@ -8,8 +8,6 @@ import { toast } from 'sonner';
 import { CropData, FileUploaded } from './upload-images.types';
 import { UseUploadImagesProps } from './use-upload-images.types';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-
 export function useUploadImages({
   parentId,
   medias,
@@ -17,7 +15,6 @@ export function useUploadImages({
   fnUploadImages,
   updateQueryFn,
 }: UseUploadImagesProps) {
-  // const queryClient = useQueryClient();
   const [images, setImages] = useState<FileUploaded[]>([]);
 
   async function loadImages() {
@@ -76,12 +73,10 @@ export function useUploadImages({
   }
 
   const deleteMutation = useMutation({
-    // mutationKey: [keyPrefix, 'deleteImage', parentId],
     mutationFn: (idImage: string) => fnDeleteImages(idImage),
     onSuccess: (_data, idImage) => {
-      toast.success('Imagem deletada com sucesso');
+      toast.success('Imagem deletada com sucesso', { position: 'top-right' });
       setImages((prev) => prev.filter((item) => item.id !== idImage));
-      // queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
       updateQueryFn();
     },
     onError: () => {
@@ -95,9 +90,9 @@ export function useUploadImages({
   });
 
   const uploadMutation = useMutation({
-    // mutationKey: [keyPrefix, 'uploadImage', parentId],
     mutationFn: (file: File) => fnUploadImages(parentId, file),
     onSuccess: (response, file) => {
+      console.log(response);
       //@ts-ignore
       if (response.status !== 200) {
         toast.error(
@@ -129,9 +124,8 @@ export function useUploadImages({
           return item;
         })
       );
-      // queryClient.invalidateQueries({ queryKey: [keyPrefix, parentId] });
       updateQueryFn();
-      toast.success('Imagem enviada com sucesso');
+      toast.success('Imagem enviada com sucesso', { position: 'top-right' });
     },
     onError: (error, file) => {
       console.error('Erro ao fazer upload da imagem:', file, error);

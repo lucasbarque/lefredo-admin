@@ -1,6 +1,6 @@
 'use client';
 
-import { getRestaurantData } from '@/actions/restaurant.action';
+import { fetcher } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 
 import { Header } from '@/components/data-display/header';
@@ -11,7 +11,7 @@ import { Skeleton } from './skeleton';
 export default function PageMyStore() {
   const { data, isLoading } = useQuery({
     queryKey: ['restaurantData'],
-    queryFn: getRestaurantData,
+    queryFn: () => fetcher('/api/restaurants'),
   });
 
   if (isLoading || !data) return <Skeleton />;

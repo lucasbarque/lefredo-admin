@@ -5,22 +5,11 @@ import {
   UpdateResturantDTO,
   changeLogoRestaurant,
   deleteLogoRestaurant,
-  getRestaurantById,
   getRestaurantIsFirstCategory,
   updateRestaurant,
 } from '@/http/api';
 
 import { getCookiesHeader } from './utils.action';
-
-export async function getRestaurantData() {
-  const headers = await getCookiesHeader();
-
-  const response = await getRestaurantById(headers.restaurantid, {
-    headers,
-  });
-
-  return response.data;
-}
 
 export async function updateRestaurantData({
   restaurantId,

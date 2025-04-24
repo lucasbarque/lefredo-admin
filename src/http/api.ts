@@ -26,10 +26,6 @@ export interface GetUserByRestaurantId {
   restaurantId: string;
 }
 
-export interface CreateUserDTO {
-  name: string;
-}
-
 export interface CreateMenuDTO {
   [key: string]: unknown;
 }
@@ -394,53 +390,6 @@ export const changeOnboardingStatus = async (
       method: 'PATCH',
     }
   );
-};
-
-/**
- * @summary Get all users
- */
-export type getAllUsersResponse = {
-  data: void;
-  status: number;
-  headers: Headers;
-};
-
-export const getGetAllUsersUrl = () => {
-  return `/users`;
-};
-
-export const getAllUsers = async (
-  options?: RequestInit
-): Promise<getAllUsersResponse> => {
-  return customFetch<getAllUsersResponse>(getGetAllUsersUrl(), {
-    ...options,
-    method: 'GET',
-  });
-};
-
-/**
- * @summary Create user
- */
-export type createUserResponse = {
-  data: void;
-  status: number;
-  headers: Headers;
-};
-
-export const getCreateUserUrl = () => {
-  return `/users`;
-};
-
-export const createUser = async (
-  createUserDTO: CreateUserDTO,
-  options?: RequestInit
-): Promise<createUserResponse> => {
-  return customFetch<createUserResponse>(getCreateUserUrl(), {
-    ...options,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(createUserDTO),
-  });
 };
 
 export type menusControllerGetByRestaurantResponse = {

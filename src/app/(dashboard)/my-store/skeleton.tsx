@@ -1,17 +1,15 @@
+import { SkeletonItem } from '@/components/data-display/skeleton-item/skeleton-item';
+
 export function Skeleton() {
   return (
     <div className='flex animate-pulse flex-col'>
-      <div className='h-[28px] w-[266px] rounded-md bg-slate-200' />
-
-      <div className='mt-6 h-[24px] w-[103px] rounded-md bg-slate-200' />
-      <div className='mt-1 h-[44px] w-[640px] rounded-md bg-slate-200' />
-
-      <div className='mt-2 h-[24px] w-[283px] rounded-md bg-slate-200' />
-      <div className='mt-1 h-[200px] w-[640px] rounded-md bg-slate-200' />
-
-      <div className='mt-2 h-[131px] w-[490px] rounded-md bg-slate-200' />
-
-      <div className='mt-2 h-[44px] w-[163px] rounded-md bg-slate-200' />
+      <SkeletonItem width='266px' height='28px' />
+      <SkeletonItem className='mt-6' width='103px' height='24px' />
+      <SkeletonItem className='mt-1' width='640px' height='44px' />
+      <SkeletonItem className='mt-2' width='283px' height='24px' />
+      <SkeletonItem className='mt-1' width='640px' height='200px' />
+      <SkeletonItem className='mt-2' width='490px' height='131px' />
+      <SkeletonItem className='mt-2' width='163px' height='44px' />
     </div>
   );
 }

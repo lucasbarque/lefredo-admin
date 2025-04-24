@@ -7,7 +7,6 @@ import {
   deleteRestaurantLogo,
   updateRestaurantData,
 } from '@/actions/restaurant.action';
-import { GetRestaurantByIdDTO } from '@/http/api';
 import { updateStoreSchema } from '@/validations/update-store';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,13 +20,9 @@ import { InputEditor } from '@/components/inputs/input-editor';
 import { UploadImage } from '@/components/inputs/upload-image/upload-image';
 import { FileUploaded } from '@/components/inputs/upload-image/upload-image.types';
 
-/* eslint-disable react-hooks/exhaustive-deps */
+import { FormUpdateStoreProps } from './my-store.types';
 
-export interface FormProps {
-  restaurantData: GetRestaurantByIdDTO;
-}
-
-export function FormUpdateStore({ restaurantData }: FormProps) {
+export function FormUpdateStore({ restaurantData }: FormUpdateStoreProps) {
   const queryClient = useQueryClient();
 
   const {

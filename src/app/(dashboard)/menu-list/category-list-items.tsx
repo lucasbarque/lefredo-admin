@@ -37,7 +37,15 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
 
   const toggleMutation = useMutation({
     mutationFn: () => toggleSectionAPI(id),
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response.status === 428) {
+        setIsCategoryActive(false);
+        toast.error(
+          'Para ativar a categoria é necessário possuir pelo menos um item ativo',
+          { position: 'top-right' }
+        );
+        return;
+      }
       toast.success(
         `Categoria foi ${isCategoryActive ? 'desativada' : 'ativada'} com sucesso`,
         { position: 'top-right' }

@@ -55,10 +55,20 @@ export const extname = (filePath: string) => {
   return base.slice(lastDot);
 };
 
-export const fetcher = async (url: string) => {
-  const res = await fetch(url);
+export async function fetcher<T = any>(
+  url: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const res = await fetch(url, {
+    method: options.method ?? 'GET',
+    ...options,
+  });
+
   if (!res.ok) {
-    throw res.status;
+    const error = new Error('Request failed');
+    (error as any).status = res.status;
+    throw error;
   }
-  return res.json();
-};
+
+  return (await res.json()) as T;
+}

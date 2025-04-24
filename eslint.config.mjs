@@ -24,6 +24,7 @@ const eslintConfig = [
       'no-constant-binary-expression': 'off',
       'react/display-name': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
+      'react-hooks/exhaustive-deps': 'off',
     },
   },
 ];

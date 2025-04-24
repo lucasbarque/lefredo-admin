@@ -41,6 +41,8 @@ export async function createSectionAPI(data: {
 }) {
   const headers = await getCookiesHeader();
 
+  console.log(data);
+
   const response = await createSection(
     { ...data, menuId: headers.menuid },
     {
@@ -67,7 +69,7 @@ export async function toggleSectionAPI(id: string) {
     headers,
   });
 
-  return response.status;
+  return response;
 }
 
 export async function updateSectionAPI(
