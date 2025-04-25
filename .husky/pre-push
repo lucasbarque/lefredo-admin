@@ -1,0 +1,15 @@
+# bash echo color
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;36m'
+BOLD='\033[1;37m'
+NC='\033[0m'
+
+npm run build ||
+(
+    echo "❌ Next build ${RED}Failed${NC}. ❌\n View the errors above to see why."
+    false;
+)
+
+# If everything passes... Now we can push
+echo "✅✅ ${GREEN}Build is completed... I am pushing this now.${NC} ✅✅"

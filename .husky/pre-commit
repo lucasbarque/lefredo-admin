@@ -1,0 +1,51 @@
+# bash echo color
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+BLUE='\033[1;36m'
+BOLD='\033[1;37m'
+NC='\033[0m'
+
+echo "🚧🏗️  ${BOLD}Checking format, lint and types in your project before committing${NC}"
+# Check Prettier standards
+npm run check-format ||
+(
+    echo "❌🟨 Prettier Check ${RED}Failed${NC}. 🟨❌\n Run ${BLUE}npm run format${NC}, add changes and try commit again.";
+    false;
+)
+
+# Check ESLint Standards
+npm run lint ||
+(
+    echo "❌🟪 ESLint Check ${RED}Failed${NC}. 🟪❌\n Make the required changes listed above, add changes and try to commit again."
+    false;
+)
+(
+  echo "✅ - Code successfully linted, now applying default formatting to the code.."
+  true;
+) &&
+
+npm run check-types ||
+(
+    echo "❌🟦 Type check ${RED}Failed${NC}. 🟦❌\n Make the changes required above."
+    false;
+)
+
+modified_files=$(git status --porcelain | awk '$1 == "M" || $1 == "MM" {print $2}')
+
+git add $modified_files ||
+(
+  echo "❌ - git add Failed. - ❌\n View the errors above in order to fix them!"
+  false;
+)
+
+(
+  echo "✅ - Formatted files successfully added to git, now compiling Typescript.."
+  true;
+) &&
+
+npx tsc ||
+(
+  echo "❌ - npx tsc Failed. - ❌\n View the errors above in order to fix them!"
+  false;
+)
+echo "\n ${BOLD}All passed... I am now committing this.${NC} 🚀🔥"

@@ -1,8 +1,10 @@
-import { ComponentProps, ReactNode } from 'react';
+import { ComponentProps } from 'react';
 
 export type ButtonProps = ComponentProps<'button'> & {
-  leftIcon?: ReactNode;
-  rightIcon?: ReactNode;
-  size?: 'md' | 'sm';
+  family?: 'primary' | 'secondary' | 'tertiary';
+  size?: 'md' | 'sm' | 'lg';
   fullSize?: boolean;
+  isLoading?: boolean;
 };
+
+export type ButtonIconProps = ComponentProps<'span'>;
