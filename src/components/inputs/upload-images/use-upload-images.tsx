@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ export function useUploadImages({
   updateQueryFn,
 }: UseUploadImagesProps) {
   const [images, setImages] = useState<FileUploaded[]>([]);
+  const scheduledUploads = useRef<Set<string>>(new Set());
 
   async function loadImages() {
     const placeholders: FileUploaded[] = medias.map((image) => ({
@@ -92,7 +93,6 @@ export function useUploadImages({
   const uploadMutation = useMutation({
     mutationFn: (file: File) => fnUploadImages(parentId, file),
     onSuccess: (response, file) => {
-      console.log(response);
       //@ts-ignore
       if (response.status !== 200) {
         toast.error(
@@ -241,12 +241,16 @@ export function useUploadImages({
 
   useEffect(() => {
     if (!parentId) return;
-    const imagesToUpload = images.filter(
-      (img) => img.isNew && img.isLoading && img.file
-    );
-    if (imagesToUpload.length === 0) return;
-    imagesToUpload.forEach((img) => {
-      uploadMutation.mutate(img.file as File);
+    images.forEach((img) => {
+      if (
+        img.isNew &&
+        img.isLoading &&
+        img.file &&
+        !scheduledUploads.current.has(img.id)
+      ) {
+        uploadMutation.mutate(img.file as File);
+        scheduledUploads.current.add(img.id);
+      }
     });
   }, [parentId, images]);
 
