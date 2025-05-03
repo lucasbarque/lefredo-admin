@@ -48,4 +48,4 @@ npx tsc ||
   echo "❌ - npx tsc Failed. - ❌\n View the errors above in order to fix them!"
   false;
 )
-echo "\n ${BOLD}All passed... I am now committing this.${NC} 🚀🔥"
+echo "\n${BOLD}All passed... I am now committing this.${NC} 🚀🔥"
