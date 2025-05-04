@@ -36,6 +36,7 @@ export default function PageCreateCategory() {
       return await createSectionAPI(data);
     },
     onSuccess: async (response) => {
+      console.log(response);
       if (response.status === 201) {
         toast.success('Categoria criada com sucesso', {
           position: 'top-right',
@@ -44,9 +45,9 @@ export default function PageCreateCategory() {
       } else if (response.status === 409) {
         setError('title', {
           message:
-            'Digite um título diferente, já existe uma categoria com este título cadastrado.',
+            'Digite um título diferente, já existe uma categoria cadastrada com este título.',
         });
-        toast.error('Falha ao cadastrar categoria. Título já existe.', {
+        toast.warning('Já existe uma categoria cadastrada com este título.', {
           position: 'top-right',
         });
       } else {
