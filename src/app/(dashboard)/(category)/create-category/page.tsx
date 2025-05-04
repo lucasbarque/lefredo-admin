@@ -36,7 +36,6 @@ export default function PageCreateCategory() {
       return await createSectionAPI(data);
     },
     onSuccess: async (response) => {
-      console.log(response);
       if (response.status === 201) {
         toast.success('Categoria criada com sucesso', {
           position: 'top-right',

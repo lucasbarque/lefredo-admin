@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { CropData, FileUploaded } from './upload-images.types';
 import { UseUploadImagesProps } from './use-upload-images.types';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 export function useUploadImages({
   parentId,
   medias,
@@ -33,7 +35,6 @@ export function useUploadImages({
       try {
         const response = await fetch(imageUrl);
         if (!response.ok) {
-          console.error('Falha ao buscar imagem:', imageUrl);
           return {
             index,
             file: null,
@@ -52,7 +53,6 @@ export function useUploadImages({
           isNew: false,
         };
       } catch (error) {
-        console.error('Erro ao carregar imagem:', imageUrl, error);
         return {
           index,
           file: null,
@@ -127,8 +127,7 @@ export function useUploadImages({
       updateQueryFn();
       toast.success('Imagem enviada com sucesso', { position: 'top-right' });
     },
-    onError: (error, file) => {
-      console.error('Erro ao fazer upload da imagem:', file, error);
+    onError: (_, file) => {
       toast.error(
         'Erro ao fazer upload da imagem. Tente novamente mais tarde',
         { position: 'top-right' }
@@ -176,7 +175,6 @@ export function useUploadImages({
         return;
       }
     } catch (error) {
-      console.error(error);
       toast.error('Erro ao deletar a imagem. Tente novamente mais tarde', {
         position: 'top-right',
       });
@@ -219,8 +217,7 @@ export function useUploadImages({
           );
         }
       },
-      onError: (error) => {
-        console.error('Erro no processo de upload:', error);
+      onError: (_) => {
         toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
           position: 'top-right',
         });

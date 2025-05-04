@@ -16,6 +16,8 @@ import {
 
 import { UploadImagesComponentProps } from './add-item-flavors.types';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 export function UploadImagesComponent({
   id,
   imagesFlavor,
@@ -37,7 +39,6 @@ export function UploadImagesComponent({
       try {
         const response = await fetch(imageUrl);
         if (!response.ok) {
-          console.error('Falha ao buscar imagem:', imageUrl);
           return {
             index,
             file: null,
@@ -56,7 +57,6 @@ export function UploadImagesComponent({
           isNew: false,
         };
       } catch (error) {
-        console.error('Erro ao carregar imagem:', imageUrl, error);
         return {
           index,
           file: null,
@@ -89,7 +89,6 @@ export function UploadImagesComponent({
       try {
         const response = await deleteDishesFlavorsImageAPI(idImage);
         if (response.status !== 200) {
-          console.error('Erro ao deletar a imagem:', img.url);
           setImages((prev) =>
             prev.map((item) =>
               item.id === idImage ? { ...item, isLoading: false } : item
@@ -98,7 +97,6 @@ export function UploadImagesComponent({
           return;
         }
       } catch (error) {
-        console.error('Erro ao deletar a imagem:', img.url, error);
         setImages((prev) =>
           prev.map((item) =>
             item.id === idImage ? { ...item, isLoading: false } : item
@@ -169,7 +167,6 @@ export function UploadImagesComponent({
         )
       );
     } catch (error) {
-      console.error('Erro no processo de atualização de imagem:', error);
       toast.error('Erro ao atualizar a imagem. Tente novamente mais tarde', {
         position: 'top-right',
       });
@@ -219,7 +216,6 @@ export function UploadImagesComponent({
             newUrl: process.env.NEXT_PUBLIC_BUCKET_URL + response.data.url,
           };
         } catch (error) {
-          console.error('Erro ao fazer upload da imagem:', img.url, error);
           toast.error(
             'Erro ao fazer upload da imagem. Tente novamente mais tarde',
             { position: 'top-right' }

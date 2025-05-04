@@ -44,7 +44,7 @@ export function useWelcome() {
       title: 'Faça upload da sua logo',
       text: 'Personalize o seu sistema e deixe tudo com a cara do seu restaurante. Isso ajuda a fortalecer a identidade visual do seu negócio.',
       type: 'upload',
-      isChecked: hasLogo || false,
+      isChecked: hasLogo === 'true',
     },
     {
       title: 'Cadastre, pelo menos 01 prato',
@@ -56,7 +56,7 @@ export function useWelcome() {
       title: 'Ative pelo menos uma categoria',
       text: 'Ao ativar a categoria, todos os pratos cadastrados dentro dela também serão exibidos para seus clientes. Você pode ativar ou desativar categorias a qualquer momento.',
       type: 'active',
-      isChecked: hasActiveCategory || false,
+      isChecked: hasActiveCategory === 'true',
     },
   ];
 
