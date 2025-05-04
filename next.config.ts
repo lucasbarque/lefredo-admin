@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'lefredo-development.s3.us-east-1.amazonaws.com',
+        hostname: process.env.NEXT_PUBLIC_IMAGE_REMOTE_PATTERN || '',
       },
     ],
   },
