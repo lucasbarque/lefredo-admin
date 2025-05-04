@@ -55,7 +55,6 @@ export function GetStartedItem({
       href: '/my-store',
     },
   };
-  console.log({ isChecked });
 
   return (
     <Link

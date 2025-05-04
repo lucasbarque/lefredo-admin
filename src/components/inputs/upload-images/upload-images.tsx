@@ -143,7 +143,6 @@ export function UploadImages({
     if (currentEditingIndex === null) return;
     const imageObj = images[currentEditingIndex];
     if (!imageObj.file) {
-      console.error('Arquivo inexistente para a imagem selecionada.');
       return;
     }
 

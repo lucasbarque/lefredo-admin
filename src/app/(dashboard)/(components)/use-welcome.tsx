@@ -33,8 +33,6 @@ export function useWelcome() {
       queryFn: () => fetcher('/api/reports/active-category'),
     });
 
-  console.log(hasActiveCategory);
-
   const steps: Steps[] = [
     {
       title: 'Cadastre a primeira categoria',

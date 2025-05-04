@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "check-format": "prettier --check .",
-    "check-types": "tsc --pretty --noEmit",
-    "format": "prettier --write ."
+    "check-types": "tsc --pretty --noEmit"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",

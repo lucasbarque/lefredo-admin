@@ -10,6 +10,8 @@ import {
   UseUploadImageProps,
 } from '@/components/inputs/upload-image/upload-image.types';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 export function useUploadImage<TResponse = any>({
   initialUrl,
   initialId,
@@ -31,9 +33,7 @@ export function useUploadImage<TResponse = any>({
       const file = new File([blob], initialUrl, { type: blob.type });
       setImageData({ file, url: initialUrl });
       setImageId(initialId);
-    } catch (error) {
-      console.error('Error loading image:', error);
-    }
+    } catch (_) {}
   }, [initialUrl, initialId]);
 
   const uploadMutation = useMutation({

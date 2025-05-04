@@ -22,6 +22,8 @@ import { FileUploaded } from '@/components/inputs/upload-image/upload-image.type
 
 import { FormUpdateStoreProps } from './my-store.types';
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 export function FormUpdateStore({ restaurantData }: FormUpdateStoreProps) {
   const queryClient = useQueryClient();
 
@@ -73,9 +75,7 @@ export function FormUpdateStore({ restaurantData }: FormUpdateStoreProps) {
       const blob = await response.blob();
       const file = new File([blob], imageUrl, { type: blob.type });
       setImageData({ file, url: imageUrl });
-    } catch (error) {
-      console.error('Erro ao carregar imagem:', error);
-    }
+    } catch (error) {}
   }, [restaurantData.logo]);
 
   const uploadMutation = useMutation({

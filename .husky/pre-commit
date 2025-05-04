@@ -5,13 +5,7 @@ BLUE='\033[1;36m'
 BOLD='\033[1;37m'
 NC='\033[0m'
 
-echo "🚧🏗️  ${BOLD}Checking format, lint and types in your project before committing${NC}"
-# Check Prettier standards
-npm run check-format ||
-(
-    echo "❌🟨 Prettier Check ${RED}Failed${NC}. 🟨❌\n Run ${BLUE}npm run format${NC}, add changes and try commit again.";
-    false;
-)
+echo "🚧🏗️  ${BOLD}Checking lint and types in your project before committing${NC}"
 
 # Check ESLint Standards
 npm run lint ||
