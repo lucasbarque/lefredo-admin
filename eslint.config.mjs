@@ -25,6 +25,7 @@ const eslintConfig = [
       'react/display-name': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       'react-hooks/exhaustive-deps': 'off',
+      'no-console': 'warn',
     },
   },
 ];
