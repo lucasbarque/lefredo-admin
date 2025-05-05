@@ -15,7 +15,7 @@ export function Header({ title, description, backButton }: HeaderProps) {
           {...backButton}
         >
           <Button.Icon>
-            <IconChevronLeft size={16} />
+            <IconChevronLeft size={20} />
           </Button.Icon>
           {backButton.title}
           {backButton.children}

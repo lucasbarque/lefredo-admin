@@ -10,6 +10,13 @@ export default async function PageAddItemDetails({
   params,
 }: PageAddItemDetailsParams) {
   const { categoryId } = await params;
+  const items = [
+    { title: 'Detalhes', link: '' },
+    { title: 'Fotos', link: '' },
+    { title: 'Adicionais', link: '' },
+    { title: 'Classificação', link: '' },
+    { title: 'Sabores', link: '' },
+  ];
 
   return (
     <div className='flex h-[calc(100vh-80px)] w-full flex-col overflow-y-auto'>
@@ -21,7 +28,7 @@ export default async function PageAddItemDetails({
           }}
           title='Adicionar item'
         />
-        <StepperBar currentStepperIndex={0} />
+        <StepperBar currentStepperIndex={0} items={items} />
       </div>
 
       <FormAddItemDetails categoryId={categoryId} />

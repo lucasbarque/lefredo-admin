@@ -40,7 +40,7 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
     onSuccess: (response) => {
       if (response.status === 428) {
         setIsCategoryActive(false);
-        toast.error(
+        toast.warning(
           'Para ativar a categoria é necessário possuir pelo menos um item ativo',
           { position: 'top-right' }
         );
@@ -52,6 +52,7 @@ export function CategoryListItems({ id, title, isActive }: CategoryListProps) {
       );
       setIsCategoryActive((prev) => !prev);
       queryClient.invalidateQueries({ queryKey: ['sections'] });
+      queryClient.invalidateQueries({ queryKey: ['has-active-category'] });
     },
     onError: () => {
       toast.error(

@@ -1,6 +1,8 @@
 type AlertMessageTypes = 'warning' | 'danger';
 
 export interface AlertMessageProps {
-  text: string;
+  title: string;
+  description?: string;
   type: AlertMessageTypes;
+  className?: string;
 }

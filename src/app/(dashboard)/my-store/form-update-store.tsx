@@ -71,7 +71,7 @@ export function FormUpdateStore({ restaurantData }: FormUpdateStoreProps) {
     if (!restaurantData.logo) return;
     try {
       const imageUrl = process.env.NEXT_PUBLIC_BUCKET_URL + restaurantData.logo;
-      const response = await fetch(imageUrl);
+      const response = await fetch(imageUrl, { mode: 'no-cors' });
       const blob = await response.blob();
       const file = new File([blob], imageUrl, { type: blob.type });
       setImageData({ file, url: imageUrl });

@@ -15,7 +15,6 @@ const eslintConfig = [
   },
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
-    // ignorePatterns: ["src/http/api.ts"],
     rules: {
       'react-hooks/rules-of-hooks': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',

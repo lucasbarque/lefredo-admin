@@ -10,6 +10,13 @@ export default async function PageAddItemAdditionals({
   params,
 }: PageAddItemAdditionalsParams) {
   const { dishId } = await params;
+  const items = [
+    { title: 'Detalhes', link: `/edit-item-details/${dishId}` },
+    { title: 'Fotos', link: `/add-item-photos/${dishId}` },
+    { title: 'Adicionais', link: `/add-item-additionals/${dishId}` },
+    { title: 'Classificação', link: `/add-item-classification/${dishId}` },
+    { title: 'Sabores', link: `/add-item-flavors/${dishId}` },
+  ];
 
   return (
     <>
@@ -21,7 +28,7 @@ export default async function PageAddItemAdditionals({
             children: <Link href={`/add-item-photos/${dishId}`}>Voltar</Link>,
           }}
         />
-        <StepperBar currentStepperIndex={2} />
+        <StepperBar currentStepperIndex={2} items={items} />
       </div>
 
       <div className='px-6 pt-6'>

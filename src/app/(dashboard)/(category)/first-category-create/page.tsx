@@ -1,10 +1,8 @@
 import { getRestaurantIsFirstCategoryAPI } from '@/actions/restaurant.action';
-import { getSectionsAPI } from '@/actions/section.action';
 import { IconDeviceMobileSearch } from '@tabler/icons-react';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
-import { CategoryItem } from '@/components/data-display/category-item';
 import { Header } from '@/components/data-display/header';
 
 import { FormCreateCategory } from './form-create-category';
@@ -15,8 +13,6 @@ export default async function PageFirstCategoryCreate() {
   if (!isFirstCategory) {
     return redirect('menu-list');
   }
-
-  const sections = await getSectionsAPI();
 
   return (
     <section>
@@ -36,15 +32,6 @@ export default async function PageFirstCategoryCreate() {
             Elas ajudam na organização dos produtos em grupos, tornando mais
             fácil para seus clientes encontrarem o que procuram na sua loja.
           </p>
-          <div className='mt-5 flex flex-col gap-2'>
-            {sections?.map((section) => (
-              <CategoryItem
-                key={section.id}
-                id={section.id}
-                title={section.title}
-              />
-            ))}
-          </div>
 
           <FormCreateCategory />
         </div>

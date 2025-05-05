@@ -11,6 +11,7 @@ export const createFlavorSchema = z.object({
     .max(100, 'Digite no máximo 100 caracteres'),
   price: z
     .string()
-    .transform((value) => value.replace('.', '').replace(',', '.')),
+    .transform((value) => value.replace('.', '').replace(',', '.'))
+    .nullable(),
   description: z.string().nullable(),
 });
