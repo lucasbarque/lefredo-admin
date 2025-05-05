@@ -1,9 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import { getSectionsAPI } from '@/actions/section.action';
 import { IconPlus } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { Header } from '@/components/data-display/header';
 import { SkeletonItem } from '@/components/data-display/skeleton-item/skeleton-item';
@@ -12,14 +15,24 @@ import { Button } from '@/components/inputs/button';
 import { CategoryListItems } from './category-list-items';
 
 export default function PageMenuList() {
+  const router = useRouter();
   const {
     data: sections,
     isLoading,
+    isFetching,
     isError,
   } = useQuery({
     queryKey: ['sections'],
     queryFn: getSectionsAPI,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   });
+
+  useEffect(() => {
+    if (!isFetching && sections?.length === 0) {
+      router.replace('/first-category-create');
+    }
+  }, [isFetching, sections, router]);
 
   if (isLoading)
     return (
