@@ -16,11 +16,17 @@ import {
 
 import { InputProps } from './input.types';
 
-export function InputErrorFeedback({ error }: { error: string }) {
+export function InputErrorFeedback({
+  error,
+  name,
+}: {
+  error: string;
+  name: string;
+}) {
   return (
     <div className='mt-1 flex items-center gap-1 text-red-500'>
       <IconExclamationCircle size={16} />
-      <span>{error}</span>
+      <span data-testid={`error-input-${name}`}>{error}</span>
     </div>
   );
 }
@@ -128,7 +134,7 @@ export function Input({
       </div>
 
       <div className='justify-betweeen flex items-center'>
-        {error && <InputErrorFeedback error={error} />}
+        {error && <InputErrorFeedback error={error} name={name} />}
 
         {countCharacters && (
           <span

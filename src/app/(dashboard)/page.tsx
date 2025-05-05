@@ -29,7 +29,10 @@ export default function PageWelcome() {
     <div className='h-[calc(100vh-80px)] w-full overflow-y-scroll p-8 outline-0'>
       <div className='flex items-center justify-between'>
         <div>
-          <div className='text-title-default flex items-center gap-2 text-3xl font-extrabold'>
+          <div
+            className='text-title-default flex items-center gap-2 text-3xl font-extrabold'
+            data-testid='welcome-message'
+          >
             <div className='shrink-0'>Seja bem-vindo(a)</div>
             {!user ? (
               <SkeletonItem width='170px' height='32px' />
