@@ -38,7 +38,7 @@ export function ItemFlavor({
   };
 
   const descriptionText = cleanDescription(
-    description || dish.data.description
+    description || dish.data.description!
   );
   const priceValue = price || dish.data.price;
 

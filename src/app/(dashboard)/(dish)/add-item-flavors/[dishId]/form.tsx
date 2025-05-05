@@ -64,7 +64,7 @@ export function Form({ control, errors, isEditingId }: FormProps) {
         <div className='mt-4'>
           <AlertMessage
             type='warning'
-            text='Para cadastrar as imagens, é necessário primeiro criar o sabor.'
+            title='Para cadastrar as imagens, é necessário primeiro criar o sabor.'
           />
         </div>
       )}

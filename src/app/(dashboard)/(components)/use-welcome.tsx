@@ -38,7 +38,7 @@ export function useWelcome() {
       title: 'Cadastre a primeira categoria',
       text: 'As categorias ajudam seus clientes a navegarem com mais facilidade pelo cardápio digital, além de deixarem tudo mais organizado para você no painel administrativo.',
       type: 'category',
-      isChecked: categoriesCount !== 0,
+      isChecked: categoriesCount !== '0',
     },
     {
       title: 'Faça upload da sua logo',
@@ -50,7 +50,7 @@ export function useWelcome() {
       title: 'Cadastre, pelo menos 01 prato',
       text: 'Pode ser o carro-chefe da casa, aquele que todo mundo ama ou o que melhor representa sua cozinha.',
       type: 'dish',
-      isChecked: dishesCount !== 0,
+      isChecked: dishesCount !== '0',
     },
     {
       title: 'Ative pelo menos uma categoria',

@@ -13,7 +13,10 @@ export const createDishDetailsSchema = z.object({
     .string()
     .regex(priceRegex, 'Digite um preço válido')
     .transform((value) => value.replace('.', '').replace(',', '.')),
-  prepTime: z.string().nullable(),
+  prepTime: z.coerce
+    .number()
+    .min(0, 'O valor mínimo é 0')
+    .max(999, 'O valor mínimo é 999'),
   flagged: z.string(),
   description: z.string().nullable(),
   sectionId: z.string(),

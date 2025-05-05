@@ -24,6 +24,14 @@ export default async function PageAddItemClassification({
   const { dishId } = await params;
   const dishSpecs = await getDishesSpecsAPI(dishId);
 
+  const items = [
+    { title: 'Detalhes', link: `/edit-item-details/${dishId}` },
+    { title: 'Fotos', link: `/add-item-photos/${dishId}` },
+    { title: 'Adicionais', link: `/add-item-additionals/${dishId}` },
+    { title: 'Classificação', link: `/add-item-classification/${dishId}` },
+    { title: 'Sabores', link: `/add-item-flavors/${dishId}` },
+  ];
+
   return (
     <>
       <div className='flex items-end justify-between px-6 pt-6'>
@@ -36,7 +44,7 @@ export default async function PageAddItemClassification({
             ),
           }}
         />
-        <StepperBar currentStepperIndex={3} />
+        <StepperBar currentStepperIndex={3} items={items} />
       </div>
 
       <div className='p-6'>

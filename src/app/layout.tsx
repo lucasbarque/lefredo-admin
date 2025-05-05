@@ -6,6 +6,8 @@ import { Toaster } from 'sonner';
 
 import '@/styles/global.css';
 
+import { NoSmartphone } from '@/components/data-display/no-smartphone';
+
 export const metadata: Metadata = {
   title: 'Le Fredo | Admin',
   description: 'Gerencie sua loja de maneira simples e rápida',
@@ -35,6 +37,7 @@ export default function RootLayout({
         className={`${nunitoSans.variable} ${workSans.variable}`}
       >
         <body>
+          <NoSmartphone />
           <ReactQueryProvider>
             <Toaster richColors />
             {children}

@@ -56,6 +56,9 @@ export function DishesList({
               position: 'top-right',
             });
             queryClient.invalidateQueries({ queryKey: ['sections'] });
+            queryClient.invalidateQueries({
+              queryKey: ['has-active-category'],
+            });
             onCategoryDeactivated();
           })
           .catch(() => {

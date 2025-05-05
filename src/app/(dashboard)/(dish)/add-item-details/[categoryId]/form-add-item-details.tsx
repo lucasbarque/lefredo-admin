@@ -32,7 +32,7 @@ export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
       portion: '',
       price: '0,00',
       flagged: 'false',
-      prepTime: '',
+      prepTime: 0,
       description: '',
       sectionId: categoryId,
     },
@@ -91,7 +91,7 @@ export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
               placeholder='Exemplo: 01 unidade'
             />
           </div>
-          <div className='col-span-4'>
+          <div className='col-span-3'>
             <InputCashout
               control={control}
               name='price'
@@ -103,14 +103,16 @@ export function FormAddItemDetails({ categoryId }: FormAddItemDetailsProps) {
               error={errors.price?.message}
             />
           </div>
-          <div className='col-span-2'>
+          <div className='col-span-3'>
             <Input
               id='prepTime'
               name='prepTime'
-              label='Tempo de preparo'
+              label='Tempo de preparo (em minutos)'
+              type='number'
+              min={0}
+              max={999}
               control={control}
               error={errors.prepTime?.message}
-              placeholder='Exemplo: 01 Minuto'
               isOptional
             />
           </div>

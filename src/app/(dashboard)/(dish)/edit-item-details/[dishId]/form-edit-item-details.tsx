@@ -41,7 +41,7 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
           minimumFractionDigits: 2,
         }).format(data.price / 100) ?? '0,00',
       flagged: String(isFlagged),
-      prepTime: data.prepTime || '',
+      prepTime: data.prepTime || 0,
       description: data.description || '',
       sectionId: data.section.id,
     },
@@ -99,17 +99,6 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
               placeholder='Exemplo: X Salada'
             />
           </div>
-          <div className='col-span-4'>
-            <Select
-              id='sectionId'
-              options={[{ label: data.section.title, value: data.section.id }]}
-              name='sectionId'
-              error={errors.sectionId?.message}
-              control={control}
-              label='Categoria'
-              disabled
-            />
-          </div>
           <div className='col-span-2'>
             <Input
               id='portion'
@@ -121,6 +110,17 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
             />
           </div>
           <div className='col-span-2'>
+            <Select
+              id='sectionId'
+              options={[{ label: data.section.title, value: data.section.id }]}
+              name='sectionId'
+              error={errors.sectionId?.message}
+              control={control}
+              label='Categoria'
+              disabled
+            />
+          </div>
+          <div className='col-span-3'>
             <InputCashout
               control={control}
               name='price'
@@ -132,14 +132,16 @@ export function FormEditItemDetails({ data }: FormEditItemDetailsProps) {
               error={errors.price?.message}
             />
           </div>
-          <div className='col-span-2'>
+          <div className='col-span-3'>
             <Input
               id='prepTime'
               name='prepTime'
-              label='Tempo de preparo'
+              label='Tempo de preparo (em minutos)'
+              type='number'
+              min={0}
+              max={999}
               control={control}
               error={errors.prepTime?.message}
-              placeholder='Exemplo: 01 Minuto'
               isOptional
             />
           </div>
