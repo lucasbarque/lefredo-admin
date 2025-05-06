@@ -92,7 +92,7 @@ export function InputCashout({
         )}
       </div>
 
-      {error && <InputErrorFeedback error={error} />}
+      {error && <InputErrorFeedback error={error} name={name} />}
     </div>
   );
 }

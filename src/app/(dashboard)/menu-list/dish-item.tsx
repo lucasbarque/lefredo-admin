@@ -35,6 +35,7 @@ interface ItemListProps {
   sectionId: string;
   handleDeleteDish: (id: string) => void;
   isDeleting: boolean;
+  isHighlighted: boolean;
 }
 
 export function DishItem({
@@ -46,6 +47,7 @@ export function DishItem({
   sectionId,
   handleDeleteDish,
   isDeleting,
+  isHighlighted,
 }: ItemListProps) {
   const queryClient = useQueryClient();
   const { control, watch } = useForm<FormPriceSchema>({
@@ -109,7 +111,17 @@ export function DishItem({
       <LoadingSpinner family='secondary' />
     </div>
   ) : (
-    <div className='flex items-center px-6 py-3'>
+    <div className='relative flex items-center px-6 py-3'>
+      {isHighlighted && (
+        <Image
+          src='/assets/icons/highlighted.svg'
+          width={53}
+          height={53}
+          alt=''
+          className='absolute top-[-1px] left-[-1px]'
+        />
+      )}
+
       <div className='flex w-[70%] items-center gap-4'>
         {coverPhoto ? (
           <Image

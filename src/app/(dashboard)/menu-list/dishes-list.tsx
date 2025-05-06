@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import { deleteDishAPI, getDishesBySectionIdAPI } from '@/actions/dish.action';
 import { toggleSectionAPI } from '@/actions/section.action';
+import { DishSpecKey } from '@/http/api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -112,6 +113,9 @@ export function DishesList({
             title={dish.title}
             price={dish.price}
             isActive={dish.isActive}
+            isHighlighted={dish.dishSpecs.some(
+              (spec) => spec.DishSpecs.key === DishSpecKey.highlighted
+            )}
             sectionId={sectionId}
             handleDeleteDish={handleDeleteDish}
             isDeleting={
