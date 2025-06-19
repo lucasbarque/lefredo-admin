@@ -1,13 +1,23 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { SkeletonItem } from '@/components/data-display/skeleton-item/skeleton-item';
 import { Button } from '@/components/inputs/button';
 
-import { Card } from './(components)/card';
-import { GetStartedItem } from './(components)/get-started-item';
 import { useWelcome } from './(components)/use-welcome';
+
+const Card = dynamic(() =>
+  import('./(components)/card').then((mod) => mod.Card)
+);
+const GetStartedItem = dynamic(() =>
+  import('./(components)/get-started-item').then((mod) => mod.GetStartedItem)
+);
+const SkeletonItem = dynamic(() =>
+  import('@/components/data-display/skeleton-item/skeleton-item').then(
+    (mod) => mod.SkeletonItem
+  )
+);
 
 export default function PageWelcome() {
   const {
